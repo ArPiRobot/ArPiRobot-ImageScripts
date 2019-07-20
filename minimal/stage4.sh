@@ -45,6 +45,12 @@ fi
 # Stage operations
 ################################################################################
 
+printf "Remounting RW..."
+mount -o rw,remount /
+print_if_fail
+mount -o rw,remount /boot
+print_status
+
 printf "Installing python3 for ArPiRobot code..."
 apt-get -y install python3 python3-pip python3-setuptools python3-wheel >> $LOGFILE 2>&1
 print_status

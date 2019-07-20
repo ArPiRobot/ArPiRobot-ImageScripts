@@ -64,6 +64,6 @@ print_status
 printf "The system will now reboot. Once rebooted run stage2.sh as root.\nPress enter to reboot now..."
 read n
 
-echo "stage1" > /root/last_setup_stage.txt >> $LOGFILE 2>&1
+echo "stage1" > /root/last_setup_stage.txt
 
 reboot
