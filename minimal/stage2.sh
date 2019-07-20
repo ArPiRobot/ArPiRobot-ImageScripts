@@ -46,7 +46,7 @@ fi
 ################################################################################
 
 printf "Installing git..."
-apt-get install git >> $LOGFILE 2>&1
+apt-get -y install git >> $LOGFILE 2>&1
 print_status
 
 printf "Cloning rpi-readonly..."

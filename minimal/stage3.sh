@@ -124,13 +124,33 @@ print_if_fail
 print_status
 
 printf "Installing other required software..."
-apt-get install hostapd dnsmasq >> $LOGFILE 2>&1
+apt-get -y install hostapd dnsmasq >> $LOGFILE 2>&1
 print_status
 
 printf "Setting up to create virtual adapter on boot..."
-sed -i 's/exit 0/  /g' /etc/rc.local >> $LOGFILE 2>&1
+sed -i 's/exit 0//g' /etc/rc.local >> $LOGFILE 2>&1
 print_if_fail
 printf "/usr/local/bin/wirelessadd.sh\n/usr/local/bin/wirelessinit.sh\n\nexit 0" | tee -a /etc/rc.local >> $LOGFILE 2>&1
+print_status
+
+printf "Writing dnsmasq config file..."
+printf "interface=lo,ap0\nno-dhcp-interface=lo,wlan0\nbind-interfaces\nserver=8.8.8.8\ndomain-needed\nbogus-priv\ndhcp-range=192.168.10.50,192.168.10.150,12h\naddress=/ArPiRobot-Robot.lan/192.168.10.1\n" | tee /etc/dnsmasq.conf >> $LOGFILE 2>&1
+print_status
+
+printf "Writing hostapd config file..."
+printf "ctrl_interface=/var/run/hostapd\nctrl_interface_group=0\ninterface=ap0\ndriver=nl80211\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=11\nwmm_enabled=0\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP CCMP\nrsn_pairwise=CCMP" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
+print_if_fail
+sed -i 's/#DAEMON_CONF=""/DAEMON_CONF="/etc/hostapd/hostapd.conf"/g' /etc/default/hostapd >> $LOGFILE 2>&1
+print_status
+
+printf "Fixing dnsmasq on readonly filesystem..."
+echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab >> $LOGFILE 2>&1
+print_status
+
+printf "Adding client network id string..."
+sed -i 's/}//g' /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
+print_if_fail
+printf '\tid_str="AP1"\n}\n' | tee -a /etc/wpa_supplicant/wpa_supplicant.conf
 print_status
 
 
