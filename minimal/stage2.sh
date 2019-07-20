@@ -45,6 +45,10 @@ fi
 # Stage operations
 ################################################################################
 
+printf "Making sure dpkg configure finished after upgrade..."
+dpkg --configure -a >> $LOGFILE 2>&1
+print_status
+
 printf "Installing git..."
 apt-get -y install git >> $LOGFILE 2>&1
 print_status
