@@ -83,7 +83,7 @@ su - pi -c 'echo "test.py" | tee /home/pi/arpirobot/main.txt' >> $LOGFILE 2>&1
 print_status
 
 printf "Clearing WiFi network settings..."
-printf "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n        id_str="AP1"\n}" | tee /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
+printf 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n        id_str="AP1"\n}' | tee /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
 print_status
 
 printf "Clearing bash history..."
