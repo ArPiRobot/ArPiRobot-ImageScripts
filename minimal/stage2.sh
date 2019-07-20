@@ -60,8 +60,10 @@ git clone https://gitlab.com/larsfp/rpi-readonly.git >> $LOGFILE 2>&1
 print_status
 
 printf "Running rpi-readonly script..."
+cd /home/pi/rpi-readonly/
+print_if_fail
 echo "N" | ./setup.sh  >> $LOGFILE 2>&1
-print_status()
+print_status
 
 
 
