@@ -57,6 +57,8 @@ apt-get -y install python3 python3-pip python3-setuptools python3-wheel >> $LOGF
 print_status
 
 printf "Installing required python3 libraries..."
+python3 -m pip install --upgrade pip >> $LOGFILE 2>&1
+print_if_fail
 pip3 install apscheduler ansicolors pyserial adafruit-circuitpython-motorkit >> $LOGFILE 2>&1
 print_status
 
