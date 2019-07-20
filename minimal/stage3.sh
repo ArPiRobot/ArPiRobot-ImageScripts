@@ -99,15 +99,7 @@ localectl set-locale LC_IDENTIFICATION=en_US.UTF-8  >> $LOGFILE 2>&1
 print_status
 
 printf "Changing keyboard layout..."
-printf '# KEYBOARD CONFIGURATION FILE\n# Consult the keyboard(5) manual page.\nXKBMODEL="pc105"\nXKBLAYOUT="us"\nXKBVARIANT=""\nXKBOPTIONS=""\n\nBACKSPACE="guess"\n' | tee  /etc/default/keyboard  >> $LOGFILE 2>&1
-print_if_fail
-dpkg-reconfigure -f noninteractive keyboard-configuration
-print_if_fail
-invoke-rc.d keyboard-setup start
-print_if_fail
-setsid sh -c 'exec setupcon -k --force <> /dev/tty1 >&0 2>&1'
-print_if_fail
-udevadm trigger --subsystem-match=input --action=change
+raspi-config nonint do_configure_keyboard us >> $LOGFILE 2>&1
 print_status
 
 
