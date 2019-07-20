@@ -56,51 +56,84 @@ printf "arpirobot\narpirobot" | passwd pi  >> $LOGFILE 2>&1
 print_status
 
 printf "Changing hostname..."
-echo "ArPiRobot-Robot" > /etc/hostname
+echo "ArPiRobot-Robot" > /etc/hostname  >> $LOGFILE 2>&1
 print_if_fail
-sed -i 's/raspberrypi/ArPiRobot-Robot/g' /etc/hosts
+sed -i 's/raspberrypi/ArPiRobot-Robot/g' /etc/hosts  >> $LOGFILE 2>&1
 print_status
 
 printf "Changing locale..."
-sed -i 's/en_GB.UTF-8 UTF-8/# en_GB.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/en_GB.UTF-8 UTF-8/# en_GB.UTF-8 UTF-8/g' /etc/locale.gen  >> $LOGFILE 2>&1
 print_if_fail
 
-sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen  >> $LOGFILE 2>&1
 print_if_fail
 
-locale-gen en_US.UTF-8
+locale-gen en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
 
-localectl set-locale LANG=en_US.UTF-8
+localectl set-locale LANG=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_CTYPE=en_US.UTF-8
+localectl set-locale LC_CTYPE=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_NUMERIC=en_US.UTF-8
+localectl set-locale LC_NUMERIC=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_TIME=en_US.UTF-8
+localectl set-locale LC_TIME=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_COLLATE=en_US.UTF-8
+localectl set-locale LC_COLLATE=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_MONETARY=en_US.UTF-8
+localectl set-locale LC_MONETARY=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_MESSAGES=en_US.UTF-8
+localectl set-locale LC_MESSAGES=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_PAPER=en_US.UTF-8
+localectl set-locale LC_PAPER=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_NAME=en_US.UTF-8
+localectl set-locale LC_NAME=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_ADDRESS=en_US.UTF-8
+localectl set-locale LC_ADDRESS=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_TELEPHONE=en_US.UTF-8
+localectl set-locale LC_TELEPHONE=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_MEASUREMENT=en_US.UTF-8
+localectl set-locale LC_MEASUREMENT=en_US.UTF-8  >> $LOGFILE 2>&1
 print_if_fail
-localectl set-locale LC_IDENTIFICATION=en_US.UTF-8
+localectl set-locale LC_IDENTIFICATION=en_US.UTF-8  >> $LOGFILE 2>&1
 print_status
 
 printf "Changing keyboard layout..."
-printf '# KEYBOARD CONFIGURATION FILE\n# Consult the keyboard(5) manual page.\nXKBMODEL="pc105"\nXKBLAYOUT="us"\nXKBVARIANT=""\nXKBOPTIONS=""\n\nBACKSPACE="guess"\n' | tee  /etc/default/keyboard
+printf '# KEYBOARD CONFIGURATION FILE\n# Consult the keyboard(5) manual page.\nXKBMODEL="pc105"\nXKBLAYOUT="us"\nXKBVARIANT=""\nXKBOPTIONS=""\n\nBACKSPACE="guess"\n' | tee  /etc/default/keyboard  >> $LOGFILE 2>&1
 print_status
+
+
+printf "Enabling SSH, SPI, and I2C..."
+raspi-config nonint do_spi 1  >> $LOGFILE 2>&1
+print_if_fail
+raspi-config nonint do_i2c 1  >> $LOGFILE 2>&1
+print_if_fail
+raspi-config nonint do_ssh 1  >> $LOGFILE 2>&1
+print_status
+
+printf "Cloning ArPiRobot Raspbian tools repo..."
+git clone git@github.com:MB3hel/ArPiRobot-RaspbianTools.git /home/pi/ArPiRobot-RaspbianTools >> $LOGFILE 2>&1
+print_status
+
+printf "Installing raspbian tools..."
+cd /home/pi/ArPiRobot-RaspbianTools>> $LOGFILE 2>&1
+print_if_fail
+chmod +x ./install.sh>> $LOGFILE 2>&1
+print_if_fail
+./install.sh
+print_status
+
+printf "Installing other required software..."
+apt-get install hostapd dnsmasq >> $LOGFILE 2>&1
+print_status
+
+printf "Setting up to create virtual adapter on boot..."
+sed -i 's/exit 0/  /g' /etc/rc.local >> $LOGFILE 2>&1
+print_if_fail
+printf "/usr/local/bin/wirelessadd.sh\n/usr/local/bin/wirelessinit.sh\n\nexit 0" | tee -a /etc/rc.local >> $LOGFILE 2>&1
+print_status
+
+
 
 
 ################################################################################
