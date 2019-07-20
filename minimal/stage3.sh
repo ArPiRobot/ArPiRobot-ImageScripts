@@ -153,7 +153,9 @@ print_if_fail
 printf '\tid_str="AP1"\n}\n' | tee -a /etc/wpa_supplicant/wpa_supplicant.conf
 print_status
 
-
+printf "Configuring interfaces..."
+printf "auto lo\nauto ap0\nauto wlan0\niface lo inet loopback\n\nallow-hotplug ap0\niface ap0 inet static\n    address 192.168.10.1\n    netmask 255.255.255.0\n    hostapd /etc/hostapd/hostapd.conf\n\nallow-hotplug wlan0\niface wlan0 inet manual\n    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf\niface AP1 inet dhcp" | tee -a /etc/network/interfaces >> $LOGFILE 2>&1
+print_status
 
 
 ################################################################################
