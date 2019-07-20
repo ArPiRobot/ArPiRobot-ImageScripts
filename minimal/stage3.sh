@@ -46,9 +46,9 @@ fi
 ################################################################################
 
 printf "Remounting RW..."
-mount -o rw,remount /  >> $LOGFILE 2>&1
+mount -o rw,remount /  >> /dev/null 2>&1
 print_if_fail
-mount -o rw,remount /boot >> $LOGFILE 2>&1
+mount -o rw,remount /boot >> /dev/null 2>&1
 print_status
 
 printf "Changing user pi password..."

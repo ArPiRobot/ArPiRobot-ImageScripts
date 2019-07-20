@@ -46,9 +46,9 @@ fi
 ################################################################################
 
 printf "Remounting RW..."
-mount -o rw,remount /
+mount -o rw,remount / >> /dev/null 2>&1
 print_if_fail
-mount -o rw,remount /boot
+mount -o rw,remount /boot >> /dev/null 2>&1
 print_status
 
 printf "Installing python3 for ArPiRobot code..."
