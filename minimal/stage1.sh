@@ -42,7 +42,9 @@ fi
 printf "Will now setup Raspbian Lite as minimal ArPiRobot image.\n"
 
 printf "Setting lower resolution..."
-printf "hdmi_group=1\nhdmi_mode=4\n" | tee -a /boot/config.txt
+sed -i 's/#hdmi_group=1/hdmi_group=1/g' /boot/config.txt
+print_if_fail
+sed -i 's/#hdmi_mode=1/hdmi_mode=4/g' /boot/config.txt
 print_status
 
 
