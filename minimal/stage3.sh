@@ -120,7 +120,7 @@ cd /home/pi/ArPiRobot-RaspbianTools>> $LOGFILE 2>&1
 print_if_fail
 chmod +x ./install.sh>> $LOGFILE 2>&1
 print_if_fail
-./install.sh
+./install.sh >> $LOGFILE 2>&1
 print_status
 
 printf "Installing other required software..."
