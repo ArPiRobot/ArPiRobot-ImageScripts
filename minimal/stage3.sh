@@ -130,7 +130,7 @@ print_status
 printf "Setting up to create virtual adapter on boot..."
 sed -i 's/exit 0//g' /etc/rc.local >> $LOGFILE 2>&1
 print_if_fail
-printf "/usr/local/bin/wirelessadd.sh\n/usr/local/bin/wirelessinit.sh\n\nexit 0" | tee -a /etc/rc.local >> $LOGFILE 2>&1
+printf "/usr/local/bin/wirelessadd.sh\n/usr/local/bin/wirelessinit.sh\n\nexit 0\n" | tee -a /etc/rc.local >> $LOGFILE 2>&1
 print_status
 
 printf "Writing dnsmasq config file..."
@@ -138,9 +138,10 @@ printf "interface=lo,ap0\nno-dhcp-interface=lo,wlan0\nbind-interfaces\nserver=8.
 print_status
 
 printf "Writing hostapd config file..."
-printf "ctrl_interface=/var/run/hostapd\nctrl_interface_group=0\ninterface=ap0\ndriver=nl80211\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=11\nwmm_enabled=0\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP CCMP\nrsn_pairwise=CCMP" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
+printf "ctrl_interface=/var/run/hostapd\nctrl_interface_group=0\ninterface=ap0\ndriver=nl80211\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=11\nwmm_enabled=0\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP CCMP\nrsn_pairwise=CCMP\n" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
 print_if_fail
-sed -i 's/#DAEMON_CONF=""/DAEMON_CONF="/etc/hostapd/hostapd.conf"/g' /etc/default/hostapd >> $LOGFILE 2>&1
+#sed -i 's/#DAEMON_CONF=""/DAEMON_CONF="/etc/hostapd/hostapd.conf"/g' /etc/default/hostapd >> $LOGFILE 2>&1
+printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
 print_status
 
 printf "Fixing dnsmasq on readonly filesystem..."
@@ -150,11 +151,11 @@ print_status
 printf "Adding client network id string..."
 sed -i 's/}//g' /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
 print_if_fail
-printf '\tid_str="AP1"\n}\n' | tee -a /etc/wpa_supplicant/wpa_supplicant.conf
+printf '\tid_str="AP1"\n}\n' | tee -a /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
 print_status
 
 printf "Configuring interfaces..."
-printf "auto lo\nauto ap0\nauto wlan0\niface lo inet loopback\n\nallow-hotplug ap0\niface ap0 inet static\n    address 192.168.10.1\n    netmask 255.255.255.0\n    hostapd /etc/hostapd/hostapd.conf\n\nallow-hotplug wlan0\niface wlan0 inet manual\n    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf\niface AP1 inet dhcp" | tee -a /etc/network/interfaces >> $LOGFILE 2>&1
+printf "auto lo\nauto ap0\nauto wlan0\niface lo inet loopback\n\nallow-hotplug ap0\niface ap0 inet static\n    address 192.168.10.1\n    netmask 255.255.255.0\n    hostapd /etc/hostapd/hostapd.conf\n\nallow-hotplug wlan0\niface wlan0 inet manual\n    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf\niface AP1 inet dhcp\n" | tee -a /etc/network/interfaces >> $LOGFILE 2>&1
 print_status
 
 
