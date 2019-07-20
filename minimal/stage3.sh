@@ -39,6 +39,7 @@ last=$(cat /root/last_setup_stage.txt)
 if [ "$last" != "stage2" ]
 then
     printf "Run stage 2 first.\n"
+    exit 1
 fi
 
 ################################################################################
