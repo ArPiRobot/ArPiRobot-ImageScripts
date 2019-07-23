@@ -124,22 +124,16 @@ print_if_fail
 ./install.sh >> $LOGFILE 2>&1
 print_status
 
-printf "Installing other required software..."
+printf "Installing other required software for network configuration..."
 apt-get -y install hostapd dnsmasq >> $LOGFILE 2>&1
 print_status
 
-printf "Setting up to create virtual adapter on boot..."
-sed -i 's/exit 0//g' /etc/rc.local >> $LOGFILE 2>&1
-print_if_fail
-printf "/usr/local/bin/wirelessadd.sh\n/usr/local/bin/wirelessinit.sh\n\nexit 0\n" | tee -a /etc/rc.local >> $LOGFILE 2>&1
-print_status
-
 printf "Writing dnsmasq config file..."
-printf "interface=lo,ap0\nno-dhcp-interface=lo,wlan0\nbind-interfaces\nserver=8.8.8.8\ndomain-needed\nbogus-priv\ndhcp-range=192.168.10.50,192.168.10.150,12h\naddress=/ArPiRobot-Robot.lan/192.168.10.1\n" | tee /etc/dnsmasq.conf >> $LOGFILE 2>&1
+printf "interface=lo,ap0\nserver=8.8.8.8\ndomain-needed\nbogus-priv\ndhcp-range=192.168.10.2,192.168.10.10,255.255.255.0,24h" | tee /etc/dnsmasq.conf >> $LOGFILE 2>&1
 print_status
 
 printf "Writing hostapd config file..."
-printf "ctrl_interface=/var/run/hostapd\nctrl_interface_group=0\ninterface=ap0\ndriver=nl80211\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=11\nwmm_enabled=0\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP CCMP\nrsn_pairwise=CCMP\n" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
+printf "channel=11\nssid=AP_SSID\nwpa_passphrase=AP_PASSWORD\ninterface=ap0\nhw_mode=g\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\ndriver=nl80211" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
 print_if_fail
 #sed -i 's/#DAEMON_CONF=""/DAEMON_CONF="/etc/hostapd/hostapd.conf"/g' /etc/default/hostapd >> $LOGFILE 2>&1
 printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
@@ -149,14 +143,8 @@ printf "Fixing dnsmasq on readonly filesystem..."
 echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab >> $LOGFILE 2>&1
 print_status
 
-printf "Adding client network id string..."
-sed -i 's/}//g' /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
-print_if_fail
-printf '\tid_str="AP1"\n}\n' | tee -a /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
-print_status
-
-printf "Configuring interfaces..."
-printf "auto lo\nauto ap0\nauto wlan0\niface lo inet loopback\n\nallow-hotplug ap0\niface ap0 inet static\n    address 192.168.10.1\n    netmask 255.255.255.0\n    hostapd /etc/hostapd/hostapd.conf\n\nallow-hotplug wlan0\niface wlan0 inet manual\n    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf\niface AP1 inet dhcp\n" | tee -a /etc/network/interfaces >> $LOGFILE 2>&1
+printf "Configuring dhcpcd..."
+printf "interface ap0\nstatic ip_address=192.168.10.1\nnohook wpa_supplicant" | tee -a /etc/dhcpcd.conf >> $LOGFILE 2>&1
 print_status
 
 
