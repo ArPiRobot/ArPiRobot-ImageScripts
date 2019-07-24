@@ -148,7 +148,7 @@ printf "interface ap0\nstatic ip_address=192.168.10.1\nnohook wpa_supplicant" | 
 print_status
 
 
-printf "Disabling networking services on startup (handled by custom service)..."
+printf "Disabling networking services on startup (handled by custom script)..."
 systemctl stop hostapd   >> $LOGFILE 2>&1
 print_if_fail
 systemctl stop dnsmasq  >> $LOGFILE 2>&1
@@ -163,6 +163,10 @@ systemctl disable dhcpcd  >> $LOGFILE 2>&1
 print_if_fail
 systemctl unmask hostapd >> $LOGFILE 2>&1
 print_status
+
+printf "Settingup wifi start script to run at boot..."
+sed -i 's/exit 0//g' /etc/rc.local >> $LOGFILE 2>&1
+printf "/usr/local/bin/wifistart.sh\n\nexit 0\n" | tee -a /etc/rc.local >> $LOGFILE 2>&1
 
 ################################################################################
 # Restart
