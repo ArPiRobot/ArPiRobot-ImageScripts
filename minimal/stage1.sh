@@ -19,6 +19,8 @@ function print_if_fail(){
 
 LOGFILE=/root/setup_log.txt
 
+printf"" | tee $LOGFILE > /dev/null 2>&1
+
 ################################################################################
 # Prechecks (running as root and has intenet access)
 ################################################################################
@@ -60,6 +62,8 @@ print_status
 ################################################################################
 # Restart
 ################################################################################
+
+printf "\n\n-------------------------\nEND OF STAGE 1\n-------------------------\n\n" >> $LOGFILE 2>&1
 
 printf "The system will now reboot. Once rebooted run stage2.sh as root.\nPress enter to reboot now..."
 read n

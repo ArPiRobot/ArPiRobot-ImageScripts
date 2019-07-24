@@ -103,6 +103,8 @@ print_status
 # Restart
 ################################################################################
 
+printf "\n\n-------------------------\nEND OF STAGE 4\n-------------------------\n\n" >> $LOGFILE 2>&1
+
 printf "The minimal image configuration is now setup on this Pi. The system will now reboot.\nMake sure to test the image and make sure all sensitive information has been removed.\nPress enter to reboot now..."
 read n
 

@@ -168,6 +168,8 @@ print_status
 # Restart
 ################################################################################
 
+printf "\n\n-------------------------\nEND OF STAGE 3\n-------------------------\n\n" >> $LOGFILE 2>&1
+
 printf "The system will now reboot. Once rebooted run stage4.sh as root.\nPress enter to reboot now..."
 read n
 
