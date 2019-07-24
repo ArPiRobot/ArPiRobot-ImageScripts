@@ -133,10 +133,10 @@ printf "interface=lo,ap0\nserver=8.8.8.8\ndomain-needed\nbogus-priv\ndhcp-range=
 print_status
 
 printf "Writing hostapd config file..."
-printf "channel=11\nssid=AP_SSID\nwpa_passphrase=AP_PASSWORD\ninterface=ap0\nhw_mode=g\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\ndriver=nl80211" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
+printf "channel=11\nssid=ArPiRobot-RobotAP\nwpa_passphrase=arpirobot123\ninterface=ap0\nhw_mode=g\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\ndriver=nl80211" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
 print_if_fail
 #sed -i 's/#DAEMON_CONF=""/DAEMON_CONF="/etc/hostapd/hostapd.conf"/g' /etc/default/hostapd >> $LOGFILE 2>&1
-printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
+printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf"\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
 print_status
 
 printf "Fixing dnsmasq on readonly filesystem..."
@@ -147,6 +147,22 @@ printf "Configuring dhcpcd..."
 printf "interface ap0\nstatic ip_address=192.168.10.1\nnohook wpa_supplicant" | tee -a /etc/dhcpcd.conf >> $LOGFILE 2>&1
 print_status
 
+
+printf "Disabling networking services on startup (handled by custom service)..."
+systemctl stop hostapd   >> $LOGFILE 2>&1
+print_if_fail
+systemctl stop dnsmasq  >> $LOGFILE 2>&1
+print_if_fail
+systemctl stop dhcpcd  >> $LOGFILE 2>&1
+print_if_fail
+systemctl disable hostapd  >> $LOGFILE 2>&1
+print_if_fail
+systemctl disable dnsmasq  >> $LOGFILE 2>&1
+print_if_fail
+systemctl disable dhcpcd  >> $LOGFILE 2>&1
+print_if_fail
+systemctl unmask hostapd >> $LOGFILE 2>&1
+print_status
 
 ################################################################################
 # Restart
