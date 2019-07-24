@@ -19,7 +19,7 @@ function print_if_fail(){
 
 LOGFILE=/root/setup_log.txt
 
-printf"" | tee $LOGFILE > /dev/null 2>&1
+printf "" | tee $LOGFILE > /dev/null 2>&1
 
 ################################################################################
 # Prechecks (running as root and has intenet access)
