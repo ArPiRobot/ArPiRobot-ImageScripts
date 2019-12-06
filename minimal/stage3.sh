@@ -104,7 +104,7 @@ raspi-config nonint do_configure_keyboard us >> $LOGFILE 2>&1
 print_status
 
 
-printf "Enabling SSH, SPI, and I2C..."
+printf "Enabling SSH, SPI, Camera, and I2C..."
 raspi-config nonint do_spi 0  >> $LOGFILE 2>&1
 print_if_fail
 raspi-config nonint do_i2c 0  >> $LOGFILE 2>&1
@@ -112,6 +112,12 @@ print_if_fail
 raspi-config nonint do_ssh 0  >> $LOGFILE 2>&1
 print_if_fail
 raspi-config nonint do_camera 0 >> $LOGFILE 2>&1
+print_status
+
+printf "Disabling dialy apt update and upgrade services..."
+systemctl disable apt-daily.service >> $LOGFILE 2>&1
+print_if_fail
+systemctl disable apt-daily-upgrade.service >> $LOGFILE 2>&1
 print_status
 
 printf "Cloning ArPiRobot Raspbian tools repo..."
