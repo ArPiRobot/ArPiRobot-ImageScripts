@@ -34,6 +34,12 @@ printf "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# R
 chmod +x /etc/init.d/resize2fs_once
 update-rc.d resize2fs_once defaults
 
+
+# Clear all bash history
+rm /root/.bash_history
+rm /home/pi/.bash_history
+
+
 printf "The system will expand the root partition and filesystem on next boot. \nPress enter to power off..."
 read n
 
