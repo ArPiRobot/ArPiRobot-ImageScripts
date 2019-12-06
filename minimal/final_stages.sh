@@ -37,6 +37,7 @@ update-rc.d resize2fs_once defaults
 
 # Clear all bash history
 rm /root/.bash_history
+history -c
 rm /home/pi/.bash_history
 
 
