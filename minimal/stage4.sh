@@ -58,7 +58,7 @@ systemctl restart console-setup
 print_status
 
 printf "Installing python3 for ArPiRobot code..."
-apt-get -y install python3 python3-pip python3-setuptools python3-wheel >> $LOGFILE 2>&1
+apt-get -y install python3 python3-pip python3-setuptools python3-setuptools-scm python3-wheel >> $LOGFILE 2>&1
 print_status
 
 printf "Installing gstreamer for camera streaming..."
