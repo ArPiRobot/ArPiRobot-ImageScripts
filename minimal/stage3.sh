@@ -110,6 +110,8 @@ print_if_fail
 raspi-config nonint do_i2c 0  >> $LOGFILE 2>&1
 print_if_fail
 raspi-config nonint do_ssh 0  >> $LOGFILE 2>&1
+print_if_fial
+raspi-config nonint do_camera 0 >> $LOGFILE 2>&1
 print_status
 
 printf "Cloning ArPiRobot Raspbian tools repo..."
