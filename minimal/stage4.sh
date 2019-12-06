@@ -114,7 +114,7 @@ print_status
 printf "Setting up to expand root fs at next boot..."
 echo "init=/usr/lib/raspi-config/init_resize.sh" | tee -a /boot/config.txt
 print_if_fail
-printf "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# Required-Start:\n# Required-Stop:\n# Default-Start: 3\n# Default-Stop:\n# Short-Description: Resize the root filesystem to fill partition\n# Description:\n### END INIT INFO\n. /lib/lsb/init-functions\ncase "\$1" in\n  start)\n    log_daemon_msg "Starting resize2fs_once" &&\n    resize2fs /dev/$ROOT_PART &&\n    update-rc.d resize2fs_once remove &&\n    rm /etc/init.d/resize2fs_once &&\n    log_end_msg \$?\n    ;;\n  *)\n    echo "Usage: \$0 start" >&2\n    exit 3\n    ;;\nesac" | tee /etc/init.d/resize2fs_once
+printf "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# Required-Start:\n# Required-Stop:\n# Default-Start: 3\n# Default-Stop:\n# Short-Description: Resize the root filesystem to fill partition\n# Description:\n### END INIT INFO\n. /lib/lsb/init-functions\ncase \"\$1\" in\n  start)\n    log_daemon_msg \"Starting resize2fs_once\" &&\n    resize2fs /dev/$ROOT_PART &&\n    update-rc.d resize2fs_once remove &&\n    rm /etc/init.d/resize2fs_once &&\n    log_end_msg \$?\n    ;;\n  *)\n    echo \"Usage: \$0 start\" >&2\n    exit 3\n    ;;\nesac\n" | tee /etc/init.d/resize2fs_once
 print_if_fail
 chmod +x /etc/init.d/resize2fs_once >> $LOGFILE 2>&1
 print_if_fail
