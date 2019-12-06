@@ -107,9 +107,9 @@ print_if_fail
 rm -rf /root/.ssh/*  >> $LOGFILE 2>&1
 print_status
 
-printf "Clearing ssh host keys..."
-rm -f /etc/ssh/ssh_host_* >> $LOGFILE 2>&1
-print_status
+#printf "Clearing ssh host keys..."
+#rm -f /etc/ssh/ssh_host_* >> $LOGFILE 2>&1
+#print_status
 
 ################################################################################
 # Restart
