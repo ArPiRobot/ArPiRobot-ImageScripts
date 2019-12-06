@@ -62,7 +62,7 @@ apt-get -y install python3 python3-pip python3-setuptools python3-wheel >> $LOGF
 print_status
 
 printf "Installing gstreamer for camera streaming..."
-apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-pulseaudio >> $LOGFILE 2>&1
+apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-pulseaudio >> $LOGFILE 2>&1
 print_status
 
 #printf "Installing required python3 libraries..."
