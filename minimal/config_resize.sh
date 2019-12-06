@@ -18,7 +18,7 @@ printf "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# R
 
 # Enable service next boot (it will delete itself after running
 chmod +x /etc/init.d/resize2fs_once
-systemctl enable resize2fs_once
+update-rc.d resize2fs_once defaults
 
 printf "The system will expand the root partition and filesystem on next boot. \nPress enter to power off..."
 read n
