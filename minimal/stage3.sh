@@ -120,6 +120,10 @@ print_if_fail
 systemctl disable apt-daily-upgrade.service >> $LOGFILE 2>&1
 print_status
 
+printf "Installing sysstat package for CPU usage monitoring..."
+sudo apt install -y sysstat >> $LOGFILE 2>&1
+print_status
+
 printf "Cloning ArPiRobot Raspbian tools repo..."
 git clone git@github.com:MB3hel/ArPiRobot-RaspbianTools.git /home/pi/ArPiRobot-RaspbianTools >> $LOGFILE 2>&1
 print_status
