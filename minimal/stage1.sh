@@ -43,6 +43,12 @@ fi
 
 printf "Will now setup Raspbian Lite as minimal ArPiRobot image.\n"
 
+printf "Version name for this image: "
+read image_ver
+printf "Adding image version text file for deploy tool..."
+printf "$image_ver" > /usr/local/arpirobot-image-version.txt
+print_status
+
 printf "Setting lower resolution..."
 sed -i 's/#hdmi_group=1/hdmi_group=1/g' /boot/config.txt
 print_if_fail
