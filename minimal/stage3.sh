@@ -114,6 +114,16 @@ print_if_fail
 raspi-config nonint do_camera 0 >> $LOGFILE 2>&1
 print_status
 
+printf "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
+systemctl disable systemd-rfkill.service
+print_if_fail
+systemctl mask systemd-rfkill.service
+print_if_fail
+systemctl disable systemd-rfkill.socket
+print_if_fail
+systemctl mask systemd-rfkill.socket
+print_status
+
 printf "Disabling dialy apt update and upgrade services..."
 systemctl disable apt-daily.service >> $LOGFILE 2>&1
 print_if_fail
@@ -158,7 +168,6 @@ print_status
 printf "Configuring dhcpcd..."
 printf "interface ap0\nstatic ip_address=192.168.10.1\nnohook wpa_supplicant" | tee -a /etc/dhcpcd.conf >> $LOGFILE 2>&1
 print_status
-
 
 printf "Disabling networking services on startup (handled by custom script)..."
 systemctl stop hostapd   >> $LOGFILE 2>&1
