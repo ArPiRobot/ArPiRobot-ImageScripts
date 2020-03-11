@@ -185,6 +185,10 @@ print_if_fail
 systemctl unmask hostapd >> $LOGFILE 2>&1
 print_status
 
+printf "Fix permissions on wpa supplicant conf file..."
+chmod 755 /etc/wpa_supplicant/wpa_supplicant.conf
+print_status
+
 printf "Settingup wifi start script to run at boot..."
 sed -i 's/exit 0//g' /etc/rc.local >> $LOGFILE 2>&1
 printf "/usr/local/bin/wifistart.sh\n\nexit 0\n" | tee -a /etc/rc.local >> $LOGFILE 2>&1
