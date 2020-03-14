@@ -14,7 +14,7 @@ rm -f /etc/ssh/ssh_host_*
 
 # Patch the regenerate service to work with readonly filesystem
 sed -i 's/Type=oneshot/&\nExecStartPre=\/bin\/mount -o rw,remount \//' /lib/systemd/system/regenerate_ssh_host_keys.service
-sed -i 's/\[Install\]/ExecStartPre=\/bin\/mount -o ro,remount \/\n&/' /lib/systemd/system/regenerate_ssh_host_keys.service
+sed -i 's/\[Install\]/ExecStartPost=\/bin\/mount -o ro,remount \/\n&/' /lib/systemd/system/regenerate_ssh_host_keys.service
 
 # Enable the service
 systemctl enable regenerate_ssh_host_keys
@@ -34,6 +34,11 @@ printf "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# R
 chmod +x /etc/init.d/resize2fs_once
 update-rc.d resize2fs_once defaults
 
+
+# Cleanup from image creation process
+rm -rf /home/pi/ArPiRobot-ImageScripts
+rm -rf /home/pi/ArPiRobot-RaspbianTools
+rm -rf /home/pi/rpi-readonly
 
 # Clear all bash history
 rm /root/.bash_history

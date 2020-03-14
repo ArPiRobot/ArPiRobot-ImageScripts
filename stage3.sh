@@ -155,7 +155,7 @@ printf "interface=lo,ap0\nserver=8.8.8.8\ndomain-needed\nbogus-priv\ndhcp-range=
 print_status
 
 printf "Writing hostapd config file..."
-printf "channel=11\nssid=ArPiRobot-RobotAP\nwpa_passphrase=arpirobot123\ninterface=ap0\nhw_mode=g\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\ndriver=nl80211" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
+printf "channel=11\ncountry_code=US\nssid=ArPiRobot-RobotAP\nwpa_passphrase=arpirobot123\ninterface=ap0\nhw_mode=g\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\ndriver=nl80211" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
 print_if_fail
 #sed -i 's/#DAEMON_CONF=""/DAEMON_CONF="/etc/hostapd/hostapd.conf"/g' /etc/default/hostapd >> $LOGFILE 2>&1
 printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf"\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
