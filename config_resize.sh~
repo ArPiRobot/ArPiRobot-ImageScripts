@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# Note: Run as root
-
-# Append quiet init=/usr/lib/raspi-config/init_resize.sh to the end of the first line in the file
-sed '1 s/$/ quiet init=/usr/lib/raspi-config/init_resize.sh/' /boot/cmdline.txt
