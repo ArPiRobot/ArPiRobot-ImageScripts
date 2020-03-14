@@ -114,6 +114,10 @@ print_if_fail
 raspi-config nonint do_camera 0 >> $LOGFILE 2>&1
 print_status
 
+printf "Enabling console uart..."
+printf "enable_uart=1\n" >> /boot/config.txt
+print_status
+
 printf "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
 systemctl disable systemd-rfkill.service
 print_if_fail
