@@ -146,17 +146,17 @@ printf "Installing gstreamer for camera streaming..."
 apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-pulseaudio >> $LOGFILE 2>&1
 print_status
 
-# printf "Cloning ArPiRobot Raspbian tools repo..."
-# git clone git@github.com:MB3hel/ArPiRobot-RaspbianTools.git /home/pi/ArPiRobot-RaspbianTools >> $LOGFILE 2>&1
-# print_status
+printf "Cloning ArPiRobot Raspbian tools repo..."
+git clone git@github.com:MB3hel/ArPiRobot-RaspbianTools.git /home/pi/ArPiRobot-RaspbianTools >> $LOGFILE 2>&1
+print_status
 
-#printf "Installing raspbian tools..."
-#cd /home/pi/ArPiRobot-RaspbianTools>> $LOGFILE 2>&1
-#print_if_fail
-#chmod +x ./install.sh>> $LOGFILE 2>&1
-#print_if_fail
-#./install.sh >> $LOGFILE 2>&1
-#print_status
+printf "Installing raspbian tools..."
+cd /home/pi/ArPiRobot-RaspbianTools>> $LOGFILE 2>&1
+print_if_fail
+chmod +x ./install.sh>> $LOGFILE 2>&1
+print_if_fail
+./install.sh >> $LOGFILE 2>&1
+print_status
 
 printf "Installing required software for network configuration..."
 apt-get -y install hostapd dnsmasq >> $LOGFILE 2>&1
