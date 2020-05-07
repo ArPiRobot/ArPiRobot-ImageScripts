@@ -28,12 +28,12 @@ if ! [ $(id -u) = 0 ]; then
    exit 1
 fi
 
-if ping -q -c 1 -W 1 google.com >/dev/null; then
-    true
-else
-    echo "Connect to the internet before running this script!"
-    exit 1
-fi
+#if ping -q -c 1 -W 1 google.com >/dev/null; then
+#    true
+#else
+#    echo "Connect to the internet before running this script!"
+#    exit 1
+#fi
 
 last=$(cat /root/last_setup_stage.txt)
 if [ "$last" != "stage3" ]
@@ -55,14 +55,6 @@ print_status
 printf "Doing one-time fix for keymap set..."
 # This has to be done once while writable
 systemctl restart console-setup
-print_status
-
-printf "Installing python3 for ArPiRobot code..."
-apt-get -y install python3 python3-pip python3-setuptools python3-setuptools-scm python3-wheel >> $LOGFILE 2>&1
-print_status
-
-printf "Installing gstreamer for camera streaming..."
-apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-pulseaudio >> $LOGFILE 2>&1
 print_status
 
 #printf "Installing required python3 libraries..."
@@ -91,9 +83,9 @@ print_status
 #su - pi -c 'echo "test.py" | tee /home/pi/arpirobot/main.txt' >> $LOGFILE 2>&1
 #print_status
 
-printf "Clearing WiFi network settings..."
-printf 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n}' | tee /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
-print_status
+# printf "Clearing WiFi network settings..."
+# printf 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n}' | tee /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
+# print_status
 
 #printf "Clearing bash history..."
 #history -c >> $LOGFILE 2>&1

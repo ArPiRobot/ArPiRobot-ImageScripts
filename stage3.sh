@@ -138,30 +138,47 @@ printf "Installing sysstat package for CPU usage monitoring..."
 sudo apt install -y sysstat >> $LOGFILE 2>&1
 print_status
 
-printf "Cloning ArPiRobot Raspbian tools repo..."
-git clone git@github.com:MB3hel/ArPiRobot-RaspbianTools.git /home/pi/ArPiRobot-RaspbianTools >> $LOGFILE 2>&1
+printf "Installing python3 for ArPiRobot code..."
+apt-get -y install python3 python3-pip python3-setuptools python3-setuptools-scm python3-wheel >> $LOGFILE 2>&1
 print_status
 
-printf "Installing raspbian tools..."
-cd /home/pi/ArPiRobot-RaspbianTools>> $LOGFILE 2>&1
-print_if_fail
-chmod +x ./install.sh>> $LOGFILE 2>&1
-print_if_fail
-./install.sh >> $LOGFILE 2>&1
+printf "Installing gstreamer for camera streaming..."
+apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-pulseaudio >> $LOGFILE 2>&1
 print_status
 
-printf "Installing other required software for network configuration..."
+# printf "Cloning ArPiRobot Raspbian tools repo..."
+# git clone git@github.com:MB3hel/ArPiRobot-RaspbianTools.git /home/pi/ArPiRobot-RaspbianTools >> $LOGFILE 2>&1
+# print_status
+
+#printf "Installing raspbian tools..."
+#cd /home/pi/ArPiRobot-RaspbianTools>> $LOGFILE 2>&1
+#print_if_fail
+#chmod +x ./install.sh>> $LOGFILE 2>&1
+#print_if_fail
+#./install.sh >> $LOGFILE 2>&1
+#print_status
+
+printf "Installing required software for network configuration..."
 apt-get -y install hostapd dnsmasq >> $LOGFILE 2>&1
 print_status
 
+printf "Configuring hostapd to start on boot..."
+systemctl unmask hostapd
+print_if_fail
+systemctl enable hostapd
+print_status
+
+printf "Unblocking WiFi..."
+sudo rfkill unblock wlan
+print_status
+
 printf "Writing dnsmasq config file..."
-printf "interface=lo,ap0\nserver=8.8.8.8\ndomain-needed\nbogus-priv\ndhcp-range=192.168.10.2,192.168.10.10,255.255.255.0,24h" | tee /etc/dnsmasq.conf >> $LOGFILE 2>&1
+printf "interface=wlan0\ndhcp-range=192.168.10.2,192.168.10.20,255.255.255.0,24h\ndomain=local\naddress=/ArPiRobot-Robot.local/192.168.10.1" | tee /etc/dnsmasq.conf >> $LOGFILE 2>&1
 print_status
 
 printf "Writing hostapd config file..."
-printf "channel=11\ncountry_code=US\nssid=ArPiRobot-RobotAP\nwpa_passphrase=arpirobot123\ninterface=ap0\nhw_mode=g\nmacaddr_acl=0\nauth_algs=1\nwpa=2\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\ndriver=nl80211" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
+printf "country_code=US\ninterface=wlan0\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=6\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
 print_if_fail
-#sed -i 's/#DAEMON_CONF=""/DAEMON_CONF="/etc/hostapd/hostapd.conf"/g' /etc/default/hostapd >> $LOGFILE 2>&1
 printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf"\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
 print_status
 
@@ -170,32 +187,9 @@ echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab >> $LOGFIL
 print_status
 
 printf "Configuring dhcpcd..."
-printf "interface ap0\nstatic ip_address=192.168.10.1\nnohook wpa_supplicant" | tee -a /etc/dhcpcd.conf >> $LOGFILE 2>&1
+printf "interface wlan0\n    static ip_address=192.168.10.1/24\n    nohook wpa_supplicant" | tee -a /etc/dhcpcd.conf >> $LOGFILE 2>&1
 print_status
 
-printf "Disabling networking services on startup (handled by custom script)..."
-systemctl stop hostapd   >> $LOGFILE 2>&1
-print_if_fail
-systemctl stop dnsmasq  >> $LOGFILE 2>&1
-print_if_fail
-systemctl stop dhcpcd  >> $LOGFILE 2>&1
-print_if_fail
-systemctl disable hostapd  >> $LOGFILE 2>&1
-print_if_fail
-systemctl disable dnsmasq  >> $LOGFILE 2>&1
-print_if_fail
-systemctl disable dhcpcd  >> $LOGFILE 2>&1
-print_if_fail
-systemctl unmask hostapd >> $LOGFILE 2>&1
-print_status
-
-printf "Fix permissions on wpa supplicant conf file..."
-chmod 755 /etc/wpa_supplicant/wpa_supplicant.conf
-print_status
-
-printf "Settingup wifi start script to run at boot..."
-sed -i 's/exit 0//g' /etc/rc.local >> $LOGFILE 2>&1
-printf "/usr/local/bin/wifistart.sh\n\nexit 0\n" | tee -a /etc/rc.local >> $LOGFILE 2>&1
 
 ################################################################################
 # Restart
