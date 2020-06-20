@@ -57,51 +57,19 @@ printf "Doing one-time fix for keymap set..."
 systemctl restart console-setup
 print_status
 
-#printf "Installing required python3 libraries..."
-#python3 -m pip install --upgrade pip >> $LOGFILE 2>&1
-#print_if_fail
-#pip3 install apscheduler ansicolors pyserial adafruit-circuitpython-motorkit >> $LOGFILE 2>&1
-#print_status
-
-#printf "Cloning ArPiRobot PythonLib..."
-#git clone git@github.com:MB3hel/ArPiRobot-PythonLib.git /home/pi/ArPiRobot-PythonLib >> $LOGFILE 2>&1
-#print_status
-
-#printf "Installing ArPiRobot PythonLib..."
-#cd /home/pi/ArPiRobot-PythonLib/ >> $LOGFILE 2>&1
-#print_if_fail
-#python3 setup.py install >> $LOGFILE 2>&1
-#print_status
-
 printf "Making ArPiRobot directory..."
 su - pi -c "mkdir -p /home/pi/arpirobot/"  >> $LOGFILE 2>&1
 print_status
 
-#printf "Setting up test program..."
-#cp /home/pi/ArPiRobot-PythonLib/samples/test.py /home/pi/arpirobot/ >> $LOGFILE 2>&1
-#print_if_fail
-#su - pi -c 'echo "test.py" | tee /home/pi/arpirobot/main.txt' >> $LOGFILE 2>&1
-#print_status
-
 printf "Clearing WiFi network settings..."
 printf 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n}' | tee /etc/wpa_supplicant/wpa_supplicant.conf >> $LOGFILE 2>&1
 print_status
-
-#printf "Clearing bash history..."
-#history -c >> $LOGFILE 2>&1
-#print_if_fail
-#su - pi -c "history -c" >> $LOGFILE 2>&1
-#print_status
 
 printf "Removing ssh keys..."
 rm -rf /home/pi/.ssh/* >> $LOGFILE 2>&1
 print_if_fail
 rm -rf /root/.ssh/*  >> $LOGFILE 2>&1
 print_status
-
-#printf "Clearing ssh host keys..."
-#rm -f /etc/ssh/ssh_host_* >> $LOGFILE 2>&1
-#print_status
 
 ################################################################################
 # Restart
