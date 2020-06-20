@@ -69,7 +69,7 @@ print_if_fail
 sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen  >> $LOGFILE 2>&1
 print_if_fail
 
-locale-gen en_US.UTF-8  >> $LOGFILE 2>&1
+locale-gen en_US.UTF-8 >> $LOGFILE 2>&1
 print_if_fail
 
 localectl set-locale LANG=en_US.UTF-8  >> $LOGFILE 2>&1
@@ -119,13 +119,13 @@ printf "enable_uart=1\n" >> /boot/config.txt
 print_status
 
 printf "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
-systemctl disable systemd-rfkill.service
+systemctl disable systemd-rfkill.service >> $LOGFILE 2>&1
 print_if_fail
-systemctl mask systemd-rfkill.service
+systemctl mask systemd-rfkill.service >> $LOGFILE 2>&1
 print_if_fail
-systemctl disable systemd-rfkill.socket
+systemctl disable systemd-rfkill.socket >> $LOGFILE 2>&1
 print_if_fail
-systemctl mask systemd-rfkill.socket
+systemctl mask systemd-rfkill.socket >> $LOGFILE 2>&1
 print_status
 
 printf "Disabling dialy apt update and upgrade services..."
@@ -148,12 +148,12 @@ apt-get -y install openjdk-8-jdk-headless >> $LOGFILE 2>&1
 print_status
 
 printf "Installing GPIO libraries..."
-apt-get -y install pigpio pigpiod pigpio-tools wiringpi
+apt-get -y install pigpio pigpiod pigpio-tools wiringpi >> $LOGFILE 2>&1
 print_status
 
 printf "Installing iperf for network debugging..."
 # This may not work on the Pi zero???
-apt-get -y install iperf3
+apt-get -y install iperf3 >> $LOGFILE 2>&1
 print_status
 
 printf "Installing gstreamer for camera streaming..."
@@ -177,13 +177,13 @@ apt-get -y install hostapd dnsmasq >> $LOGFILE 2>&1
 print_status
 
 printf "Configuring hostapd to start on boot..."
-systemctl unmask hostapd
+systemctl unmask hostapd >> $LOGFILE 2>&1
 print_if_fail
-systemctl enable hostapd
+systemctl enable hostapd >> $LOGFILE 2>&1
 print_status
 
 printf "Unblocking WiFi..."
-sudo rfkill unblock wlan
+sudo rfkill unblock wlan >> $LOGFILE 2>&1
 print_status
 
 printf "Writing dnsmasq config file..."
