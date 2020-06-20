@@ -142,6 +142,20 @@ printf "Installing python3 for ArPiRobot code..."
 apt-get -y install python3 python3-pip python3-setuptools python3-setuptools-scm python3-wheel >> $LOGFILE 2>&1
 print_status
 
+printf "Installing Java for ArPiRobot code..."
+# Use JDK8 as it supports the Pi Zero
+apt-get -y install openjdk-8-jdk-headless >> $LOGFILE 2>&1
+print_status
+
+printf "Installing GPIO libraries..."
+apt-get -y install pigpio pigpiod pigpio-tools wiringpi
+print_status
+
+printf "Installing iperf for network debugging..."
+# This may not work on the Pi zero???
+apt-get -y install iperf3
+print_status
+
 printf "Installing gstreamer for camera streaming..."
 apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-pulseaudio >> $LOGFILE 2>&1
 print_status
@@ -177,7 +191,7 @@ printf "interface=wlan0\ndhcp-range=192.168.10.2,192.168.10.20,255.255.255.0,24h
 print_status
 
 printf "Writing hostapd config file..."
-printf "country_code=US\ninterface=wlan0\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=6\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\nwmm_enabled=1\n" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
+printf "country_code=US\nieee80211d=1\ninterface=wlan0\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=6\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\nwmm_enabled=1\n" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
 print_if_fail
 printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf"\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
 print_status
