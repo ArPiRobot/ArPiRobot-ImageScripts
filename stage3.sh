@@ -147,8 +147,8 @@ printf "Installing Java for ArPiRobot code..."
 apt-get -y install openjdk-8-jdk-headless >> $LOGFILE 2>&1
 print_status
 
-printf "Installing GPIO libraries..."
-apt-get -y install pigpio pigpiod pigpio-tools wiringpi >> $LOGFILE 2>&1
+printf "Installing required native libraries..."
+apt-get -y install pigpio pigpiod pigpio-tools wiringpi libasound2-dev >> $LOGFILE 2>&1
 print_status
 
 printf "Installing iperf for network debugging..."
