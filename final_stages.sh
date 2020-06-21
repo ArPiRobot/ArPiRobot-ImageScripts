@@ -1,4 +1,26 @@
 #!/bin/bash
+#####################################################################################
+# This file is part of ArPiRobot-ImageScripts.
+# 
+# ArPiRobot-ImageScripts is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# ArPiRobot-ImageScripts is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with ArPiRobot-ImageScripts.  If not, see <https://www.gnu.org/licenses/>.
+#####################################################################################
+# script:      final_stages.sh
+# description: Does some cleanup and sets image up to exapand fs on next reboot.
+# author:      Marcus Behel
+# date:        6-21-2020
+# version:     v1.0.0
+#####################################################################################
 
 # Note: Run as root
 
