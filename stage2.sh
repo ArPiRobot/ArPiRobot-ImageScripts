@@ -1,5 +1,8 @@
 #!/bin/bash
 #####################################################################################
+#
+# Copyright 2020 Marcus Behel
+#
 # This file is part of ArPiRobot-ImageScripts.
 # 
 # ArPiRobot-ImageScripts is free software: you can redistribute it and/or modify

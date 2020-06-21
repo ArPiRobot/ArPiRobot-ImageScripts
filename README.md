@@ -3,8 +3,6 @@ Scripts to setup an ArPiRobot image from a Raspberry Pi OS install.
 
 ## License
 
-Copyright 2020 Marcus Behel
-
 ```
 ArPiRobot-ImageScripts is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
