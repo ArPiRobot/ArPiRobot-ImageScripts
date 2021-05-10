@@ -169,10 +169,10 @@ printf "Installing python3 for ArPiRobot code..."
 apt-get -y install python3 python3-pip python3-setuptools python3-setuptools-scm python3-wheel >> $LOGFILE 2>&1
 print_status
 
-printf "Installing Java for ArPiRobot code..."
+# printf "Installing Java for ArPiRobot code..."
 # Use JDK8 as it supports the Pi Zero
-apt-get -y install openjdk-8-jdk-headless >> $LOGFILE 2>&1
-print_status
+# apt-get -y install openjdk-8-jdk-headless >> $LOGFILE 2>&1
+# print_status
 
 printf "Installing required native libraries..."
 apt-get -y install pigpio pigpiod pigpio-tools wiringpi libasound2-dev >> $LOGFILE 2>&1
