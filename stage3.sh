@@ -161,6 +161,10 @@ print_if_fail
 systemctl disable apt-daily-upgrade.service >> $LOGFILE 2>&1
 print_status
 
+printf "Installing dos2unix..."
+sudo apt install -y dos2unix >> $LOGFILE 2>&1
+print_status
+
 printf "Installing sysstat package for CPU usage monitoring..."
 sudo apt install -y sysstat >> $LOGFILE 2>&1
 print_status
