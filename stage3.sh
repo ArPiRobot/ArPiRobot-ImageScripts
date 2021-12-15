@@ -192,11 +192,11 @@ apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plug
 print_status
 
 printf "Cloning ArPiRobot Raspbian tools repo..."
-git clone https://github.com/MB3hel/ArPiRobot-RaspbianTools.git /home/pi/ArPiRobot-RaspbianTools >> $LOGFILE 2>&1
+git clone https://github.com/ArPiRobot/ArPiRobot-Tools.git /home/pi/ArPiRobot-Tools >> $LOGFILE 2>&1
 print_status
 
 printf "Installing raspbian tools..."
-cd /home/pi/ArPiRobot-RaspbianTools>> $LOGFILE 2>&1
+cd /home/pi/ArPiRobot-Tools>> $LOGFILE 2>&1
 print_if_fail
 chmod +x ./install.sh>> $LOGFILE 2>&1
 print_if_fail
