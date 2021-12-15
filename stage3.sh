@@ -37,6 +37,15 @@ function print_status(){
     fi
 }
 
+function print_status_allow_fail(){
+    if [ $? -eq 0 ]
+    then
+	printf "Done.\n"
+    else
+	printf "Failed.\n"
+    fi
+}
+
 function print_if_fail(){
     if [ $? -ne 0 ]
     then
@@ -215,7 +224,7 @@ print_status
 
 printf "Unblocking WiFi..."
 sudo rfkill unblock wlan >> $LOGFILE 2>&1
-print_status
+print_status_allow_fail
 
 printf "Writing dnsmasq config file..."
 printf "interface=wlan0\ndhcp-range=192.168.10.2,192.168.10.20,255.255.255.0,24h\ndomain=local\naddress=/ArPiRobot-Robot.local/192.168.10.1" | tee /etc/dnsmasq.conf >> $LOGFILE 2>&1
