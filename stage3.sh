@@ -197,7 +197,7 @@ apt-get -y install iperf3 >> $LOGFILE 2>&1
 print_status
 
 printf "Installing gstreamer for camera streaming..."
-apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-pulseaudio >> $LOGFILE 2>&1
+apt-get -y install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-base-apps gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-alsa gstreamer1.0-pulseaudio python3-gi python3-gst-1.0 >> $LOGFILE 2>&1
 print_status
 
 printf "Cloning ArPiRobot Raspbian tools repo..."
