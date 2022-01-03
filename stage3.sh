@@ -202,6 +202,7 @@ print_status
 
 printf "Cloning ArPiRobot Camera Streaming repo"
 git clone https://github.com/ArPiRobot/ArPiRobot-CameraStreaming.git /home/pi/ArPiRobot-CameraStreaming >> $LOGFILE 2>&1
+chown -R pi:pi /home/pi/ArPiRobot-CameraStreaming
 print_status
 
 printf "Cloning ArPiRobot Raspbian tools repo..."
