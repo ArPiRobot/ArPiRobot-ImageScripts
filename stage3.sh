@@ -205,11 +205,21 @@ git clone https://github.com/ArPiRobot/ArPiRobot-CameraStreaming.git /home/pi/Ar
 chown -R pi:pi /home/pi/ArPiRobot-CameraStreaming
 print_status
 
-printf "Cloning ArPiRobot Raspbian tools repo..."
+printf "Installing camstream..."
+cd /home/pi/ArPiRobot-CameraStreaming >>$LOGFILE 2>&1
+print_if_fail
+chmod +x ./install.sh >> $LOGFILE 2>&1
+print_if_fail
+./install.sh >> $LOGFILE 2>&1
+print_if_fail
+sed -i 's/libcamera/raspicam/g' /home/pi/camstream/default.txt
+print_status
+
+printf "Cloning ArPiRobot tools repo..."
 git clone https://github.com/ArPiRobot/ArPiRobot-Tools.git /home/pi/ArPiRobot-Tools >> $LOGFILE 2>&1
 print_status
 
-printf "Installing raspbian tools..."
+printf "Installing tools..."
 cd /home/pi/ArPiRobot-Tools>> $LOGFILE 2>&1
 print_if_fail
 chmod +x ./install.sh>> $LOGFILE 2>&1
