@@ -212,6 +212,10 @@ chmod +x ./install.sh >> $LOGFILE 2>&1
 print_if_fail
 ./install.sh >> $LOGFILE 2>&1
 print_if_fail
+chmod +x ./install_rtsp_server.sh >> $LOGFILE 2>&1
+print_if_fail
+./install_rtsp_server.sh  >> $LOGFILE 2>&1
+print_if_fail
 sed -i 's/libcamera/raspicam/g' /home/pi/camstream/default.txt
 print_status
 
