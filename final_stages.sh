@@ -33,6 +33,10 @@ if ! [ $(id -u) = 0 ]; then
 fi
 
 
+# Make read / write
+mount -o rw,remount /
+mount -o rw,remount /boot
+
 
 # Delete ssh host keys (don't want these in the image. they need to be regenerated on each device)
 rm -f /etc/ssh/ssh_host_*
@@ -63,6 +67,8 @@ update-rc.d resize2fs_once defaults
 # Cleanup from image creation process
 rm -rf /home/pi/ArPiRobot-ImageScripts
 rm -rf /home/pi/ArPiRobot-RaspbianTools
+rm -rf /home/pi/ArPiRobot-Tools
+rm -rf /home/pi/ArPiRobot-CameraStreaming
 rm -rf /home/pi/rpi-readonly
 
 # Clear all bash history
