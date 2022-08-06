@@ -1,5 +1,18 @@
 # ArPiRobot-ImageScripts
-Scripts to setup an ArPiRobot image from a Raspberry Pi OS install.
+
+Scripts to setup an ArPiRobot OS image.
+
+
+## Supported Operating Systems
+
+- Raspberry Pi OS Buster (for Raspberry Pi boards)
+- Ubuntu Bionic (for Raspberry Pi and Nvidia Jetson boards)
+
+
+## Usage
+
+TODO: Document this!
+
 
 ## License
 
