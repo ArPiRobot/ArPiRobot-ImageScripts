@@ -43,7 +43,7 @@ check_root                              # ensure running as root
     echo "Allowing passwordless sudo for user..."
     username=$(read_username)
     print_if_fail
-    echo "${username} ALL=(ALL) NOPASSWD: ALL"
+    echo "${username} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_arpirobot-nopasswd
     print_status
 
     echo "Changing hostname..."
