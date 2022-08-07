@@ -43,7 +43,7 @@ check_root                              # ensure running as root
     # Based on process used by https://gitlab.com/larsfp/rpi-readonly/-/blob/master/setup.sh
 
     echo "Removing swapfile and log software..."
-    apt remove -y --purge logrotate dphys-swapfile rsyslog
+    apt-get purge -y logrotate dphys-swapfile rsyslog
     print_status
 
     echo "Changing boot cmdline"
