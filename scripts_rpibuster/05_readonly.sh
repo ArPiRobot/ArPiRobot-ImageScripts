@@ -160,6 +160,10 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     echo "sudo mount -o remount,rw /\nhistory -a\nsudo fake-hwclock save\nsudo mount -o remount,ro /\nsudo mount -o remount,ro /boot\n" >> /etc/bash.bash_logout
     print_status
 
+    echo "Disabling ntp service..."
+    systemctl disable ntp
+    print_status
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"

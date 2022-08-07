@@ -84,6 +84,10 @@ check_root                              # ensure running as root
     raspi-config nonint do_camera 0
     print_status
 
+    echo "Restarting console-setup service..."
+    systemctl restart console-setup
+    print_status
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"
