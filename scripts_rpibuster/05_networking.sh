@@ -18,8 +18,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
 ################################################################################
-# script:      03_installarpirobot.sh
-# description: Install arpirobot specific software
+# script:      04_networking.sh
+# description: Setup networking (ethernet and wireless)
 # author:      Marcus Behel
 ################################################################################
 
@@ -39,58 +39,39 @@ check_root                              # ensure running as root
     echo "--------------------------------------------------------------------------------"
 
     # Code goes here
-    username=$(read_username)
 
-    
-    echo "Cloning ArPiRobot Camera Streaming repo"
-    cd "/home/$username"
+    echo "Making system read / write..."
+    mount -o rw,remount /
     print_if_fail
-    git clone https://github.com/ArPiRobot/ArPiRobot-CameraStreaming.git
-    print_if_fail
-    chown -R ${username}:${username} ArPiRobot-CameraStreaming
+    mount -o rw,remount /boot
     print_status
 
-
-    echo "Installing camstream..."
-    cd ArPiRobot-CameraStreaming
-    print_if_fail
-    chmod +x ./install.sh
-    print_if_fail
-    ./install.sh "${username}"
-    print_if_fail
-
-    arch=$(binarch $(which python3))
-    if [ "$arch" = "ARM" ]; then
-        chmod +x ./install_rtsp_server_armv6.sh
-        print_if_fail
-        ./install_rtsp_server_armv6.sh "${username}"
-        print_if_fail
-    elif [ "$arch" = "AArch64" ]; then
-        chmod +x ./install_rtsp_server_aarch64.sh
-        print_if_fail
-        ./install_rtsp_server_aarch64.sh "${username}"
-        print_if_fail
-    else
-        echo "Unknown architecture. Cannot run robot program!"
-        false
-        print_if_fail
-    fi
-
-    sed -i 's/libcamera/raspicam/g' /home/${username}/camstream/default.txt
+    echo "Installing required software for network configuration..."
+    apt-get -y install hostapd dnsmasq
     print_status
 
-    echo "Cloning ArPiRobot tools repo..."
-    cd "/home/$username"
+    echo "Configuring hostapd to start on boot..."
+    systemctl unmask hostapd
     print_if_fail
-    git clone https://github.com/ArPiRobot/ArPiRobot-Tools.git
+    systemctl enable hostapd
     print_status
 
-    echo "Installing tools..."
-    cd ArPiRobot-Tools
+    echo "Unblocking WiFi..."
+    sudo rfkill unblock wlan
+    print_status_noexit
+
+    echo "Writing dnsmasq config file..."
+    printf "interface=wlan0\ndhcp-range=192.168.10.2,192.168.10.20,255.255.255.0,24h\ndomain=local\naddress=/ArPiRobot-Robot.local/192.168.10.1" | tee /etc/dnsmasq.conf
+    print_status
+
+    echo "Writing hostapd config file..."
+    printf "country_code=US\nieee80211d=1\ninterface=wlan0\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=6\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\nwmm_enabled=1\n" | tee /etc/hostapd/hostapd.conf
     print_if_fail
-    chmod +x ./install.sh
-    print_if_fail
-    ./install.sh "${username}"
+    printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf"\n' | tee -a /etc/default/hostapd
+    print_status
+
+    echo "Configuring dhcpcd..."
+    printf "interface wlan0\n    static ip_address=192.168.10.1/24\n    nohook wpa_supplicant\ninterface eth0\n    static ip_address=192.168.11.1/24\n" | tee -a /etc/dhcpcd.conf
     print_status
 
     echo "--------------------------------------------------------------------------------"

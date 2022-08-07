@@ -18,8 +18,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
 ################################################################################
-# script:      02_systemconfig.sh
-# description: OS / system configuration for the image
+# script:      03_installarpirobot.sh
+# description: Install arpirobot specific software
 # author:      Marcus Behel
 ################################################################################
 
@@ -39,53 +39,64 @@ check_root                              # ensure running as root
     echo "--------------------------------------------------------------------------------"
 
     # Code goes here
-    
-    echo "Allowing passwordless sudo for user..."
     username=$(read_username)
+
+    echo "Making system read / write..."
+    mount -o rw,remount /
     print_if_fail
-    echo "${username} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_arpirobot-nopasswd
+    mount -o rw,remount /boot
     print_status
 
-    echo "Changing hostname..."
-    oldhost=$(hostname)
+    
+    echo "Cloning ArPiRobot Camera Streaming repo"
+    cd "/home/$username"
     print_if_fail
-    echo "ArPiRobot-Robot" | tee /etc/hostname
+    git clone https://github.com/ArPiRobot/ArPiRobot-CameraStreaming.git
     print_if_fail
-    sed -i "s/${oldhost}/ArPiRobot-Robot/g" /etc/hosts
+    chown -R ${username}:${username} ArPiRobot-CameraStreaming
     print_status
 
-    echo "Setting locale..."
-    sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+
+    echo "Installing camstream..."
+    cd ArPiRobot-CameraStreaming
     print_if_fail
-    locale-gen
+    chmod +x ./install.sh
     print_if_fail
-    update-locale LANG=en_US.UTF-8
+    ./install.sh "${username}"
+    print_if_fail
+
+    arch=$(binarch $(which python3))
+    if [ "$arch" = "ARM" ]; then
+        chmod +x ./install_rtsp_server_armv6.sh
+        print_if_fail
+        ./install_rtsp_server_armv6.sh "${username}"
+        print_if_fail
+    elif [ "$arch" = "AArch64" ]; then
+        chmod +x ./install_rtsp_server_aarch64.sh
+        print_if_fail
+        ./install_rtsp_server_aarch64.sh "${username}"
+        print_if_fail
+    else
+        echo "Unknown architecture. Cannot run robot program!"
+        false
+        print_if_fail
+    fi
+
+    sed -i 's/libcamera/raspicam/g' /home/${username}/camstream/default.txt
     print_status
 
-    echo "Setting keyboard layout..."
-    echo "# KEYBOARD CONFIGURATION FILE\n\n# Consult the keyboard(5) manual page.\n\nXKBMODEL=\"pc105\"\nXKBLAYOUT=\"us\"\nXKBVARIANT=\"\"\nXKBOPTIONS=\"\"\n\nBACKSPACE=\"guess\"" > /etc/default/keyboard
+    echo "Cloning ArPiRobot tools repo..."
+    cd "/home/$username"
     print_if_fail
-    systemctl restart keyboard-setup.service
+    git clone https://github.com/ArPiRobot/ArPiRobot-Tools.git
     print_status
 
-    # Enable SSH
-    echo "Enabling ssh server..."
-    systemctl enable ssh
-    print_status
-
-    # Enable hardware interfaces (SPI, I2C, UART, camera, etc)
-    echo "Enabling hardware interfaces..."
-    raspi-config nonint do_spi 0
+    echo "Installing tools..."
+    cd ArPiRobot-Tools
     print_if_fail
-    raspi-config nonint do_i2c 0
+    chmod +x ./install.sh
     print_if_fail
-    raspi-config nonint do_ssh 0
-    print_if_fail
-    raspi-config nonint do_camera 0
-    print_status
-
-    echo "Restarting console-setup service..."
-    systemctl restart console-setup
+    ./install.sh "${username}"
     print_status
 
     echo "--------------------------------------------------------------------------------"

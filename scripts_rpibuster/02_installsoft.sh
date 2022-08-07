@@ -39,6 +39,12 @@ check_root                              # ensure running as root
     echo "Last run script: \"${lastscript}\"."
     echo "--------------------------------------------------------------------------------"
 
+    echo "Making system read / write..."
+    mount -o rw,remount /
+    print_if_fail
+    mount -o rw,remount /boot
+    print_status
+
     echo "Installing software from system repos..."
     apt-get -y install git \
         openssh-server \
@@ -79,3 +85,6 @@ check_root                              # ensure running as root
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
+
+echo "Reboot required. Press enter to reboot."
+read n

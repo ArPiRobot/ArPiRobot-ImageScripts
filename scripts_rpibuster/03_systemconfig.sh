@@ -18,8 +18,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
 ################################################################################
-# script:      04_networking.sh
-# description: Setup networking (ethernet and wireless)
+# script:      02_systemconfig.sh
+# description: OS / system configuration for the image
 # author:      Marcus Behel
 ################################################################################
 
@@ -39,34 +39,59 @@ check_root                              # ensure running as root
     echo "--------------------------------------------------------------------------------"
 
     # Code goes here
-    # TODO: Setup ethernet for static 192.168.11.1
 
-    echo "Installing required software for network configuration..."
-    apt-get -y install hostapd dnsmasq
-    print_status
-
-    echo "Configuring hostapd to start on boot..."
-    systemctl unmask hostapd
+    echo "Making system read / write..."
+    mount -o rw,remount /
     print_if_fail
-    systemctl enable hostapd
+    mount -o rw,remount /boot
     print_status
-
-    echo "Unblocking WiFi..."
-    sudo rfkill unblock wlan
-    print_status_noexit
-
-    echo "Writing dnsmasq config file..."
-    printf "interface=wlan0\ndhcp-range=192.168.10.2,192.168.10.20,255.255.255.0,24h\ndomain=local\naddress=/ArPiRobot-Robot.local/192.168.10.1" | tee /etc/dnsmasq.conf
-    print_status
-
-    echo "Writing hostapd config file..."
-    printf "country_code=US\nieee80211d=1\ninterface=wlan0\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=6\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\nwmm_enabled=1\n" | tee /etc/hostapd/hostapd.conf
+    
+    echo "Allowing passwordless sudo for user..."
+    username=$(read_username)
     print_if_fail
-    printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf"\n' | tee -a /etc/default/hostapd
+    echo "${username} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_arpirobot-nopasswd
     print_status
 
-    echo "Configuring dhcpcd..."
-    printf "interface wlan0\n    static ip_address=192.168.10.1/24\n    nohook wpa_supplicant\ninterface eth0\n    static ip_address=192.168.11.1/24\n" | tee -a /etc/dhcpcd.conf
+    echo "Changing hostname..."
+    oldhost=$(hostname)
+    print_if_fail
+    echo "ArPiRobot-Robot" | tee /etc/hostname
+    print_if_fail
+    sed -i "s/${oldhost}/ArPiRobot-Robot/g" /etc/hosts
+    print_status
+
+    echo "Setting locale..."
+    sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+    print_if_fail
+    locale-gen
+    print_if_fail
+    update-locale LANG=en_US.UTF-8
+    print_status
+
+    echo "Setting keyboard layout..."
+    echo "# KEYBOARD CONFIGURATION FILE\n\n# Consult the keyboard(5) manual page.\n\nXKBMODEL=\"pc105\"\nXKBLAYOUT=\"us\"\nXKBVARIANT=\"\"\nXKBOPTIONS=\"\"\n\nBACKSPACE=\"guess\"" > /etc/default/keyboard
+    print_if_fail
+    systemctl restart keyboard-setup.service
+    print_status
+
+    # Enable SSH
+    echo "Enabling ssh server..."
+    systemctl enable ssh
+    print_status
+
+    # Enable hardware interfaces (SPI, I2C, UART, camera, etc)
+    echo "Enabling hardware interfaces..."
+    raspi-config nonint do_spi 0
+    print_if_fail
+    raspi-config nonint do_i2c 0
+    print_if_fail
+    raspi-config nonint do_ssh 0
+    print_if_fail
+    raspi-config nonint do_camera 0
+    print_status
+
+    echo "Restarting console-setup service..."
+    systemctl restart console-setup
     print_status
 
     echo "--------------------------------------------------------------------------------"
