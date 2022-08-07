@@ -13,6 +13,9 @@ Scripts to setup an ArPiRobot OS image.
 
 - Easiest option is to flash an SD card with the OS image and boot it on the actual hardware. Then clone this repo and run the correct scripts. Then shrink the partition and read the sd card contents to an image file. Delete the image creation log & state files (in `/root`) before making the image.
 
+- If it is possible to emulate the actual system hardware using qmeu, the image can be generated in a qemu virtual machine.
+
+- It may be possible to use systemd-nspawn along with qmeu-user-static to generate the image in a container (without having / booting on actual hardware).
 
 ## License
 

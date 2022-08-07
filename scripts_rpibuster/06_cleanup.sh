@@ -59,10 +59,6 @@ check_root                              # ensure running as root
     echo "Removing clones repos..."
     username=$(read_username)
     print_if_fail
-    rm -rf /home/${username}/ArPiRobot-ImageScripts
-    print_if_fail
-    rm -rf /home/pi/ArPiRobot-ImageScripts
-    print_if_fail
     rm -rf /home/${username}/ArPiRobot-Tools
     print_if_fail
     rm -rf /home/${username}/ArPiRobot-CameraStreaming
