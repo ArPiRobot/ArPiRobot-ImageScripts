@@ -94,8 +94,8 @@ function read_last_stage(){
 
 # Delete old log and state files
 function clear_files(){
-    rm "$AIS_LOGFILE"
-    rm "$AIS_STATEFILE"
+    rm "$AIS_LOGFILE" 2> /dev/null
+    rm "$AIS_STATEFILE"  2> /dev/null
 }
 
 # Write username used on this image

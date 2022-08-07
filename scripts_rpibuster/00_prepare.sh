@@ -51,7 +51,7 @@ clear_files                             # clear old log and state files
 
     # Setup username for the image
     printf "Adding arpirobot user..."
-    adduser arpirobot
+    adduser --disabled-password --gecos arpirobot
     print_if_fail
     printf "arpirobot\narpirobot" | passwd arpirobot
     print_if_fail
