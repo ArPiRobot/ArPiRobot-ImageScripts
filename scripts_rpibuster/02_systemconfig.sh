@@ -59,7 +59,7 @@ check_root                              # ensure running as root
     print_if_fail
     locale-gen
     print_if_fail
-    update-locale LANG=LANG=en_US.UTF-8
+    update-locale LANG=en_US.UTF-8
     print_status
 
     echo "Setting keyboard layout..."
