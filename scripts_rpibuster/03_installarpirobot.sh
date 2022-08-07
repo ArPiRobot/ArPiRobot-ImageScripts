@@ -18,19 +18,34 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts.  If not, see <https://www.gnu.org/licenses/>.
 #####################################################################################
-# script:      99_template.sh
-# description: Template for implementing scripts
+# script:      03_installarpirobot.sh
+# description: Install arpirobot specific software
 # author:      Marcus Behel
 #####################################################################################
 
+# Initialization
+DIR=$(realpath $(dirname "$0"))         # get directory of this script
+ORIG_CWD=$(pwd)                         # store original working directory
+cd "$DIR"                               # cd to script directory
+source "$DIR/../99_functions.sh"        # source helper functions file
+check_root                              # ensure running as root
 
-DIR=$(realpath $(dirname "$0"))
-
-ORIG_CWD=$(pwd)
-cd "$DIR"
+# Body of the script
 {
-    
-    # Code goes here
+    script=$(basename "$0")
+    lastscript=$(read_last_stage)
+    echo "Running \"${script}\":"
+    echo "Last run script: \"${lastscript}\"."
+    echo "--------------------------------------------------------------------------------"
 
-} > "$AIS_LOGFILE" 2>&1
-cd "$ORIG_CWD"
+    # Code goes here
+    # TODO: Install CameraStreaming and Tools
+
+    echo "--------------------------------------------------------------------------------"
+    echo ""
+} 2>&1 | tee -a "$AIS_LOGFILE"
+
+
+# Cleanup
+cd "$ORIG_CWD"                          # restore original working directory
+write_last_stage                        # write this script's name to state file

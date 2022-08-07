@@ -18,36 +18,34 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts.  If not, see <https://www.gnu.org/licenses/>.
 #####################################################################################
-# script:      99_functions.sh
-# description: Helper functions used by other scripts
+# script:      05_readonly.sh
+# description: Make OS readonly
 # author:      Marcus Behel
 #####################################################################################
 
-export AIS_LOGFILE=/root/arpirobot_image_scripts.log
+# Initialization
+DIR=$(realpath $(dirname "$0"))         # get directory of this script
+ORIG_CWD=$(pwd)                         # store original working directory
+cd "$DIR"                               # cd to script directory
+source "$DIR/../99_functions.sh"        # source helper functions file
+check_root                              # ensure running as root
 
-# Print status of last command and exit on failure
-function print_status(){
-    if [ $? -eq 0 ]; then
-	    printf "Done.\n"
-    else
-        printf "Failed.\n"
-        exit 2
-    fi
-}
+# Body of the script
+{
+    script=$(basename "$0")
+    lastscript=$(read_last_stage)
+    echo "Running \"${script}\":"
+    echo "Last run script: \"${lastscript}\"."
+    echo "--------------------------------------------------------------------------------"
 
-# Print if last command failed and exit 
-function print_status_noexit(){
-    if [ $? -eq 0 ]; then
-	    printf "Done.\n"
-    else
-        printf "Failed.\n"
-    fi
-}
+    # Code goes here
+    # Make system readonly
 
-# Make sure the script is running as root. Exit if it is not
-function check_root(){
-    if ! [ $(id -u) = 0 ]; then
-        echo "Run this script as root!"
-        exit 1
-    fi
-}
+    echo "--------------------------------------------------------------------------------"
+    echo ""
+} 2>&1 | tee -a "$AIS_LOGFILE"
+
+
+# Cleanup
+cd "$ORIG_CWD"                          # restore original working directory
+write_last_stage                        # write this script's name to state file

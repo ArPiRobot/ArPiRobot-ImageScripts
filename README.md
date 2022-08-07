@@ -2,16 +2,11 @@
 
 Scripts to setup an ArPiRobot OS image.
 
+## Supported Boards and OS Images
 
-## Supported Operating Systems
-
-- Raspberry Pi OS Buster (for Raspberry Pi boards)
-- Ubuntu Bionic (for Raspberry Pi and Nvidia Jetson boards)
-
-
-## Usage
-
-TODO: Document this!
+- Raspberry Pi Boards
+    - RasPiOS Lite Buster (10) 32-bit
+    <!--Ubuntu Server Bionic (18.04) 64-bit-->
 
 
 ## License
