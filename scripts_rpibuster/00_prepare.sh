@@ -49,16 +49,12 @@ clear_files                             # clear old log and state files
     printf "$image_ver" > /usr/local/arpirobot-image-version.txt
     print_status
 
-    # Write username for later use
-    printf "System username: "
-    read username
-    printf "${username}\n"
-    printf "Validating username..."
-    id -u "$username"
-    print_status
-    printf "Writing username file..."
-    write_username "${username}"
-    print_status
+    # Setup username for the image
+    adduser arpirobot
+    for i in `grep -E "(:|,)pi(:,|$)" /etc/group|cut -f1 -d:` ; do
+        addgroup mynewuser $i
+    done
+    write_username arpirobot
 
     printf "Updating apt repos..."
     apt-get -y update

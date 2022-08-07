@@ -41,6 +41,10 @@ check_root                              # ensure running as root
     # Code goes here
     # Make system readonly
 
+    # printf "Fixing dnsmasq on readonly filesystem..."
+    # echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab >> $LOGFILE 2>&1
+    # print_status
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"
