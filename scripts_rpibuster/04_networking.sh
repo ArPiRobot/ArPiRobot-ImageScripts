@@ -66,7 +66,7 @@ check_root                              # ensure running as root
     print_status
 
     echo "Configuring dhcpcd..."
-    printf "interface wlan0\n    static ip_address=192.168.10.1/24\n    nohook wpa_supplicant\ninterface eth0\n    static ip_address=192.168.11.1/24" | tee -a /etc/dhcpcd.conf
+    printf "interface wlan0\n    static ip_address=192.168.10.1/24\n    nohook wpa_supplicant\ninterface eth0\n    static ip_address=192.168.11.1/24\n" | tee -a /etc/dhcpcd.conf
     print_status
 
     echo "--------------------------------------------------------------------------------"
