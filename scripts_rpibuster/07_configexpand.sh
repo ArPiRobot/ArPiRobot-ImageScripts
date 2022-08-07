@@ -40,6 +40,42 @@ check_root                              # ensure running as root
 
     # Code goes here
     # Configure system to expand root filesystem on next boot
+    # NOTE: RasPiOS has a specific way this is done (and is replicated here)
+    #       For general systems though, a service to run growpart and resize2fs should work
+
+    printf "Making system read / write..."
+    mount -o rw,remount /
+    print_if_fail
+    mount -o rw,remount /boot
+    print_status
+
+    printf "Configuring to grow partition on next boot"
+    # Append quiet init=/usr/lib/raspi-config/init_resize.sh to the end of the first line in the file
+    sed -i '1 s/$/ quiet init=\/usr\/lib\/raspi-config\/init_resize.sh/' /boot/cmdline.txt 
+    print_if_fail
+
+    # Modify raspbian's script to handle readonly file system
+    sed -i 's/mount \/boot/&\nmount -o rw,remount \/boot/' /usr/lib/raspi-config/init_resize.sh
+    print_if_fail
+
+    # Write script
+    printf "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# Required-Start:\n# Required-Stop:\n# Default-Start: 3\n# Default-Stop:\n# Short-Description: Resize the root filesystem to fill partition\n# Description:\n### END INIT INFO\n. /lib/lsb/init-functions\ncase \"\$1\" in\n  start)\n    log_daemon_msg \"Starting resize2fs_once\"\n    mount -o rw,remount / &&\n    ROOT_DEV=\$(findmnt / -o source -n) &&\n    resize2fs \$ROOT_DEV &&\n    update-rc.d resize2fs_once remove &&\n    bash -c \"sleep 5;mount -o ro,remount /\" &\n    rm /etc/init.d/resize2fs_once &&\n    log_end_msg $?\n    ;;\n  *)\n    echo \"Usage: $0 start\" >&2\n    exit 3\n    ;;\nesac\n" > /etc/init.d/resize2fs_once
+    print_if_fail
+
+    # Enable service next boot (it will delete itself after running once)
+    chmod +x /etc/init.d/resize2fs_once
+    print_if_fail
+    update-rc.d resize2fs_once defaults
+    print_status
+
+    # Clear history again
+    printf "Clearing bash history again..."
+    rm /root/.bash_history
+    print_if_fail
+    history -c
+    print_if_fail
+    rm /home/pi/.bash_history
+    print_status
 
     echo "--------------------------------------------------------------------------------"
     echo ""

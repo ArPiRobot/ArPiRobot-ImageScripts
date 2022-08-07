@@ -39,8 +39,42 @@ check_root                              # ensure running as root
     echo "--------------------------------------------------------------------------------"
 
     # Code goes here
-    # Unblock wlan and other things related to readonly configuration
-    # Remove logs and sensative info (eg wifi passwords, history, ssh keys, etc)
+
+    printf "Making system read / write..."
+    mount -o rw,remount /
+    print_if_fail
+    mount -o rw,remount /boot
+    print_status
+
+    printf "Configuring to regenerate ssh host keys on next boot"
+    rm -f /etc/ssh/ssh_host_*
+    print_if_fail
+    sed -i 's/Type=oneshot/&\nExecStartPre=\/bin\/mount -o rw,remount \//' /lib/systemd/system/regenerate_ssh_host_keys.service
+    print_if_fail
+    sed -i 's/\[Install\]/ExecStartPost=\/bin\/mount -o ro,remount \/\n&/' /lib/systemd/system/regenerate_ssh_host_keys.service
+    print_if_fail
+    systemctl enable regenerate_ssh_host_keys
+    print_status
+
+    printf "Removing clones repos..."
+    username=$(read_username)
+    print_if_fail
+    rm -rf /home/${username}/ArPiRobot-ImageScripts
+    print_if_fail
+    rm -rf /home/${username}/ArPiRobot-Tools
+    print_if_fail
+    rm -rf /home/${username}/ArPiRobot-CameraStreaming
+    print_status
+
+    printf "Clearing WiFi network settings..."
+    printf 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n}' | tee /etc/wpa_supplicant/wpa_supplicant.conf
+    print_status
+
+    printf "Removing ssh keys..."
+    rm -rf /home/${username}/.ssh/*
+    print_if_fail
+    rm -rf /root/.ssh/*
+    print_status
 
     echo "--------------------------------------------------------------------------------"
     echo ""
