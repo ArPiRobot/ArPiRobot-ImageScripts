@@ -45,12 +45,12 @@ clear_files                             # clear old log and state files
     printf "Version name for this image: "
     read image_ver
     printf "${image_ver}\n"
-    printf "Writing image version file..."
+    echo "Writing image version file..."
     printf "$image_ver" > /usr/local/arpirobot-image-version.txt
     print_status
 
     # Setup username for the image
-    printf "Adding arpirobot user..."
+    echo "Adding arpirobot user..."
     adduser --disabled-password --gecos "" arpirobot
     print_if_fail
     printf "arpirobot\narpirobot" | passwd arpirobot
@@ -62,15 +62,15 @@ clear_files                             # clear old log and state files
     write_username arpirobot
     print_status
 
-    printf "Changing pi user password..."
+    echo "Changing pi user password..."
     printf "notdefault\nnotdefault" | passwd pi
     print_status
 
-    printf "Updating apt repos..."
+    echo "Updating apt repos..."
     apt-get -y update
     print_status
 
-    printf "Upgrading packages..."
+    echo "Upgrading packages..."
     apt-get -y upgrade
     print_status
 

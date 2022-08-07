@@ -42,7 +42,7 @@ check_root                              # ensure running as root
     username=$(read_username)
 
     
-    printf "Cloning ArPiRobot Camera Streaming repo"
+    echo "Cloning ArPiRobot Camera Streaming repo"
     cd "/home/$username"
     print_if_fail
     git clone https://github.com/ArPiRobot/ArPiRobot-CameraStreaming.git
@@ -51,7 +51,7 @@ check_root                              # ensure running as root
     print_status
 
 
-    printf "Installing camstream..."
+    echo "Installing camstream..."
     cd ArPiRobot-CameraStreaming
     print_if_fail
     chmod +x ./install.sh
@@ -79,13 +79,13 @@ check_root                              # ensure running as root
     sed -i 's/libcamera/raspicam/g' /home/${username}/camstream/default.txt
     print_status
 
-    printf "Cloning ArPiRobot tools repo..."
+    echo "Cloning ArPiRobot tools repo..."
     cd "/home/$username"
     print_if_fail
     git clone https://github.com/ArPiRobot/ArPiRobot-Tools.git
     print_status
 
-    printf "Installing tools..."
+    echo "Installing tools..."
     cd ArPiRobot-Tools
     print_if_fail
     chmod +x ./install.sh

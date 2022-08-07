@@ -40,7 +40,7 @@ check_root                              # ensure running as root
 
     # Code goes here
     
-    printf "Changing hostname..."
+    echo "Changing hostname..."
     oldhost=$(hostname)
     print_if_fail
     echo "ArPiRobot-Robot" | tee /etc/hostname
@@ -48,13 +48,13 @@ check_root                              # ensure running as root
     sed -i "s/${oldhost}/ArPiRobot-Robot/g" /etc/hosts
     print_status
 
-    printf "Setting locale..."
+    echo "Setting locale..."
     locale-gen en_US.UTF-8
     print_if_fail
     update-locale LANG=LANG=en_US.UTF-8
     print_status
 
-    printf "Setting keyboard layout..."
+    echo "Setting keyboard layout..."
     echo "# KEYBOARD CONFIGURATION FILE\n\n# Consult the keyboard(5) manual page.\n\nXKBMODEL=\"pc105\"\nXKBLAYOUT=\"us\"\nXKBVARIANT=\"\"\nXKBOPTIONS=\"\"\n\nBACKSPACE=\"guess\"" > /etc/default/keyboard
     print_if_fail
     systemctl restart keyboard-setup.service

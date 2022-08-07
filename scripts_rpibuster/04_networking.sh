@@ -41,31 +41,31 @@ check_root                              # ensure running as root
     # Code goes here
     # TODO: Setup ethernet for static 192.168.11.1
 
-    printf "Installing required software for network configuration..."
+    echo "Installing required software for network configuration..."
     apt-get -y install hostapd dnsmasq
     print_status
 
-    printf "Configuring hostapd to start on boot..."
+    echo "Configuring hostapd to start on boot..."
     systemctl unmask hostapd
     print_if_fail
     systemctl enable hostapd
     print_status
 
-    printf "Unblocking WiFi..."
+    echo "Unblocking WiFi..."
     sudo rfkill unblock wlan
     print_status_noexit
 
-    printf "Writing dnsmasq config file..."
+    echo "Writing dnsmasq config file..."
     printf "interface=wlan0\ndhcp-range=192.168.10.2,192.168.10.20,255.255.255.0,24h\ndomain=local\naddress=/ArPiRobot-Robot.local/192.168.10.1" | tee /etc/dnsmasq.conf >> $LOGFILE 2>&1
     print_status
 
-    printf "Writing hostapd config file..."
+    echo "Writing hostapd config file..."
     printf "country_code=US\nieee80211d=1\ninterface=wlan0\nssid=ArPiRobot-RobotAP\nhw_mode=g\nchannel=6\nmacaddr_acl=0\nauth_algs=1\nignore_broadcast_ssid=0\nwpa=2\nwpa_passphrase=arpirobot123\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=TKIP\nrsn_pairwise=CCMP\nwmm_enabled=1\n" | tee /etc/hostapd/hostapd.conf  >> $LOGFILE 2>&1
     print_if_fail
     printf 'DAEMON_CONF="/etc/hostapd/hostapd.conf"\n' | tee -a /etc/default/hostapd >> $LOGFILE 2>&1
     print_status
 
-    printf "Configuring dhcpcd..."
+    echo "Configuring dhcpcd..."
     printf "interface wlan0\n    static ip_address=192.168.10.1/24\n    nohook wpa_supplicant\ninterface eth0\n    static ip_address=192.168.11.1/24" | tee -a /etc/dhcpcd.conf >> $LOGFILE 2>&1
     print_status
 

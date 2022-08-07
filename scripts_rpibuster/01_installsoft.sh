@@ -39,7 +39,7 @@ check_root                              # ensure running as root
     echo "Last run script: \"${lastscript}\"."
     echo "--------------------------------------------------------------------------------"
 
-    printf "Installing software from system repos..."
+    echo "Installing software from system repos..."
     apt-get install git \
         openssh-server \
         dos2unix \

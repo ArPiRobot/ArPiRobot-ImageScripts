@@ -42,17 +42,17 @@ check_root                              # ensure running as root
     # Make system readonly
     # Based on process used by https://gitlab.com/larsfp/rpi-readonly/-/blob/master/setup.sh
 
-    printf "Removing swapfile and log software..."
+    echo "Removing swapfile and log software..."
     apt remove -y --purge logrotate dphys-swapfile rsyslog
     print_status
 
-    printf "Changing boot cmdline"
+    echo "Changing boot cmdline"
     uuid=`grep '/ ' /etc/fstab | awk -F'[=]' '{print $2}' | awk '{print $1}'`
     print_if_fail
     echo "console=serial0,115200 console=tty1 root=PARTUUID=$uuid rootfstype=ext4 fsck.repair=yes rootwait noswap ro fastboot rfkill.default_state=1" > /boot/cmdline.txt
     print_status
 
-    printf "Editing system services..."
+    echo "Editing system services..."
     rm /var/lib/systemd/random-seed
     print_if_fail
     ln -s /tmp/random-seed /var/lib/systemd/random-seed
@@ -89,7 +89,7 @@ EOF
     systemctl daemon-reload
     print_status
 
-    printf "Editing fake-hwclock..."
+    echo "Editing fake-hwclock..."
     cp /etc/cron.hourly/fake-hwclock /etc/cron.hourly/fake-hwclock.backup
     print_if_fail
     cat > /etc/cron.hourly/fake-hwclock << EOF
@@ -111,24 +111,24 @@ fi
 EOF
     print_status
 
-    printf "Editing fstab..."
+    echo "Editing fstab..."
     sed -i.bak "/boot/ s/defaults/defaults,ro/g" /etc/fstab
     print_if_fail
     sed -i "/ext4/ s/defaults/defaults,ro/g" /etc/fstab
     print_if_fail
     echo "
-    tmpfs           /tmp             tmpfs   nosuid,nodev         0       0
-    tmpfs           /var/log         tmpfs   nosuid,nodev         0       0
-    tmpfs           /var/tmp         tmpfs   nosuid,nodev         0       0
-    tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
-    " >> /etc/fstab
+tmpfs           /tmp             tmpfs   nosuid,nodev         0       0
+tmpfs           /var/log         tmpfs   nosuid,nodev         0       0
+tmpfs           /var/tmp         tmpfs   nosuid,nodev         0       0
+tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
+" >> /etc/fstab
     print_status
 
-    printf "Configuring for auto reboot on kernel panic..."
+    echo "Configuring for auto reboot on kernel panic..."
     echo "kernel.panic = 10" > /etc/sysctl.d/01-panic.conf
     print_status
 
-    printf "Disabling daily apt services..."
+    echo "Disabling daily apt services..."
     systemctl disable apt-daily.service
     print_if_fail
     systemctl disable apt-daily.timer
@@ -138,11 +138,11 @@ EOF
     systemctl disable apt-daily-upgrade.timer
     print_status
 
-    printf "Fixing dnsmasq on readonly filesystem..."
+    echo "Fixing dnsmasq on readonly filesystem..."
     echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab
     print_status
 
-    printf "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
+    echo "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
     systemctl disable systemd-rfkill.service
     print_if_fail
     systemctl mask systemd-rfkill.service
@@ -150,6 +150,14 @@ EOF
     systemctl disable systemd-rfkill.socket
     print_if_fail
     systemctl mask systemd-rfkill.socket
+    print_status
+
+    echo "Patching bashrc..."
+    echo "set_bash_prompt(){\n    fs_mode=$(mount | sed -n -e 's/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p')\n    PS1='\[\033[01;32m\]\u@\h${fs_mode:+($fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '\n}\nalias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot'\nalias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot'\nPROMPT_COMMAND=set_bash_prompt\n" >> /etc/bash.bashrc
+    print_status
+
+    echo "Patching bash_logout..."
+    echo "sudo mount -o remount,rw /\nhistory -a\nsudo fake-hwclock save\nsudo mount -o remount,ro /\nsudo mount -o remount,ro /boot\n" >> /etc/bash.bash_logout
     print_status
 
     echo "--------------------------------------------------------------------------------"

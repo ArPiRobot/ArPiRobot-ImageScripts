@@ -40,13 +40,13 @@ check_root                              # ensure running as root
 
     # Code goes here
 
-    printf "Making system read / write..."
+    echo "Making system read / write..."
     mount -o rw,remount /
     print_if_fail
     mount -o rw,remount /boot
     print_status
 
-    printf "Configuring to regenerate ssh host keys on next boot"
+    echo "Configuring to regenerate ssh host keys on next boot"
     rm -f /etc/ssh/ssh_host_*
     print_if_fail
     sed -i 's/Type=oneshot/&\nExecStartPre=\/bin\/mount -o rw,remount \//' /lib/systemd/system/regenerate_ssh_host_keys.service
@@ -56,7 +56,7 @@ check_root                              # ensure running as root
     systemctl enable regenerate_ssh_host_keys
     print_status
 
-    printf "Removing clones repos..."
+    echo "Removing clones repos..."
     username=$(read_username)
     print_if_fail
     rm -rf /home/${username}/ArPiRobot-ImageScripts
@@ -66,11 +66,11 @@ check_root                              # ensure running as root
     rm -rf /home/${username}/ArPiRobot-CameraStreaming
     print_status
 
-    printf "Clearing WiFi network settings..."
+    echo "Clearing WiFi network settings..."
     printf 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n}' | tee /etc/wpa_supplicant/wpa_supplicant.conf
     print_status
 
-    printf "Removing ssh keys..."
+    echo "Removing ssh keys..."
     rm -rf /home/${username}/.ssh/*
     print_if_fail
     rm -rf /root/.ssh/*

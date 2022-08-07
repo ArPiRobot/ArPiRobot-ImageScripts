@@ -43,13 +43,13 @@ check_root                              # ensure running as root
     # NOTE: RasPiOS has a specific way this is done (and is replicated here)
     #       For general systems though, a service to run growpart and resize2fs should work
 
-    printf "Making system read / write..."
+    echo "Making system read / write..."
     mount -o rw,remount /
     print_if_fail
     mount -o rw,remount /boot
     print_status
 
-    printf "Configuring to grow partition on next boot"
+    echo "Configuring to grow partition on next boot"
     # Append quiet init=/usr/lib/raspi-config/init_resize.sh to the end of the first line in the file
     sed -i '1 s/$/ quiet init=\/usr\/lib\/raspi-config\/init_resize.sh/' /boot/cmdline.txt 
     print_if_fail
@@ -59,7 +59,7 @@ check_root                              # ensure running as root
     print_if_fail
 
     # Write script
-    printf "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# Required-Start:\n# Required-Stop:\n# Default-Start: 3\n# Default-Stop:\n# Short-Description: Resize the root filesystem to fill partition\n# Description:\n### END INIT INFO\n. /lib/lsb/init-functions\ncase \"\$1\" in\n  start)\n    log_daemon_msg \"Starting resize2fs_once\"\n    mount -o rw,remount / &&\n    ROOT_DEV=\$(findmnt / -o source -n) &&\n    resize2fs \$ROOT_DEV &&\n    update-rc.d resize2fs_once remove &&\n    bash -c \"sleep 5;mount -o ro,remount /\" &\n    rm /etc/init.d/resize2fs_once &&\n    log_end_msg $?\n    ;;\n  *)\n    echo \"Usage: $0 start\" >&2\n    exit 3\n    ;;\nesac\n" > /etc/init.d/resize2fs_once
+    echo "#!/bin/sh\n### BEGIN INIT INFO\n# Provides:          resize2fs_once\n# Required-Start:\n# Required-Stop:\n# Default-Start: 3\n# Default-Stop:\n# Short-Description: Resize the root filesystem to fill partition\n# Description:\n### END INIT INFO\n. /lib/lsb/init-functions\ncase \"\$1\" in\n  start)\n    log_daemon_msg \"Starting resize2fs_once\"\n    mount -o rw,remount / &&\n    ROOT_DEV=\$(findmnt / -o source -n) &&\n    resize2fs \$ROOT_DEV &&\n    update-rc.d resize2fs_once remove &&\n    bash -c \"sleep 5;mount -o ro,remount /\" &\n    rm /etc/init.d/resize2fs_once &&\n    log_end_msg $?\n    ;;\n  *)\n    echo \"Usage: $0 start\" >&2\n    exit 3\n    ;;\nesac\n" > /etc/init.d/resize2fs_once
     print_if_fail
 
     # Enable service next boot (it will delete itself after running once)
@@ -69,7 +69,7 @@ check_root                              # ensure running as root
     print_status
 
     # Clear history again
-    printf "Clearing bash history again..."
+    echo "Clearing bash history again..."
     rm /root/.bash_history
     print_if_fail
     history -c
