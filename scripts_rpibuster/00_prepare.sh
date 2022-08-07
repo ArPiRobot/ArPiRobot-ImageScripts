@@ -50,12 +50,21 @@ clear_files                             # clear old log and state files
     print_status
 
     # Setup username for the image
+    printf "Adding arpirobot user..."
     adduser arpirobot
+    print_if_fail
     printf "arpirobot\narpirobot" | passwd arpirobot
+    print_if_fail
     for i in `grep -E "(:|,)pi(:,|$)" /etc/group|cut -f1 -d:` ; do
         addgroup mynewuser $i
+        print_if_fail
     done
     write_username arpirobot
+    print_status
+
+    printf "Changing pi user password..."
+    printf "notdefault\nnotdefault" | passwd pi
+    print_status
 
     printf "Updating apt repos..."
     apt-get -y update
