@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#####################################################################################
+################################################################################
 #
 # Copyright 2022 Marcus Behel
 #
@@ -16,12 +16,12 @@
 # GNU Lesser General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with ArPiRobot-ImageScripts.  If not, see <https://www.gnu.org/licenses/>.
-#####################################################################################
+# along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
+################################################################################
 # script:      99_functions.sh
 # description: Helper functions used by other scripts
 # author:      Marcus Behel
-#####################################################################################
+################################################################################
 
 export AIS_LOGFILE=/root/arpirobot_image.log
 export AIS_STATEFILE=/root/arpirobot_image.state

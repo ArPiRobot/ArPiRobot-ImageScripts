@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#####################################################################################
+################################################################################
 #
 # Copyright 2022 Marcus Behel
 #
@@ -16,12 +16,12 @@
 # GNU Lesser General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with ArPiRobot-ImageScripts.  If not, see <https://www.gnu.org/licenses/>.
-#####################################################################################
+# along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
+################################################################################
 # script:      00_prepare.sh
 # description: Updates software and prepares the OS for image creation
 # author:      Marcus Behel
-#####################################################################################
+################################################################################
 
 
 # Initialization
