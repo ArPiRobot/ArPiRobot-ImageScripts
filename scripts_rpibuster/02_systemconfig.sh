@@ -69,9 +69,12 @@ check_root                              # ensure running as root
     print_status
 
     # Enable SSH
+    echo "Enabling ssh server..."
     systemctl enable ssh
+    print_status
 
     # Enable hardware interfaces (SPI, I2C, UART, camera, etc)
+    echo "Enabling hardware interfaces..."
     raspi-config nonint do_spi 0
     print_if_fail
     raspi-config nonint do_i2c 0
