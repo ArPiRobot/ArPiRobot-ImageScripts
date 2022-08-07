@@ -55,7 +55,9 @@ check_root                              # ensure running as root
     print_status
 
     echo "Setting locale..."
-    locale-gen en_US.UTF-8
+    sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+    print_if_fail
+    locale-gen
     print_if_fail
     update-locale LANG=LANG=en_US.UTF-8
     print_status
