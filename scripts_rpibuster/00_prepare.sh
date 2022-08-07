@@ -56,7 +56,7 @@ clear_files                             # clear old log and state files
     printf "arpirobot\narpirobot" | passwd arpirobot
     print_if_fail
     for i in `grep -E "(:|,)pi(:,|$)" /etc/group|cut -f1 -d:` ; do
-        addgroup mynewuser $i
+        addgroup arpirobot $i
         print_if_fail
     done
     write_username arpirobot
