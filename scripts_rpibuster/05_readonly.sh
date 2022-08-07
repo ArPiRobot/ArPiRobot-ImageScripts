@@ -49,7 +49,7 @@ check_root                              # ensure running as root
     printf "Changing boot cmdline"
     uuid=`grep '/ ' /etc/fstab | awk -F'[=]' '{print $2}' | awk '{print $1}'`
     print_if_fail
-    echo "console=serial0,115200 console=tty1 root=PARTUUID=$uuid rootfstype=ext4 fsck.repair=yes rootwait noswap ro fastboot" > /boot/cmdline.txt
+    echo "console=serial0,115200 console=tty1 root=PARTUUID=$uuid rootfstype=ext4 fsck.repair=yes rootwait noswap ro fastboot rfkill.default_state=1" > /boot/cmdline.txt
     print_status
 
     printf "Editing system services..."
@@ -140,6 +140,16 @@ EOF
 
     printf "Fixing dnsmasq on readonly filesystem..."
     echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab
+    print_status
+
+    printf "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
+    systemctl disable systemd-rfkill.service
+    print_if_fail
+    systemctl mask systemd-rfkill.service
+    print_if_fail
+    systemctl disable systemd-rfkill.socket
+    print_if_fail
+    systemctl mask systemd-rfkill.socket
     print_status
 
     echo "--------------------------------------------------------------------------------"

@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts.  If not, see <https://www.gnu.org/licenses/>.
 #####################################################################################
-# script:      01_systemconfig.sh
+# script:      02_systemconfig.sh
 # description: OS / system configuration for the image
 # author:      Marcus Behel
 #####################################################################################
@@ -39,7 +39,39 @@ check_root                              # ensure running as root
     echo "--------------------------------------------------------------------------------"
 
     # Code goes here
-    # Configure system (keymap, language, locale, etc)
+    
+    printf "Changing hostname..."
+    oldhost=$(hostname)
+    print_if_fail
+    echo "ArPiRobot-Robot" | tee /etc/hostname
+    print_if_fail
+    sed -i "s/${oldhost}/ArPiRobot-Robot/g" /etc/hosts
+    print_status
+
+    printf "Setting locale..."
+    locale-gen en_US.UTF-8
+    print_if_fail
+    update-locale LANG=LANG=en_US.UTF-8
+    print_status
+
+    printf "Setting keyboard layout..."
+    echo "# KEYBOARD CONFIGURATION FILE\n\n# Consult the keyboard(5) manual page.\n\nXKBMODEL=\"pc105\"\nXKBLAYOUT=\"us\"\nXKBVARIANT=\"\"\nXKBOPTIONS=\"\"\n\nBACKSPACE=\"guess\"" > /etc/default/keyboard
+    print_if_fail
+    systemctl restart keyboard-setup.service
+    print_status
+
+    # Enable SSH
+    systemctl enable ssh
+
+    # Enable hardware interfaces (SPI, I2C, UART, camera, etc)
+    raspi-config nonint do_spi 0  >> $LOGFILE 2>&1
+    print_if_fail
+    raspi-config nonint do_i2c 0  >> $LOGFILE 2>&1
+    print_if_fail
+    raspi-config nonint do_ssh 0  >> $LOGFILE 2>&1
+    print_if_fail
+    raspi-config nonint do_camera 0 >> $LOGFILE 2>&1
+    print_status
 
     echo "--------------------------------------------------------------------------------"
     echo ""

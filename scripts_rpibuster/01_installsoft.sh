@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts.  If not, see <https://www.gnu.org/licenses/>.
 #####################################################################################
-# script:      02_installsoft.sh
+# script:      01_installsoft.sh
 # description: Install required software from system repos
 # author:      Marcus Behel
 #####################################################################################
@@ -41,6 +41,7 @@ check_root                              # ensure running as root
 
     printf "Installing software from system repos..."
     apt-get install git \
+        openssh-server \
         dos2unix \
         sysstat \
         python3 \

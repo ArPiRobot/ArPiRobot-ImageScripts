@@ -5,8 +5,8 @@ Scripts to setup an ArPiRobot OS image.
 ## Supported Boards and OS Images
 
 - Raspberry Pi Boards
-    - RasPiOS Lite Buster (10) 32-bit
-    <!--Ubuntu Server Bionic (18.04) 64-bit-->
+    - RasPiOS Lite Buster (10) 32-bit (`scripts_rpibuster`)
+    <!--Ubuntu Server Bionic (18.04) 64-bit (`scripts_rpibionic`)-->
 
 
 ## License

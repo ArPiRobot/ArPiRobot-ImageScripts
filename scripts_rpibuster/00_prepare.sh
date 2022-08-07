@@ -51,6 +51,7 @@ clear_files                             # clear old log and state files
 
     # Setup username for the image
     adduser arpirobot
+    printf "arpirobot\narpirobot" | passwd arpirobot
     for i in `grep -E "(:|,)pi(:,|$)" /etc/group|cut -f1 -d:` ; do
         addgroup mynewuser $i
     done
