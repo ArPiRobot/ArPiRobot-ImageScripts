@@ -161,7 +161,7 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     print_status
 
     echo "Disabling ntp service..."
-    systemctl disable ntp
+    systemctl disable systemd-timesyncd.service
     print_status
 
     echo "--------------------------------------------------------------------------------"
