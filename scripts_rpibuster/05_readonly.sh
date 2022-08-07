@@ -168,3 +168,4 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
+echo "REBOOT BEFORE RUNNING THE NEXT SCRIPT!"
