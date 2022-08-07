@@ -40,6 +40,12 @@ check_root                              # ensure running as root
 
     # Code goes here
     
+    echo "Allowing passwordless sudo for user..."
+    username=$(read_username)
+    print_if_fail
+    echo "${username} ALL=(ALL) NOPASSWD: ALL"
+    print_status
+
     echo "Changing hostname..."
     oldhost=$(hostname)
     print_if_fail
