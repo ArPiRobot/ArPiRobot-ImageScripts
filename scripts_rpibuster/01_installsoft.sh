@@ -40,7 +40,7 @@ check_root                              # ensure running as root
     echo "--------------------------------------------------------------------------------"
 
     echo "Installing software from system repos..."
-    apt-get install git \
+    apt-get -y install git \
         openssh-server \
         dos2unix \
         sysstat \
