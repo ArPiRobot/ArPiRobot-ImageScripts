@@ -25,6 +25,7 @@
 
 export AIS_LOGFILE=/root/arpirobot_image.log
 export AIS_STATEFILE=/root/arpirobot_image.state
+export AIS_USERNAME=/usr/local/arpirobot-user.txt
 
 # Print status of last command and exit on failure
 function print_status(){
@@ -95,4 +96,20 @@ function read_last_stage(){
 function clear_files(){
     rm "$AIS_LOGFILE"
     rm "$AIS_STATEFILE"
+}
+
+# Write username used on this image
+function write_username(){
+    printf "$1" > "$AIS_USERNAME"
+}
+
+# Read username used on this image
+function read_username(){
+    un=$(cat "$AIS_USERNAME" 2> /dev/null)
+    printf "$un"
+}
+
+# Get architecture of an ELF binary
+function binarch(){
+    printf "$(readelf -h $1 | grep Machine: | sed -r 's/\s+Machine:\s+//g')"
 }
