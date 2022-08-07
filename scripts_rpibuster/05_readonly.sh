@@ -40,10 +40,107 @@ check_root                              # ensure running as root
 
     # Code goes here
     # Make system readonly
+    # Based on process used by https://gitlab.com/larsfp/rpi-readonly/-/blob/master/setup.sh
 
-    # printf "Fixing dnsmasq on readonly filesystem..."
-    # echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab >> $LOGFILE 2>&1
-    # print_status
+    printf "Removing swapfile and log software..."
+    apt remove -y --purge logrotate dphys-swapfile rsyslog
+    print_status
+
+    printf "Changing boot cmdline"
+    uuid=`grep '/ ' /etc/fstab | awk -F'[=]' '{print $2}' | awk '{print $1}'`
+    print_if_fail
+    echo "console=serial0,115200 console=tty1 root=PARTUUID=$uuid rootfstype=ext4 fsck.repair=yes rootwait noswap ro fastboot" > /boot/cmdline.txt
+    print_status
+
+    printf "Editing system services..."
+    rm /var/lib/systemd/random-seed
+    print_if_fail
+    ln -s /tmp/random-seed /var/lib/systemd/random-seed
+    print_if_fail
+    cp /lib/systemd/system/systemd-random-seed.service /lib/systemd/system/systemd-random-seed.service.backup
+    print_if_fail
+    cat > /lib/systemd/system/systemd-random-seed.service << EOF
+#  This file is part of systemd.
+#
+#  systemd is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as published by
+#  the Free Software Foundation; either version 2.1 of the License, or
+#  (at your option) any later version.
+
+[Unit]
+Description=Load/Save Random Seed
+Documentation=man:systemd-random-seed.service(8) man:random(4)
+DefaultDependencies=no
+RequiresMountsFor=/var/lib/systemd/random-seed
+Conflicts=shutdown.target
+After=systemd-remount-fs.service
+Before=sysinit.target shutdown.target
+ConditionVirtualization=!container
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/bin/echo '' >/tmp/random-seed
+ExecStart=/lib/systemd/systemd-random-seed load
+ExecStop=/lib/systemd/systemd-random-seed save
+TimeoutSec=30s
+EOF
+    print_if_fail
+    systemctl daemon-reload
+    print_status
+
+    printf "Editing fake-hwclock..."
+    cp /etc/cron.hourly/fake-hwclock /etc/cron.hourly/fake-hwclock.backup
+    print_if_fail
+    cat > /etc/cron.hourly/fake-hwclock << EOF
+#!/bin/sh
+#
+# Simple cron script - save the current clock periodically in case of
+# a power failure or other crash
+ 
+if (command -v fake-hwclock >/dev/null 2>&1) ; then
+  ro=$(mount | sed -n -e "s/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p")
+  if [ "$ro" = "ro" ]; then
+    mount -o remount,rw /
+  fi
+  fake-hwclock save
+  if [ "$ro" = "ro" ]; then
+    mount -o remount,ro /
+  fi
+fi
+EOF
+    print_status
+
+    printf "Editing fstab..."
+    sed -i.bak "/boot/ s/defaults/defaults,ro/g" /etc/fstab
+    print_if_fail
+    sed -i "/ext4/ s/defaults/defaults,ro/g" /etc/fstab
+    print_if_fail
+    echo "
+    tmpfs           /tmp             tmpfs   nosuid,nodev         0       0
+    tmpfs           /var/log         tmpfs   nosuid,nodev         0       0
+    tmpfs           /var/tmp         tmpfs   nosuid,nodev         0       0
+    tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
+    " >> /etc/fstab
+    print_status
+
+    printf "Configuring for auto reboot on kernel panic..."
+    echo "kernel.panic = 10" > /etc/sysctl.d/01-panic.conf
+    print_status
+
+    printf "Disabling daily apt services..."
+    systemctl disable apt-daily.service
+    print_if_fail
+    systemctl disable apt-daily.timer
+    print_if_fail
+    systemctl disable apt-daily-upgrade.service
+    print_if_fail
+    systemctl disable apt-daily-upgrade.timer
+    print_status
+
+    printf "Fixing dnsmasq on readonly filesystem..."
+    echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab
+    print_status
 
     echo "--------------------------------------------------------------------------------"
     echo ""
