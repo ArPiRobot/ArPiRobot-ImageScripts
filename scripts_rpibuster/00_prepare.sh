@@ -66,6 +66,10 @@ clear_files                             # clear old log and state files
     printf "notdefault\nnotdefault" | passwd pi
     print_status
 
+    echo "Adding root user password..."
+    printf "notdefault\nnotdefault" | passwd root
+    print_status
+
     echo "Updating apt repos..."
     apt-get -y update
     print_status
