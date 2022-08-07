@@ -153,11 +153,11 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     print_status
 
     echo "Patching bashrc..."
-    echo "set_bash_prompt(){\n    fs_mode=$(mount | sed -n -e 's/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p')\n    PS1='\[\033[01;32m\]\u@\h${fs_mode:+($fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '\n}\nalias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot'\nalias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot'\nPROMPT_COMMAND=set_bash_prompt\n" >> /etc/bash.bashrc
+    cat "$DIR/bashrc_additions" >> /etc/bash.bashrc
     print_status
 
     echo "Patching bash_logout..."
-    echo "sudo mount -o remount,rw /\nhistory -a\nsudo fake-hwclock save\nsudo mount -o remount,ro /\nsudo mount -o remount,ro /boot\n" >> /etc/bash.bash_logout
+    cat "$DIR/bashlogout_additions" >> /etc/bash.bash_logout
     print_status
 
     echo "Disabling ntp service..."
