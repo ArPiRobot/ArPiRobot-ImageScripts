@@ -66,6 +66,8 @@ check_root                              # ensure running as root
 
     echo "Clearing WiFi network settings..."
     printf 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\nnetwork={\n        ssid="DUMMY_NETWORK"\n        psk="DUMMY_PASSWORD"\n}' | tee /etc/wpa_supplicant/wpa_supplicant.conf
+    print_if_fail
+    rm -rf /var/lib/dhcpcd5/*
     print_status
 
     echo "Removing ssh keys..."
