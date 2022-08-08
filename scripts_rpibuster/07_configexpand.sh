@@ -77,6 +77,8 @@ check_root                              # ensure running as root
     rm /home/pi/.bash_history
     print_status
 
+    echo "Delete the ImageScripts directory, remove logs, and poweroff."
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"
@@ -86,5 +88,3 @@ check_root                              # ensure running as root
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
 
-
-echo "Delete the ImageScripts directory, remove logs, and poweroff."

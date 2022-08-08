@@ -94,6 +94,10 @@ check_root                              # ensure running as root
     systemctl restart console-setup
     print_status
 
+    echo "Reboot required. Press enter to reboot."
+    read n
+    shutdown -r 5
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"
@@ -102,7 +106,3 @@ check_root                              # ensure running as root
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
-
-echo "Reboot required. Press enter to reboot."
-read n
-reboot

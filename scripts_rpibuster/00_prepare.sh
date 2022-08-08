@@ -78,6 +78,10 @@ clear_files                             # clear old log and state files
     apt-get -y upgrade
     print_status
 
+    echo "Reboot required. Press enter to reboot."
+    read n
+    shutdown -r 5
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"
@@ -86,7 +90,3 @@ clear_files                             # clear old log and state files
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
-
-echo "Reboot required. Press enter to reboot."
-read n
-reboot

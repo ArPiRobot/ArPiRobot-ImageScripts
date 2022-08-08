@@ -44,7 +44,7 @@ check_root                              # ensure running as root
 
     # apt upgrade ran in last script state. Make sure it finished.
     printf "Making sure dpkg configure finished after upgrade..."
-    dpkg --configure -a >> $LOGFILE 2>&1
+    dpkg --configure -a
     print_status
 
     echo "Removing swapfile and log software..."
@@ -169,6 +169,10 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     systemctl disable systemd-timesyncd.service
     print_status
 
+    echo "Reboot required. Press enter to reboot."
+    read n
+    shutdown -r 5
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"
@@ -177,7 +181,3 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
-
-echo "Reboot required. Press enter to reboot."
-read n
-reboot
