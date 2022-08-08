@@ -70,11 +70,11 @@ check_root                              # ensure running as root
 
     # Clear history again
     echo "Clearing bash history again..."
-    rm /root/.bash_history
+    rm -f /root/.bash_history
     print_if_fail
     history -c
     print_if_fail
-    rm /home/pi/.bash_history
+    rm -f /home/pi/.bash_history
     print_status
 
     echo "Delete the ImageScripts directory, remove logs, and poweroff."
