@@ -80,7 +80,7 @@ clear_files                             # clear old log and state files
 
     echo "Reboot required. Press enter to reboot."
     read n
-    sleep 5 && reboot &
+    reboot_delayed
 
     echo "--------------------------------------------------------------------------------"
     echo ""

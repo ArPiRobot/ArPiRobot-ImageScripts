@@ -113,3 +113,7 @@ function read_username(){
 function binarch(){
     printf "$(readelf -h $1 | grep Machine: | sed -r 's/\s+Machine:\s+//g')"
 }
+
+function reboot_delayed(){
+    nohup sh -c 'sleep 5 && reboot' > /dev/null 2>&1 &
+}

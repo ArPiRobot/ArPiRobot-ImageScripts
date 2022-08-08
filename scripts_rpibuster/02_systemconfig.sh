@@ -96,7 +96,7 @@ check_root                              # ensure running as root
 
     echo "Reboot required. Press enter to reboot."
     read n
-    sleep 5 && reboot &
+    reboot_delayed
 
     echo "--------------------------------------------------------------------------------"
     echo ""

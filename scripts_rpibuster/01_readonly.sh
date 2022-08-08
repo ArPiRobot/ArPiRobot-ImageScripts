@@ -118,10 +118,10 @@ EOF
     sed -i "/ext4/ s/defaults/defaults,ro/g" /etc/fstab
     print_if_fail
     echo "
-tmpfs           /tmp             tmpfs   nosuid,nodev         0       0
-tmpfs           /var/log         tmpfs   nosuid,nodev         0       0
-tmpfs           /var/tmp         tmpfs   nosuid,nodev         0       0
-tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
+tmpfs           /tmp             tmpfs   nosuid,nodev,nofail         0       0
+tmpfs           /var/log         tmpfs   nosuid,nodev,nofail         0       0
+tmpfs           /var/tmp         tmpfs   nosuid,nodev,nofail         0       0
+tmpfs           /var/lib/dhcpcd5 tmpfs   nosuid,nodev,nofail         0       0
 " >> /etc/fstab
     print_status
 
@@ -139,19 +139,19 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     systemctl disable apt-daily-upgrade.timer
     print_status
 
-    # echo "Fixing dnsmasq on readonly filesystem..."
-    # echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab
-    # print_status
+    echo "Fixing dnsmasq on readonly filesystem..."
+    echo "tmpfs /var/lib/misc tmpfs nosuid,nodev,nofail 0 0" | tee -a /etc/fstab
+    print_status
 
-    # echo "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
-    # systemctl disable systemd-rfkill.service
-    # print_if_fail
-    # systemctl mask systemd-rfkill.service
-    # print_if_fail
-    # systemctl disable systemd-rfkill.socket
-    # print_if_fail
-    # systemctl mask systemd-rfkill.socket
-    # print_status
+    echo "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
+    systemctl disable systemd-rfkill.service
+    print_if_fail
+    systemctl mask systemd-rfkill.service
+    print_if_fail
+    systemctl disable systemd-rfkill.socket
+    print_if_fail
+    systemctl mask systemd-rfkill.socket
+    print_status
 
     echo "Patching bashrc..."
     cat "$DIR/bashrc_additions" >> /etc/bash.bashrc
@@ -161,13 +161,13 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     cat "$DIR/bashlogout_additions" >> /etc/bash.bash_logout
     print_status
 
-    # echo "Disabling ntp service..."
-    # systemctl disable systemd-timesyncd.service
-    # print_status
+    echo "Disabling ntp service..."
+    systemctl disable systemd-timesyncd.service
+    print_status
 
     echo "Reboot required. Press enter to reboot."
     read n
-    sleep 5 && reboot &
+    reboot_delayed
 
     echo "--------------------------------------------------------------------------------"
     echo ""
