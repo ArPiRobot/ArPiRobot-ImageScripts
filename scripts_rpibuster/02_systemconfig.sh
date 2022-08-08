@@ -102,3 +102,6 @@ check_root                              # ensure running as root
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
+
+echo "Reboot required. Press enter to reboot."
+read n

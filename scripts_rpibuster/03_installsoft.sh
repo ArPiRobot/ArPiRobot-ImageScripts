@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
 ################################################################################
-# script:      01_installsoft.sh
+# script:      03_installsoft.sh
 # description: Install required software from system repos
 # author:      Marcus Behel
 ################################################################################
@@ -85,6 +85,3 @@ check_root                              # ensure running as root
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
-
-echo "Reboot required. Press enter to reboot."
-read n

@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
 ################################################################################
-# script:      05_readonly.sh
+# script:      01_readonly.sh
 # description: Make OS readonly
 # author:      Marcus Behel
 ################################################################################
@@ -172,3 +172,6 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
+
+echo "Reboot required. Press enter to reboot."
+read n

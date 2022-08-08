@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
 ################################################################################
-# script:      03_installarpirobot.sh
+# script:      04_installarpirobot.sh
 # description: Install arpirobot specific software
 # author:      Marcus Behel
 ################################################################################

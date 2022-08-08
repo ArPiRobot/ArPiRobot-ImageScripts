@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ArPiRobot-ImageScripts. If not, see <https://www.gnu.org/licenses/>
 ################################################################################
-# script:      04_networking.sh
+# script:      05_networking.sh
 # description: Setup networking (ethernet and wireless)
 # author:      Marcus Behel
 ################################################################################
