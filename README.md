@@ -29,7 +29,7 @@ Scripts to setup an ArPiRobot OS image.
 
 ### Option 3: EXPERIMENTAL - Containers (with QEMU Userspace Emulator)
 
-*Note: This method is currently untested. There may be unforseen issues with this method.*
+*Note: This method is not well tested!*
 
 - It should be possible to use a `systemd-nspawn` container along with `qemu-user-static` to build the image without actual hardware.
 - Expand base image, attach as loopback device, grow root partition, mount it, setup a `systemd-nspawn` container, boot the container, run image scripts (rebooting container as needed), then once done shutdown container and shrink root partition then image.
