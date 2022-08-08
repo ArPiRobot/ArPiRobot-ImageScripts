@@ -4,7 +4,7 @@ Scripts to setup an ArPiRobot OS image.
 
 ## Supported Boards and OS Images
 
-- Raspberry Pi Boards
+- Raspberry Pi Boards (Pi 4B, Pi Zero 2 W and older)
     - RasPiOS Lite Buster (10) 32-bit (`scripts_rpibuster`)
     <!--Ubuntu Server Bionic (18.04) 64-bit (`scripts_rpibionic`)-->
 
@@ -72,8 +72,6 @@ sudo systemd-nspawn -D /mnt/img-container -b
 ################################################################################
 
 # Only continue here once all scripts have been run
-
-# TODO: Delete resolve.conf maybe?
 
 # Unmount partitions (change as needed)
 sudo umount /mnt/img-container/boot
