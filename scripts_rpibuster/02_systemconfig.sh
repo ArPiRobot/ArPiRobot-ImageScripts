@@ -96,7 +96,7 @@ check_root                              # ensure running as root
 
     echo "Reboot required. Press enter to reboot."
     read n
-    shutdown -r 5
+    sleep 5 && reboot &
 
     echo "--------------------------------------------------------------------------------"
     echo ""

@@ -171,7 +171,7 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
 
     echo "Reboot required. Press enter to reboot."
     read n
-    shutdown -r 5
+    sleep 5 && reboot &
 
     echo "--------------------------------------------------------------------------------"
     echo ""
