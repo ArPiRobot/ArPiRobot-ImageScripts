@@ -42,6 +42,11 @@ check_root                              # ensure running as root
     # Make system readonly
     # Based on process used by https://gitlab.com/larsfp/rpi-readonly/-/blob/master/setup.sh
 
+    # apt upgrade ran in last script state. Make sure it finished.
+    printf "Making sure dpkg configure finished after upgrade..."
+    dpkg --configure -a >> $LOGFILE 2>&1
+    print_status
+
     echo "Removing swapfile and log software..."
     apt-get purge -y logrotate dphys-swapfile rsyslog
     print_status
