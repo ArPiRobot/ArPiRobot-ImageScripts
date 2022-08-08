@@ -51,7 +51,6 @@ function print_status_noexit(){
 	    printf "Done.\n"
     else
         printf "Failed.\n"
-        exit 2
     fi
 }
 
@@ -59,7 +58,6 @@ function print_status_noexit(){
 function print_if_fail_noexit(){
     if [ $? -ne 0 ]; then
 	    printf "Failed.\n"
-        exit 2
     fi
 }
 
