@@ -62,8 +62,6 @@ check_root                              # ensure running as root
     print_if_fail
     ln -s /tmp/random-seed /var/lib/systemd/random-seed
     print_if_fail
-    cp /lib/systemd/system/systemd-random-seed.service /lib/systemd/system/systemd-random-seed.service.backup
-    print_if_fail
     cat > /lib/systemd/system/systemd-random-seed.service << EOF
 #  This file is part of systemd.
 #
@@ -95,8 +93,6 @@ EOF
     print_status
 
     echo "Editing fake-hwclock..."
-    cp /etc/cron.hourly/fake-hwclock /etc/cron.hourly/fake-hwclock.backup
-    print_if_fail
     cat > /etc/cron.hourly/fake-hwclock << EOF
 #!/bin/sh
 #
@@ -143,19 +139,19 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     systemctl disable apt-daily-upgrade.timer
     print_status
 
-    echo "Fixing dnsmasq on readonly filesystem..."
-    echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab
-    print_status
+    # echo "Fixing dnsmasq on readonly filesystem..."
+    # echo "tmpfs /var/lib/misc tmpfs nosuid,nodev 0 0" | tee -a /etc/fstab
+    # print_status
 
-    echo "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
-    systemctl disable systemd-rfkill.service
-    print_if_fail
-    systemctl mask systemd-rfkill.service
-    print_if_fail
-    systemctl disable systemd-rfkill.socket
-    print_if_fail
-    systemctl mask systemd-rfkill.socket
-    print_status
+    # echo "Disabling systemd-rfkill service as it does not work on readonly filesystem..."
+    # systemctl disable systemd-rfkill.service
+    # print_if_fail
+    # systemctl mask systemd-rfkill.service
+    # print_if_fail
+    # systemctl disable systemd-rfkill.socket
+    # print_if_fail
+    # systemctl mask systemd-rfkill.socket
+    # print_status
 
     echo "Patching bashrc..."
     cat "$DIR/bashrc_additions" >> /etc/bash.bashrc
@@ -165,9 +161,9 @@ tmpfs           /var/lib/dhcpcd  tmpfs   nosuid,nodev         0       0
     cat "$DIR/bashlogout_additions" >> /etc/bash.bash_logout
     print_status
 
-    echo "Disabling ntp service..."
-    systemctl disable systemd-timesyncd.service
-    print_status
+    # echo "Disabling ntp service..."
+    # systemctl disable systemd-timesyncd.service
+    # print_status
 
     echo "Reboot required. Press enter to reboot."
     read n
