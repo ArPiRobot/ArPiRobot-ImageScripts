@@ -9,13 +9,31 @@ Scripts to setup an ArPiRobot OS image.
     <!--Ubuntu Server Bionic (18.04) 64-bit (`scripts_rpibionic`)-->
 
 
-## Using Scripts
+## Using Scripts to Make an Image
 
-- Easiest option is to flash an SD card with the OS image and boot it on the actual hardware. Then clone this repo and run the correct scripts. Then shrink the partition and read the sd card contents to an image file. Delete the image creation log & state files (in `/root`) before making the image.
+### Option 1: Using Actual Hardware
 
-- If it is possible to emulate the actual system hardware using qmeu, the image can be generated in a qemu virtual machine.
+- Flash an SD card (or other medium as apropriate) with the correct base image
+- Boot the SD card on the correct device
+- Connect the device to the internet
+- Clone this repo and run the correct set of scripts (in numeric order)
+- Once all scripts have been run (across reboots as needed) remove the SD card and insert it into a Linux computer (desktop / laptop).
+- Shrink the root partition using gparted
+- Use dd to dump an image of the SD card to a file
 
-- It may be possible to use systemd-nspawn along with qmeu-user-static to generate the image in a container (without having / booting on actual hardware).
+
+### Option 2: Emulating Hardware (QEMU Virtual Machine)
+
+- If it is possible to use qemu to emulate the target hardware, a virtual machine can be setup and use instead of a physical system.
+- Follow the same steps as if using actual hardware, except the image will be booted directly (and probably needs to be grown before use and shrunk when done).
+
+### Option 3: EXPERIMENTAL - Containers (with QEMU Userspace Emulator)
+
+*Note: This method is currently untested. There may be unforseen issues with this method.*
+
+- It should be possible to use a `systemd-nspawn` container along with `qemu-user-static` to build the image without actual hardware.
+- Expand base image, attach as loopback device, grow root partition, mount it, setup a `systemd-nspawn` container, boot the container, run image scripts (rebooting container as needed), then once done shutdown container and shrink root partition then image.
+
 
 ## License
 
