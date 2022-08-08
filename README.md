@@ -44,7 +44,7 @@ sudo apt-get install -y qemu qemu-user-static binfmt-support cloud-guest-utils s
 
 # Download and extract base image
 wget image_link_here
-unzip image_name.img.zip
+unzip image_name.zip
 
 # Increase img size (by 3G in this case)
 sudo dd if=/dev/zero bs=1MiB count=3072 >> image_name.img
@@ -53,25 +53,27 @@ sudo dd if=/dev/zero bs=1MiB count=3072 >> image_name.img
 export imgloop=$(sudo losetup -f -P --show image_name.img)
 
 # Grow root partition of the img (persumed to be partition 2)
-sudo growpart /dev/$imgloop 2
+sudo growpart $imgloop 2
 
 # Resize filesystem to match partition (change partition number if necessary)
-sudo e2fsck -f /dev/${imgloop}p2
-sudo resize2fs /dev/${imgloop}p2
+sudo e2fsck -f ${imgloop}p2
+sudo resize2fs ${imgloop}p2
 
 # Mount the image (make sure to mount other partitions correctly too). Change partition numbers as needed.
 sudo mkdir /mnt/img-container
-sudo mount /dev/${imgloop}p2 /mnt/img-container
-sudo mount /dev/${imgloop}p1 /mnt/img-container/boot
+sudo mount ${imgloop}p2 /mnt/img-container
+sudo mount ${imgloop}p1 /mnt/img-container/boot
 
-# Create a systemd container
-sudo systemd-nspawn -D /mnt/img-container /bin/bash
+# Create a systemd-nspawn container (and boot it)
+sudo systemd-nspawn -D /mnt/img-container -b
 
 ################################################################################
-# Run the image scripts in the container now. Reboot as needed.
+# Clone and run the correct image scripts in the container now
 ################################################################################
 
 # Only continue here once all scripts have been run
+
+# TODO: Delete resolve.conf maybe?
 
 # Unmount partitions (change as needed)
 sudo umount /mnt/img-container/boot
@@ -92,7 +94,7 @@ References:
 ```
 ArPiRobot-ImageScripts is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Softwarel Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 ArPiRobot-ImageScripts is distributed in the hope that it will be useful,

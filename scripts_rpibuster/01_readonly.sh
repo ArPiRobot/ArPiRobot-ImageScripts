@@ -58,7 +58,7 @@ check_root                              # ensure running as root
     print_status
 
     echo "Editing system services..."
-    rm /var/lib/systemd/random-seed
+    rm -f /var/lib/systemd/random-seed
     print_if_fail
     ln -s /tmp/random-seed /var/lib/systemd/random-seed
     print_if_fail
