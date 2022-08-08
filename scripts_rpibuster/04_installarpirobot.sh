@@ -99,6 +99,10 @@ check_root                              # ensure running as root
     ./install.sh "${username}"
     print_status
 
+    echo "Making program directory"
+    mkdir -p /home/${username}/arpirobot
+    print_status
+
     echo "--------------------------------------------------------------------------------"
     echo ""
 } 2>&1 | tee -a "$AIS_LOGFILE"
