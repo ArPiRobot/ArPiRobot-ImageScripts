@@ -34,6 +34,58 @@ Scripts to setup an ArPiRobot OS image.
 - It should be possible to use a `systemd-nspawn` container along with `qemu-user-static` to build the image without actual hardware.
 - Expand base image, attach as loopback device, grow root partition, mount it, setup a `systemd-nspawn` container, boot the container, run image scripts (rebooting container as needed), then once done shutdown container and shrink root partition then image.
 
+INSTRUCTIONS:
+
+Run on host system
+
+```sh
+# Install required software (persumably x86_64 system)
+sudo apt-get install -y qemu qemu-user-static binfmt-support cloud-guest-utils systemd-container
+
+# Download and extract base image
+wget image_link_here
+unzip image_name.img.zip
+
+# Increase img size (by 3G in this case)
+sudo dd if=/dev/zero bs=1MiB count=3072 >> image_name.img
+
+# Connect image to a loopback device
+export imgloop=$(sudo losetup -f -P --show image_name.img)
+
+# Grow root partition of the img (persumed to be partition 2)
+sudo growpart /dev/$imgloop 2
+
+# Resize filesystem to match partition (change partition number if necessary)
+sudo e2fsck -f /dev/${imgloop}p2
+sudo resize2fs /dev/${imgloop}p2
+
+# Mount the image (make sure to mount other partitions correctly too). Change partition numbers as needed.
+sudo mkdir /mnt/img-container
+sudo mount /dev/${imgloop}p2 /mnt/img-container
+sudo mount /dev/${imgloop}p1 /mnt/img-container/boot
+
+# Create a systemd container
+sudo systemd-nspawn -D /mnt/img-container /bin/bash
+
+################################################################################
+# Run the image scripts in the container now. Reboot as needed.
+################################################################################
+
+# Only continue here once all scripts have been run
+
+# Unmount partitions (change as needed)
+sudo umount /mnt/img-container/boot
+sudo umount /mnt/img-container
+
+# Free loopback device
+sudo losetup -d $imgloop
+
+# TODO: Shrink partition and image and gzip it
+```
+
+References:
+
+- [https://wiki.debian.org/RaspberryPi/qemu-user-static](https://wiki.debian.org/RaspberryPi/qemu-user-static)
 
 ## License
 
