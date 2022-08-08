@@ -104,6 +104,7 @@ check_root                              # ensure running as root
 
     echo "Making program directory"
     mkdir -p /home/${username}/arpirobot
+    chown ${username}:${username} /home/${username}/arpirobot
     print_status
 
     echo "--------------------------------------------------------------------------------"
