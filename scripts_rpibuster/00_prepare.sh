@@ -40,6 +40,11 @@ clear_files                             # clear old log and state files
     echo "Running \"${script}\":"
     echo "Last run script: \"${lastscript}\"."
     echo "--------------------------------------------------------------------------------"
+    
+    # Enable uart console
+    echo "Enabling uart console..."
+    printf "enable_uart=1\n" >> /boot/config.txt
+    print_status
 
     # Write image version name to a file (user enters name)
     printf "Version name for this image: "
