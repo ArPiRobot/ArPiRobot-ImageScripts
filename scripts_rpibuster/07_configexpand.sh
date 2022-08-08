@@ -85,3 +85,6 @@ check_root                              # ensure running as root
 # Cleanup
 cd "$ORIG_CWD"                          # restore original working directory
 write_last_stage                        # write this script's name to state file
+
+
+echo "Delete the ImageScripts directory, remove logs, and poweroff."
