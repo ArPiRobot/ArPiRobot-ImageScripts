@@ -79,10 +79,24 @@ sudo systemd-nspawn -D /mnt/img-container -b
 sudo umount /mnt/img-container/boot
 sudo umount /mnt/img-container
 
+# Shrink root filesystem to minimum size (change part number if needed)
+# sudo e2fsck -f ${imgloop}p2
+# sudo resize2fs -M ${imgloop}p2
+# TODO: Shrink actual partition?
+
+# Then shrink using gparted
+sudo gparted $imgloop
+
 # Free loopback device
 sudo losetup -d $imgloop
 
-# TODO: Shrink partition and image and gzip it
+# Truncate extra space from end of image file
+# Use fdisk to get sector size and end sector of last partition
+sudo fdisk -l image_name.img
+
+# Multiply sector size by last end sector plus 1 to get min size of file (in bytes)
+sudo truncate --size=$[(last_end_sector+1)*sector_size] image_name.img
+
 ```
 
 References:
