@@ -43,11 +43,14 @@ check_root                              # ensure running as root
     # NOTE: RasPiOS has a specific way this is done (and is replicated here)
     #       For general systems though, a service to run growpart and resize2fs should work
 
-    echo "Making system read / write..."
-    mount -o rw,remount /
-    print_if_fail
-    mount -o rw,remount /boot
-    print_status
+    fs_mode=$(mount | sed -n -e 's/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p')
+    if [ "$fs_mode" = "ro" ]; then
+        echo "Making system read / write..."
+        mount -o rw,remount /
+        print_if_fail
+        mount -o rw,remount /boot
+        print_status
+    fi
 
     echo "Configuring to grow partition on next boot"
     # Append quiet init=/usr/lib/raspi-config/init_resize.sh to the end of the first line in the file

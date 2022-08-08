@@ -39,12 +39,14 @@ check_root                              # ensure running as root
     echo "--------------------------------------------------------------------------------"
 
     # Code goes here
-
-    echo "Making system read / write..."
-    mount -o rw,remount /
-    print_if_fail
-    mount -o rw,remount /boot
-    print_status
+    fs_mode=$(mount | sed -n -e 's/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p')
+    if [ "$fs_mode" = "ro" ]; then
+        echo "Making system read / write..."
+        mount -o rw,remount /
+        print_if_fail
+        mount -o rw,remount /boot
+        print_status
+    fi
     
     echo "Allowing passwordless sudo for user..."
     username=$(read_username)
