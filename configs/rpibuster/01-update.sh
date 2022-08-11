@@ -11,6 +11,6 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
 
-apt-get update
-apt-get upgrade
+apt-get -y update
+apt-get -y upgrade
 dpkg --configure -a
