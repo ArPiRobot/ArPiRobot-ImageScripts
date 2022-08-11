@@ -66,6 +66,8 @@ else
     exit 1
 fi
 sed -i 's/libcamera/raspicam/g' /home/arpirobot/camstream/default.txt
+cd
+rm -rf /home/arpirobot/ArPiRobot-CameraStreaming
 
 # Install ArPiRobot-Tools
 cd /home/arpirobot
@@ -73,6 +75,8 @@ git clone https://github.com/ArPiRobot/ArPiRobot-Tools.git
 cd ArPiRobot-Tools
 chmod +x ./install.sh
 ./install.sh arpirobot
+cd
+rm -rf /home/arpirobot/ArPiRobot-Tools
 
 # Create directory for robot program
 mkdir -p /home/arpirobot/arpirobot

@@ -10,4 +10,5 @@ set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
-
+# Clear bash history
+rm -f /root/.bash_history
