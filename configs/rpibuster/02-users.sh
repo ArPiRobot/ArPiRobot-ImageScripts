@@ -18,7 +18,6 @@ printf "arpirobot\narpirobot" | passwd arpirobot
 # Copy all groups of default "pi" user
 for i in `grep -E "(:|,)pi(:,|$)" /etc/group|cut -f1 -d:` ; do
     addgroup arpirobot $i
-    print_if_fail
 done
 
 # Delete default "pi" user

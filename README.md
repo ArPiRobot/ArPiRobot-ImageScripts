@@ -17,15 +17,23 @@ Scripts to setup an ArPiRobot OS image.
 
 ## Using Scripts to Make an Image
 
+- Install qemu-user-static
 - Download the base image
 - Increase the base image size using dd (3GB usually good)
+    ```sh
+    dd if=/dev/zero bs=1MiB count=3072 >> file_name.img
+    ```
 - Setup a loopback device
 - Grow the base image root partition using gparted (or any other method)
 - Mount base image root
 - Mount other partitions according to base image's fstab
 - Bind mount proc, sys, dev
-- Copy host system's resolve.conf if needed (careful of symlinks in chrooted system)
-- Install qemu-user-static
+    ```sh
+    mount -t proc /proc root/proc
+    mount -t sysfs /sys root/sys
+    mount --rbind /dev root/dev
+    ```
+- Copy host system's resolve.conf contents (if needed). Don't copy actual file to avoid overwriting symlinks on some systems.
 - Chroot into /mnt/img-chroot
     - Install git
     - Clone this repository
