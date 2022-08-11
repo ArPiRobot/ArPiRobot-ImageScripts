@@ -34,6 +34,7 @@ Scripts to setup an ArPiRobot OS image.
     mount -t proc /proc root/proc
     mount -t sysfs /sys root/sys
     mount --rbind /dev root/dev
+    mount --make-rslave root/dev
     ```
 - Copy host system's resolve.conf contents (if needed). Don't copy actual file to avoid overwriting symlinks on some systems.
 - Chroot into /mnt/img-chroot
@@ -43,10 +44,20 @@ Scripts to setup an ArPiRobot OS image.
     - Let all scripts run (address errors if any)
     - Exit chroot
 - Unmount bind mounted things
+    ```sh
+    umount -R root/dev
+    umount root/sys
+    umount root/proc
+    ```
 - Unmount non root partitions
 - Unmount root partition
 - Shrink partition with gparted (or any other method)
 - Use fdisk & truncate to shrink image
+    ```sh
+    fdisk -l /dev/loop#
+    # Multiply end of last partition + 1 by sector size to get size
+    truncate --size=size_here image_name.img
+    ```
 - Gzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.gz`
 
 
