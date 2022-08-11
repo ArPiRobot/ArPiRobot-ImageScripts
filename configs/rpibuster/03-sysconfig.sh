@@ -15,9 +15,8 @@ trap exit_trap EXIT
 printf "enable_uart=1\n" >> /boot/config.txt
 
 # Set hostname
-oldhost=$(hostname)
 echo "ArPiRobot-Robot" | tee /etc/hostname
-sed -i "s/${oldhost}/ArPiRobot-Robot/g" /etc/hosts
+sed -i "s/raspberrypi/ArPiRobot-Robot/g" /etc/hosts
 
 # Set locale
 sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
@@ -78,3 +77,9 @@ done
 EOF
 chmod +x /usr/local/bin/last_boot_scripts.sh
 mkdir -p /usr/local/last_boot_scripts/
+
+# Add post-boot script to unblock wlan
+cat > /usr/local/last_boot_scripts/10-unblock-wlan.sh << 'EOF'
+#!/usr/bin/env bash
+rfkill unblock wlan
+EOF

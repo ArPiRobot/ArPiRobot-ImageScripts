@@ -19,6 +19,9 @@ systemctl unmask hostapd
 systemctl enable hostapd
 systemctl enable dnsmasq
 
+# Write country code to wpa_supplicant.conf to allow rfkill unblock to work
+printf "\ncountry=US\n" >> /etc/wpa_supplicant/wpa_supplicant.conf
+
 # Write hostpad config files
 mkdir -p /etc/hostpad
 cat > /etc/hostapd/hostapd.conf << 'EOF'
