@@ -10,7 +10,7 @@ set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
-echo "Output line 1"
-echo "Output line 2"
-sleep 3;
-echo "Output line 3"
+
+apt-get update
+apt-get upgrade
+dpkg --configure -a
