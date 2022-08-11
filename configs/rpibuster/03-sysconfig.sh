@@ -77,4 +77,4 @@ for file in $files; do
 done
 EOF
 chmod +x /usr/local/bin/last_boot_scripts.sh
-mkdir /usr/local/last_boot_scripts/
+mkdir -p /usr/local/last_boot_scripts/

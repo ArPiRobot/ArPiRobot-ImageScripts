@@ -19,7 +19,7 @@ trap exit_trap EXIT
 apt-get -y purge logrotate dphys-swapfile rsyslog
 
 # Append options to boot cmdline
-printf "$(head -1 /boot/firmware/cmdline.txt) fastboot noswap rfkill.default_state=1" > /boot/cmdline.txt
+printf "$(head -1 /boot/cmdline.txt) fastboot noswap rfkill.default_state=1" > /boot/cmdline.txt
 
 # Edit systemd-random-seed.service
 cat > /lib/systemd/system/systemd-random-seed.service << 'EOF'
