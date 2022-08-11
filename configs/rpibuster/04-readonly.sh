@@ -109,3 +109,32 @@ systemctl disable systemd-rfkill
 
 # Disable time sync service
 systemctl disable systemd-timesyncd
+
+# Setup custom systemd tartet & service & script to allow running commands at end of boot process
+# Used here to make system ro after booting is finished
+cat > /etc/systemd/system/custom.target << 'EOF'
+[Unit]
+Description=Custom Target
+Requires=multi-user.target
+After=multi-user.target
+EOF
+ln -sf /etc/systemd/system/custom.target /etc/systemd/system/default.target
+cat > /etc/systemd/system/lastcommands.service << 'EOF'
+[Unit]
+Description=Run final boot commands
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/last_boot_commands.sh
+
+[Install]
+WantedBy=custom.target
+EOF
+systemctl enable lastcommands.service
+cat > /usr/local/last_boot_commands.sh << 'EOF'
+#!/usr/bin/env bash
+sleep 10;
+mount -o ro,remount /
+mount -o ro,remount /boot
+EOF
