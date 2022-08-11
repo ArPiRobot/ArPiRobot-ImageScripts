@@ -111,10 +111,10 @@ systemctl disable systemd-rfkill
 systemctl disable systemd-timesyncd
 
 # Write script to make ro after boot (relies on custom systemd service from sysconfig script)
-cat > /usr/local/last_boot_commands/50-ro-post-boot.sh << 'EOF'
+cat > /usr/local/last_boot_scripts/50-ro-post-boot.sh << 'EOF'
 #!/usr/bin/env bash
 sleep 5
 mount -o ro,remount /
 mount -o ro,remount /boot
 EOF
-chmod +x /usr/local/last_boot_commands/50-ro-post-boot.sh
+chmod +x /usr/local/last_boot_scripts/50-ro-post-boot.sh
