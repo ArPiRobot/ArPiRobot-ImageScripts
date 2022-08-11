@@ -35,7 +35,7 @@ Scripts to setup an ArPiRobot OS image.
     ```
 - Copy host system's resolve.conf contents (if needed). Don't copy actual file to avoid overwriting symlinks on some systems.
 - Chroot into /mnt/img-chroot
-    - Install git
+    - Install git and python3
     - Clone this repository
     - Run make_image.py [config] [version]
     - Let all scripts run (address errors if any)
