@@ -1,0 +1,13 @@
+List of things to test to make sure an image is configured correctly
+Note: This is not a comprehensive list
+
+- Root filesystem expands on first boot
+- Filesystem becomes mounted readonly after boot
+- WiFi network is generated, can be connected to, and can be used to communicated with the computer at 192.168.10.1
+- Ethernet (if applicable) can be used to communicate with the computer at 192.168.11.1
+- Program service runs on boot
+- Deploy tool can conect, get robot status, deploy code, read logs
+- Code actually runs (with correct io provider and does not crash) when deployed
+- Hardware interfaces (i2c, spi, gpio, camera, etc) exist and are enabled
+- Camera streaming service & rtsp server service work as intended
+ 
