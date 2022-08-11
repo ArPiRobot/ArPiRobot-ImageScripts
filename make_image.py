@@ -80,6 +80,7 @@ def main():
             exit(1)
 
     logging.info("Done")
+    logging.info("Exit the chroot, copy out the log file, and delete the ArPiRobot-ImageScripts directory.")
     
 
 if __name__ == "__main__":

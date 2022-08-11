@@ -4,12 +4,39 @@ Scripts to setup an ArPiRobot OS image.
 
 ## Supported Boards and OS Images
 
-TODO: List images and download links (see feature/rpijammy branch)
+- Raspberry Pi: 3B(+), 3A(+), 4B, Zero W, Zero 2 W
+    - RasPiOS Lite Buster (10) 32-bit (`rpibuster`)
+    - [Download](https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/)
+
+<!--
+- Raspberry Pi: 3B(+), 3A(+), 4B, Zero 2 W
+    - Ubuntu Server Jammy (22.04) 64-bit (`scripts_rpijammy`)
+    - [Download](https://cdimage.ubuntu.com/ubuntu-server/jammy/daily-preinstalled/current/)
+-->
 
 
 ## Using Scripts to Make an Image
 
-TODO: Chroot method
+- Download the base image
+- Increase the base image size using dd
+- Setup a loopback device
+- Grow the base image root partition using gparted (or any other method)
+- Mount base image root on /mnt/img-chroot
+- Mount other partitions according to base image's fstab
+- Bind mount proc, sys, dev
+- Install qemu-user-static
+- Chroot into /mnt/img-chroot
+    - Install git
+    - Clone this repository
+    - Run make_image.py [config] [version]
+    - Let all scripts run (address errors if any)
+    - Exit chroot
+- Unmount bind mounted things
+- Unmount non root partitions
+- Unmount root partition
+- Shrink partition with gparted (or any other method)
+- Use fdisk & truncate to shrink image
+- Gzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.gz`
 
 
 ## License
