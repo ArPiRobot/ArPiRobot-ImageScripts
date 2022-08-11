@@ -2,6 +2,7 @@
 
 import logging
 import shutil
+import subprocess
 import getpass
 import sys
 import os
@@ -10,18 +11,33 @@ import glob
 import urllib.request
 
 
+def run_command(cmd_args):
+    script_name = os.path.basename(cmd_args[0])
+    proc = subprocess.Popen(cmd_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    with proc.stdout:
+        for line in iter(proc.stdout.readline, b''):
+            strline = line.decode("utf8")
+            if strline.endswith("\n"):
+                strline = strline[:-1]
+            if strline.endswith("\r"):
+                strline = strline[:-1]
+            logging.info("({}) {}".format(script_name, strline))
+    return proc.wait()
+
+
 def main():
     script_dir = os.path.realpath(os.path.dirname(__file__))
 
     parser = argparse.ArgumentParser(description="Run in a chroot to modify a base image into an ArPiRobot image.")
     parser.add_argument("config", type=str, help="Name of the config to use to generate the image.")
     parser.add_argument("version", type=str, help="Version string of the image (exclude config).")
-    res = parser.parse_args()
+    parser.add_argument("-f", dest="force", action='store_true', help="(DANGEROUS) Force run the script even if a chroot is not detected.")
+    args = parser.parse_args()
     
     logging.info("Ensuring config exists")
-    config_dir = os.path.join(script_dir, "configs", res.config)
+    config_dir = os.path.join(script_dir, "configs", args.config)
     if not os.path.exists(config_dir):
-        logging.error("The specified config '{}' is not valid.".format(res.config))
+        logging.error("The specified config '{}' is not valid.".format(args.config))
         exit(1)
 
     logging.info("Performing root check")
@@ -36,20 +52,32 @@ def main():
         logging.exception("Internet access is required to run this script.")
         exit(1)
 
-    # TODO: Check if in chroot. Warn & exit if not. Add cli flag to override
-    # systemd-detect-virt -r
+    res = subprocess.run(["systemd-detect-virt", "-r"])
+    if res.returncode != 0:
+        if not args.force:
+            logging.error("Not in a chroot. Refusing to run. Use -f to override.")
+            exit(1)
+        logging.warning("Continuing even though not in a chroot (-f specified).")
 
-    # logging.info("Writing image version file")
-    # with open("/usr/local/arpirobot-image-version.txt", "w") as f:
-    #     f.write(res.version)
+    logging.info("Writing image version file")
+    with open("/usr/local/arpirobot-image-version.txt", "w") as f:
+        f.write(args.version)
 
-    # Run each script in the selected config directory
+    # Search for all scripts in the config directory
     logging.info("Searching config directory for scripts")
     scripts = glob.glob("{}/*.sh".format(config_dir))
     scripts.sort()
     logging.info("Found {} scripts in config directory.".format(len(scripts)))
     for script in scripts:
         logging.debug(os.path.basename(script))
+
+    # Run each script in alphabetic order
+    for script in scripts:
+        logging.info("Running script '{}'".format(os.path.basename(script)))
+        ec = run_command([script])
+        if ec != 0:
+            logging.error("Failed to run script '{}'.".format(os.path.basename(script)))
+            exit(1)
 
     logging.info("Done")
     
