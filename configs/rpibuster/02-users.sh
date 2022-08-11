@@ -29,4 +29,4 @@ rm /etc/sudoers.d/010_pi-nopasswd
 printf "notdefault\nnotdefault" | passwd root
 
 # Allow passwordless sudo for arpirobot
-echo "${username} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_arpirobot-nopasswd
+echo "arpirobot ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_arpirobot-nopasswd
