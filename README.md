@@ -60,7 +60,9 @@ Scripts to setup an ArPiRobot OS image.
     truncate --size=size_here image_name.img
     ```
 - xzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.xz`
-
+    ```sh
+    xz -z image_name.img -v -T 0
+    ```
 
 ## License
 
