@@ -17,6 +17,8 @@ Scripts to setup an ArPiRobot OS image.
 
 ## Using Scripts to Make an Image
 
+*Note: Must be done on a Linux system.*
+
 - Install qemu-user-static
 - Download the base image
 - Increase the base image size using dd (3GB usually good)
