@@ -58,7 +58,7 @@ Scripts to setup an ArPiRobot OS image.
     # Multiply end of last partition + 1 by sector size to get size
     truncate --size=size_here image_name.img
     ```
-- Gzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.gz`
+- xzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.xz`
 
 
 ## License
