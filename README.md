@@ -8,11 +8,10 @@ Scripts to setup an ArPiRobot OS image.
     - RasPiOS Lite Buster (10) 32-bit (`rpibuster`)
     - [Download](https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/)
 
-<!--
 - Raspberry Pi: 3B(+), 3A(+), 4B, Zero 2 W
-    - Ubuntu Server Jammy (22.04) 64-bit (`scripts_rpijammy`)
-    - [Download](https://cdimage.ubuntu.com/ubuntu-server/jammy/daily-preinstalled/current/)
--->
+    - Armbian Jammy 64-bit (`rpiabjammy`)
+    - [Download](https://www.armbian.com/rpi4b/)
+
 
 
 ## Using Scripts to Make an Image
