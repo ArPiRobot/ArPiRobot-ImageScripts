@@ -71,3 +71,4 @@ systemctl restart dnsmasq
 systemctl restart dhcpcd
 rm /usr/local/last_boot_scripts/10-fix-wireless.sh
 EOF
+chmod +x /usr/local/last_boot_scripts/10-fix-wireless.sh
