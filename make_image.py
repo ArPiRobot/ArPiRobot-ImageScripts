@@ -61,7 +61,7 @@ def main():
 
     logging.info("Writing image version file")
     with open("/usr/local/arpirobot-image-version.txt", "w") as f:
-        f.write(args.version)
+        f.write("{}-{}".format(args.version, args.config))
 
     # Search for all scripts in the config directory
     logging.info("Searching config directory for scripts")
