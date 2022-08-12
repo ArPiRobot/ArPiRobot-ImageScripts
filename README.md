@@ -52,14 +52,17 @@ Scripts to setup an ArPiRobot OS image.
 - Unmount non root partitions
 - Unmount root partition
 - Shrink partition with gparted (or any other method)
+- Detach the loopback device
 - Use fdisk & truncate to shrink image
     ```sh
-    fdisk -l /dev/loop#
+    fdisk -l image_name.img
     # Multiply end of last partition + 1 by sector size to get size
     truncate --size=size_here image_name.img
     ```
 - xzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.xz`
-
+    ```sh
+    xz -z image_name.img -v -T 0
+    ```
 
 ## License
 
