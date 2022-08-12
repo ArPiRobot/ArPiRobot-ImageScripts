@@ -59,3 +59,15 @@ interface wlan0
 interface eth0
     static ip_address=192.168.11.1/24
 EOF
+
+
+# Script to fix wireless on first boot
+cat > /usr/local/last_boot_scripts/10-fix-wireless.sh << 'EOF'
+#!/usr/bin/env bash
+rfkill unblock wlan
+systemctl daemon-reload
+systemctl restart hostapd
+systemctl restart dnsmasq
+systemctl restart dhcpcd
+rm /usr/local/last_boot_scripts/10-fix-wireless.sh
+EOF
