@@ -3,6 +3,7 @@ Note: This is not a comprehensive list
 
 - Root filesystem expands on first boot
 - Filesystem becomes mounted readonly after boot
+- SSH host keys are regenerated on first boot
 - WiFi network is generated, can be connected to, and can be used to communicated with the computer at 192.168.10.1
 - Ethernet (if applicable) can be used to communicate with the computer at 192.168.11.1
 - Program service runs on boot
