@@ -49,6 +49,7 @@ Scripts to setup an ArPiRobot OS image.
     umount root/sys
     umount root/proc
     ```
+- Copy off the log and delete cloned repo from mounted root directory
 - Unmount non root partitions
 - Unmount root partition
 - Shrink partition with gparted (or any other method)
