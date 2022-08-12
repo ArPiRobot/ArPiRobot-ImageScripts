@@ -43,6 +43,7 @@ Scripts to setup an ArPiRobot OS image.
     - Run make_image.py [config] [version]
     - Let all scripts run (address errors if any)
     - Exit chroot
+- Copy off the log and delete cloned repo from mounted root directory
 - Unmount bind mounted things
     ```sh
     umount -R root/dev
