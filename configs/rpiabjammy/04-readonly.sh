@@ -71,7 +71,6 @@ cat >> /etc/fstab << 'EOF'
 tmpfs           /tmp             tmpfs   nosuid,nodev,nofail         0       0
 tmpfs           /var/log         tmpfs   nosuid,nodev,nofail         0       0
 tmpfs           /var/tmp         tmpfs   nosuid,nodev,nofail         0       0
-tmpfs           /var/lib/dhcpcd5 tmpfs   nosuid,nodev,nofail         0       0
 tmpfs           /var/lib/misc    tmpfs   nosuid,nodev,nofail         0       0
 EOF
 
