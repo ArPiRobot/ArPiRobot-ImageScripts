@@ -11,7 +11,8 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
 
-# TODO: Disable first boot setup & user creation (runs when first logging into root)
+# Disable first boot setup & user creation (runs when first logging into root)
+rm /root/.not_logged_in_yet
 
 
 # Enable UART console
@@ -82,12 +83,4 @@ chmod +x /usr/local/bin/last_boot_scripts.sh
 mkdir -p /usr/local/last_boot_scripts/
 
 
-# Make script to regenerate ssh host keys on first boot
-cat > /usr/local/last_boot_scripts/10-regenerate-ssh-keys.sh << 'EOF'
-#!/usr/bin/env bash
-rm /etc/ssh/ssh_host_*
-ssh-keygen -A
-systemctl restart ssh
-rm /usr/local/last_boot_scripts/10-regenerate-ssh-keys.sh
-EOF
-chmod +x /usr/local/last_boot_scripts/10-regenerate-ssh-keys.sh
+# armbian-firstrun service handles ssh key generation

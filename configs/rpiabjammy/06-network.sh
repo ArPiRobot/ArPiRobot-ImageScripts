@@ -19,9 +19,6 @@ systemctl unmask hostapd
 systemctl enable hostapd
 systemctl enable dnsmasq
 
-# Write country code to wpa_supplicant.conf to allow rfkill unblock to work
-printf "\ncountry=US\n" >> /etc/wpa_supplicant/wpa_supplicant.conf
-
 # Write hostpad config files
 mkdir -p /etc/hostpad
 cat > /etc/hostapd/hostapd.conf << 'EOF'
@@ -51,15 +48,24 @@ domain=local
 address=/ArPiRobot-Robot.local/192.168.10.1
 EOF
 
-# Write dhcpcd config file
-cat >> /etc/dhcpcd.conf << 'EOF'
-interface wlan0
-    static ip_address=192.168.10.1/24
-    nohook wpa_supplicant
-interface eth0
-    static ip_address=192.168.11.1/24
+# Configure netplan
+rm /etc/netplan/armbian-default.yaml
+cat > /etc/netplan/01-netcfg.yaml << 'EOF'
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: false
+      dhcp6: false
+      optional: true
+      addresses: [192.168.11.1/24]
+    wlan0:
+      dhcp4: false
+      dhcp6: false
+      optional: true
+      addresses: [192.168.10.1/24]
 EOF
-
 
 # Script to fix wireless on first boot
 cat > /usr/local/last_boot_scripts/10-fix-wireless.sh << 'EOF'
