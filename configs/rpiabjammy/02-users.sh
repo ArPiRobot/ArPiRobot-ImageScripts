@@ -15,7 +15,8 @@ adduser --disabled-password --gecos "" arpirobot
 printf "arpirobot\narpirobot" | passwd arpirobot
 
 # Copy all groups of default user
-for i in "tty disk dialout sudo audio video plugdev games users systemd-journal input netdev" ; do
+groups=("tty" "disk" "dialout" "sudo" "audio" "video" "plugdev" "games" "users" "systemd-journal" "input" "netdev")
+for i in "${groups[@]}" ; do
     addgroup arpirobot $i
 done
 
