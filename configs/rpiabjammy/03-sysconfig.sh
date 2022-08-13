@@ -16,7 +16,7 @@ rm /root/.not_logged_in_yet
 
 
 # Enable UART console
-sed -i 's/#enable_uart=1/enable_uart=1/g' /boot/firmware/config.txt
+sed -i 's/# enable_uart=1/enable_uart=1/g' /boot/firmware/config.txt
 sed -i 's/console=tty1/console=ttyS0,115200/g' /boot/firmware/cmdline.txt
 
 # Set hostname
