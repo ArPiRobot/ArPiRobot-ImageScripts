@@ -15,6 +15,11 @@ trap exit_trap EXIT
 chmod -x /etc/kernel/postinst.d/initramfs-tools
 chmod -x /etc/initramfs/post-update.d/flash-kernel
 
+# Don't update these. Causes issues.
+apt-mark hold initramfs-tools
+apt-mark hold flash-kernel
+apt-mark hold linux-firmware
+
 apt-get -y update
 apt-get -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef upgrade
 dpkg --configure -a
