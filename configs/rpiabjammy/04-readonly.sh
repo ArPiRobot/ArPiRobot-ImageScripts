@@ -19,7 +19,7 @@ trap exit_trap EXIT
 apt-get -y purge logrotate dphys-swapfile rsyslog
 
 # Append options to boot cmdline
-printf "$(head -1 /boot/cmdline.txt) fastboot noswap rfkill.default_state=1" > /boot/cmdline.txt
+printf "$(head -1 /boot/firmware/cmdline.txt) fastboot noswap rfkill.default_state=1" > /boot/firmware/cmdline.txt
 
 # Edit systemd-random-seed.service
 cat > /lib/systemd/system/systemd-random-seed.service << 'EOF'
@@ -80,8 +80,8 @@ set_bash_prompt(){
     fs_mode=$(mount | sed -n -e 's/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p')
     PS1='\[\033[01;32m\]\u@\h${fs_mode:+($fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 }
-alias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot'
-alias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot'
+alias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot/firmware'
+alias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot/firmware'
 PROMPT_COMMAND=set_bash_prompt
 EOF
 
@@ -91,7 +91,7 @@ sudo mount -o remount,rw /
 history -a
 sudo fake-hwclock save
 sudo mount -o remount,ro /
-sudo mount -o remount,ro /boot
+sudo mount -o remount,ro /boot/firmware
 EOF
 
 # Auto reboot on kernel panic
@@ -106,13 +106,10 @@ systemctl disable apt-daily-upgrade.timer
 # Disable systemd-rfkill
 systemctl disable systemd-rfkill
 
-# Disable time sync service
-systemctl disable systemd-timesyncd
-
 # Write script to make ro after boot (relies on custom systemd service from sysconfig script)
 cat > /usr/local/last_boot_scripts/50-ro-post-boot.sh << 'EOF'
 #!/usr/bin/env bash
 mount -o ro,remount /
-mount -o ro,remount /boot
+mount -o ro,remount /boot/firmware
 EOF
 chmod +x /usr/local/last_boot_scripts/50-ro-post-boot.sh
