@@ -20,6 +20,7 @@ chmod -x /etc/initramfs/post-update.d/flash-kernel
 apt-get -y install hostapd dnsmasq
 
 # Packages have now changed. Need to manually make update-initramfs and flash-kernel work
+# This is probably unnecessary (especially the flash-kernel part)
 update-initramfs -c -k all
 flash-kernel --machine 'Raspberry Pi 4 Model B'
 
