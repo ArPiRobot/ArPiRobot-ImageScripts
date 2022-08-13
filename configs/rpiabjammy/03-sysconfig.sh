@@ -46,7 +46,9 @@ EOF
 systemctl enable ssh
 
 # Patching raspi-config
-sed -i 's/\/boot\//\/boot\/firmware\//g' /usr/bin/raspi-config
+if ! grep -q /boot/firmware/ /usr/bin/raspi-config; then
+    sed -i 's/\/boot\//\/boot\/firmware\//g' /usr/bin/raspi-config
+fi
 
 # Enable hardware interfaces
 raspi-config nonint do_spi 0
