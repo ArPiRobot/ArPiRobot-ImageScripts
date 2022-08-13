@@ -12,5 +12,5 @@ trap exit_trap EXIT
 
 
 apt-get -y update
-apt-get -y upgrade
+apt-get -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef upgrade
 dpkg --configure -a
