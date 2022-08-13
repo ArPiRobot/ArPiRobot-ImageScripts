@@ -16,6 +16,11 @@ function binarch(){
     printf "$(readelf -h $1 | grep Machine: | sed -r 's/\s+Machine:\s+//g')"
 }
 
+# Disable flash-kernel hooks because they don't work right in chroot
+# See process used by https://github.com/armbian/build/blob/master/extensions/flash-kernel.sh
+chmod -x /etc/kernel/postinst.d/initramfs-tools
+chmod -x /etc/initramfs/post-update.d/flash-kernel
+
 # Install required software from system repos
 apt-get -y install git \
     openssh-server \
@@ -43,6 +48,14 @@ apt-get -y install git \
     python3-gst-1.0 \
     gstreamer1.0-gl \
     gstreamer1.0-rtsp
+
+# Packages have now changed. Need to manually make update-initramfs and flash-kernel work
+update-initramfs -c -k all
+flash-kernel --machine 'Raspberry Pi 4 Model B'
+
+# Enable flash-kernel hooks again
+chmod +x /etc/kernel/postinst.d/initramfs-tools
+chmod +x /etc/initramfs/post-update.d/flash-kernel
 
 # Install ArPiRobot-CameraStreaming
 cd /home/arpirobot

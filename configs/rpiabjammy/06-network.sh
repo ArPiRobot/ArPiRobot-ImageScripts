@@ -11,8 +11,21 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
 
+# Disable flash-kernel hooks because they don't work right in chroot
+# See process used by https://github.com/armbian/build/blob/master/extensions/flash-kernel.sh
+chmod -x /etc/kernel/postinst.d/initramfs-tools
+chmod -x /etc/initramfs/post-update.d/flash-kernel
+
 # Install required software
 apt-get -y install hostapd dnsmasq
+
+# Packages have now changed. Need to manually make update-initramfs and flash-kernel work
+update-initramfs -c -k all
+flash-kernel --machine 'Raspberry Pi 4 Model B'
+
+# Enable flash-kernel hooks again
+chmod +x /etc/kernel/postinst.d/initramfs-tools
+chmod +x /etc/initramfs/post-update.d/flash-kernel
 
 # Enable services
 systemctl unmask hostapd
