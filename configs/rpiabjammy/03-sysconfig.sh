@@ -45,6 +45,9 @@ EOF
 # Enable ssh server
 systemctl enable ssh
 
+# Patching raspi-config
+sed -i 's/\/boot\//\/boot\/firmware\//g' /usr/bin/raspi-config
+
 # Enable hardware interfaces
 raspi-config nonint do_spi 0
 raspi-config nonint do_i2c 0
