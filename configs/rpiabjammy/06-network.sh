@@ -91,6 +91,10 @@ rfkill unblock wlan
 systemctl daemon-reload
 systemctl restart hostapd
 systemctl restart dnsmasq
+
+# For some reason, this has to be run after a significant delay or it won't work on first boot
+nohup sh -c 'sleep 10; systemctl restart hostapd' > /dev/null 2>&1 &
+
 rm /usr/local/last_boot_scripts/10-fix-wireless.sh
 EOF
 chmod +x /usr/local/last_boot_scripts/10-fix-wireless.sh
