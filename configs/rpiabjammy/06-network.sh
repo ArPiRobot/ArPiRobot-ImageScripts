@@ -62,6 +62,9 @@ domain=local
 address=/ArPiRobot-Robot.local/192.168.10.1
 EOF
 
+# Fix dnsmasq / systemd-resolved conflict
+printf "DNSStubListener=no\n" >> /etc/systemd/resolved.conf
+
 # Configure netplan
 rm /etc/netplan/armbian-default.yaml
 cat > /etc/netplan/01-netcfg.yaml << 'EOF'
@@ -88,7 +91,6 @@ rfkill unblock wlan
 systemctl daemon-reload
 systemctl restart hostapd
 systemctl restart dnsmasq
-systemctl restart dhcpcd
 rm /usr/local/last_boot_scripts/10-fix-wireless.sh
 EOF
 chmod +x /usr/local/last_boot_scripts/10-fix-wireless.sh

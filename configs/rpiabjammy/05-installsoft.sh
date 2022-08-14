@@ -47,7 +47,21 @@ apt-get -y install git \
     python3-gi \
     python3-gst-1.0 \
     gstreamer1.0-gl \
-    gstreamer1.0-rtsp
+    gstreamer1.0-rtsp \
+    libboost-dev \
+    libgnutls28-dev \
+    openssl \
+    libtiff5-dev \
+    meson \
+    python3-jinja2 \
+    cmake \
+    libglib2.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    libjpeg-dev \
+    libboost-program-options-dev \
+    libdrm-dev \
+    libexif-dev \
+    libpng-dev
 
 # Packages have now changed. Need to manually make update-initramfs and flash-kernel work
 # This is probably unnecessary (especially the flash-kernel part)
@@ -76,7 +90,6 @@ else
     echo "Unknown architecture. Cannot install rtsp-simple-server."
     exit 1
 fi
-sed -i 's/libcamera/raspicam/g' /home/arpirobot/camstream/default.txt
 cd
 rm -rf /home/arpirobot/ArPiRobot-CameraStreaming
 
@@ -92,3 +105,28 @@ rm -rf /home/arpirobot/ArPiRobot-Tools
 # Create directory for robot program
 mkdir -p /home/arpirobot/arpirobot
 chown arpirobot:arpirobot /home/arpirobot/arpirobot
+
+# Build libcamera from source (can't build libcamera-apps with apt repo versions)
+pip3 install pyyaml ply
+pip3 install --upgrade meson
+cd
+git clone git://linuxtv.org/libcamera.git
+cd libcamera
+meson build --buildtype=release -Dpipelines=raspberrypi -Dipas=raspberrypi -Dv4l2=true -Dgstreamer=enabled -Dtest=false -Dlc-compliance=disabled -Dcam=disabled -Dqcam=disabled -Ddocumentation=disabled
+ninja -C build -j 4
+ninja -C build install
+cd
+rm -r libcamera
+
+# Build libcamera-apps from source (not available as deb on armbian)
+cd
+git clone https://github.com/raspberrypi/libcamera-apps.git
+cd libcamera-apps
+mkdir build
+cd build
+cmake .. -DENABLE_DRM=1 -DENABLE_X11=0 -DENABLE_QT=0 -DENABLE_OPENCV=0 -DENABLE_TFLITE=0
+make -j4
+make install
+ldconfig
+cd
+rm -r libcamera-apps

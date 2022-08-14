@@ -66,6 +66,9 @@ if (command -v fake-hwclock >/dev/null 2>&1) ; then
 fi
 EOF
 
+# Remove default /tmp mount line in /etc/fstab
+sed -i 's/tmpfs \/tmp tmpfs defaults,nosuid 0 0//g' /etc/fstab
+
 # Add tmpfs entries to fstab
 cat >> /etc/fstab << 'EOF'
 tmpfs           /tmp             tmpfs   nosuid,nodev,nofail         0       0
@@ -102,6 +105,9 @@ systemctl disable apt-daily.service
 systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.service
 systemctl disable apt-daily-upgrade.timer
+systemctl disable nfsdcld.service
+systemctl disable vnstat.service
+systemctl disable unattended-upgrades.service
 
 # Disable systemd-rfkill
 systemctl disable systemd-rfkill
