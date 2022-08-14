@@ -85,13 +85,14 @@ cat > /usr/local/bin/last_boot_scripts.sh << 'EOF'
 # During first boot, wait for armbian-firstrun to finish before running these scripts
 # process name is truncated to armbian-firstru
 while [ $(pgrep armbian-firstru | wc -l) -gt 0 ]; do
-    echo "Waiting for firefox to close..."
+    echo "Waiting for armbian-firstrun to finish..."
     sleep 1;
 done
 
 
 files=$(find /usr/local/last_boot_scripts/ -name "*.sh" | sort)
 for file in $files; do
+    echo "Running $file"
     bash "$file"
 done
 EOF
