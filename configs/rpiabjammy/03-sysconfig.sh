@@ -10,6 +10,9 @@ set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
+# Disable first boot auto login, root password change, and system configuration
+rm /root/.not_logged_in_yet
+
 # Enable UART console
 sed -i 's/# enable_uart=1/enable_uart=1/g' /boot/firmware/config.txt
 sed -i 's/console=tty1/console=ttyS0,115200/g' /boot/firmware/cmdline.txt
@@ -51,6 +54,10 @@ raspi-config nonint do_i2c 0
 raspi-config nonint do_ssh 0
 raspi-config nonint do_camera 0
 
+# Camera setup fixes
+sed -i 's/gpu_mem/#gpu_mem/g' /boot/firmware/config.txt
+printf "camera_auto_detect=1" >> /boot/firmware/config.txt
+
 # Setup custom systemd tartet & service & script to allow running commands at end of boot process
 cat > /etc/systemd/system/custom.target << 'EOF'
 [Unit]
@@ -74,6 +81,15 @@ EOF
 systemctl enable lastcommands.service
 cat > /usr/local/bin/last_boot_scripts.sh << 'EOF'
 #!/usr/bin/env bash
+
+# During first boot, wait for armbian-firstrun to finish before running these scripts
+# process name is truncated to armbian-firstru
+while [ $(pgrep armbian-firstru | wc -l) -gt 0 ]; do
+    echo "Waiting for firefox to close..."
+    sleep 1;
+done
+
+
 files=$(find /usr/local/last_boot_scripts/ -name "*.sh" | sort)
 for file in $files; do
     bash "$file"

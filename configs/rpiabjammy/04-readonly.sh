@@ -106,6 +106,7 @@ systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.service
 systemctl disable apt-daily-upgrade.timer
 systemctl disable nfsdcld.service
+systemctl mask nfsdcld.service
 systemctl disable vnstat.service
 systemctl disable unattended-upgrades.service
 
