@@ -112,6 +112,7 @@ systemctl disable unattended-upgrades.service
 
 # Disable systemd-rfkill
 systemctl disable systemd-rfkill
+systemctl mask systemd-rfkill
 
 # Write script to make ro after boot (relies on custom systemd service from sysconfig script)
 cat > /usr/local/last_boot_scripts/50-ro-post-boot.sh << 'EOF'

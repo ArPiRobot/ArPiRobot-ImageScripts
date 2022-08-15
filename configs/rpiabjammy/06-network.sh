@@ -88,21 +88,17 @@ EOF
 cat > /usr/local/last_boot_scripts/10-fix-wireless.sh << 'EOF'
 #!/usr/bin/env bash
 rfkill unblock wlan
-
-# Wait for unblock
-while true; do
-    state=$(rfkill --output TYPE,SOFT | grep wlan | awk '{print $2}')
-    if [ "$state" == "unblocked" ]; then
-        break
-    fi
-    echo "Waiting for wlan to become unblocked..."
-    sleep 1
-done
-
-
 systemctl daemon-reload
 systemctl restart hostapd
 systemctl restart dnsmasq
 rm /usr/local/last_boot_scripts/10-fix-wireless.sh
+
+# For some reason, despite sleeps, waiting for processes, etc
+# The AP will not work until hostapd is restarted from a login session
+# Or until the system reboots
+# So, to fix wifi, reboot the system on the first boot
+# Yes this is a dumb solution, but it works...
+sleep 3
+reboot
 EOF
 chmod +x /usr/local/last_boot_scripts/10-fix-wireless.sh

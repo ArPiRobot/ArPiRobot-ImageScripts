@@ -12,6 +12,8 @@ trap exit_trap EXIT
 
 # Disable first boot auto login, root password change, and system configuration
 rm /root/.not_logged_in_yet
+rm /etc/systemd/system/getty@.service.d/override.conf
+rm /etc/systemd/system/serial-getty@.service.d/override.conf
 
 # Enable UART console
 sed -i 's/# enable_uart=1/enable_uart=1/g' /boot/firmware/config.txt
