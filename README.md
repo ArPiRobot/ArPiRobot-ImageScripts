@@ -12,6 +12,10 @@ Scripts to setup an ArPiRobot OS image.
     - Armbian Jammy 64-bit (`rpiabjammy`)
     - [Download](https://www.armbian.com/rpi4b/)
 
+- Orange Pi Lite
+    - Armbian Jammy 32-bit (`opliteabjammy`)
+    - [Download](https://www.armbian.com/orange-pi-lite/)
+
 
 
 ## Using Scripts to Make an Image
@@ -35,7 +39,7 @@ Scripts to setup an ArPiRobot OS image.
     mount --rbind /dev root/dev
     mount --make-rslave root/dev
     ```
-- Copy host system's resolve.conf contents (if needed). Don't copy actual file to avoid overwriting symlinks on some systems.
+- Copy host system's resolv.conf contents (if needed). Don't copy actual file to avoid overwriting symlinks on some systems.
 - Chroot into /mnt/img-chroot
     - Install git and python3
     - Clone this repository
