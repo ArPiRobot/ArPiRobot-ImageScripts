@@ -16,6 +16,10 @@ Scripts to setup an ArPiRobot OS image.
     - Armbian 22.08 w/ Jammy Userspace 32-bit 5.15 kernel (`opliteabjammy`)
     - [Download](https://www.armbian.com/orange-pi-lite/)
 
+- Orange Pi 3 LTS
+    - Armbian 22.08 w/ Bullseye Userspace 64-bit 5.15 kernel (`opi3ltsabbullseye`)
+    - *Note: Bullseye userspace used instead of Jammy userspace due to [WiFi issues with Jammy Userspace](https://forum.armbian.com/topic/21697-orangepi-3-lts-armbian-2205-jammy-xfce-cant-connect-with-wifi/)*
+    - [Download](https://www.armbian.com/orangepi3-lts/)
 
 
 ## Using Scripts to Make an Image
