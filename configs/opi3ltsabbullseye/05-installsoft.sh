@@ -29,7 +29,7 @@ apt-get -y install git \
     python3-setuptools \
     python3-setuptools-scm \
     python3-wheel \
-    openjdk-8-jdk-headless \
+    openjdk-11-jdk-headless \
     libasound2-dev \
     iperf3 \
     libgstreamer1.0-0 \
