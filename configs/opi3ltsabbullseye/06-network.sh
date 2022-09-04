@@ -60,23 +60,23 @@ EOF
 # Fix dnsmasq / systemd-resolved conflict
 printf "DNSStubListener=no\n" >> /etc/systemd/resolved.conf
 
-# Configure netplan
-rm /etc/netplan/armbian-default.yaml
-cat > /etc/netplan/01-netcfg.yaml << 'EOF'
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    eth0:
-      dhcp4: false
-      dhcp6: false
-      optional: true
-      addresses: [192.168.11.1/24]
-    wlan0:
-      dhcp4: false
-      dhcp6: false
-      optional: true
-      addresses: [192.168.10.1/24]
+# Configure static IPs
+cat > /etc/network/interfaces << 'EOF'
+# Loopback
+auto lo
+iface lo inet loopback
+ 
+# Ethernet
+auto eth0
+iface eth0  inet static
+    address 192.168.11.1
+    netmask 255.255.255.0
+
+# WiFi
+auto wlan0
+iface wlan0  inet static
+    address 192.168.10.1
+    netmask 255.255.255.0
 EOF
 
 # Script to fix wireless on first boot
