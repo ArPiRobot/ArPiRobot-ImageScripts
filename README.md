@@ -9,11 +9,11 @@ Scripts to setup an ArPiRobot OS image.
     - [Download](https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/)
 
 - Raspberry Pi: 3B(+), 3A(+), 4B, Zero 2 W
-    - Armbian Jammy 64-bit (`rpiabjammy`)
+    - Armbian 22.08 w/ Jammy Userspace 64-bit 5.15 kernel (`rpiabjammy`)
     - [Download](https://www.armbian.com/rpi4b/)
 
 - Orange Pi Lite
-    - Armbian Jammy 32-bit (`opliteabjammy`)
+    - Armbian 22.08 w/ Jammy Userspace 32-bit 5.15 kernel (`opliteabjammy`)
     - [Download](https://www.armbian.com/orange-pi-lite/)
 
 
