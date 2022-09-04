@@ -61,19 +61,24 @@ EOF
 printf "DNSStubListener=no\n" >> /etc/systemd/resolved.conf
 
 # Configure static IPs
+cat > /etc/NetworkManager/conf.d/99-unmanaged-devices.conf << 'EOF'
+[keyfile]
+unmanaged-devices=interface-name:wlan0;eth0
+EOF
+
 cat > /etc/network/interfaces << 'EOF'
 # Loopback
 auto lo
 iface lo inet loopback
  
 # Ethernet
-auto eth0
+allow-hotplug eth0
 iface eth0  inet static
     address 192.168.11.1
     netmask 255.255.255.0
 
 # WiFi
-auto wlan0
+allow-hotplug wlan0
 iface wlan0  inet static
     address 192.168.10.1
     netmask 255.255.255.0
