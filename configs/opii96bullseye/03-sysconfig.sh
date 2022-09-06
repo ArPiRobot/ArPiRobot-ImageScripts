@@ -15,6 +15,7 @@ echo "ArPiRobot-Robot" | tee /etc/hostname
 sed -i "s/rpi4b/ArPiRobot-Robot/g" /etc/hosts
 
 # Set locale
+apt-get -y install locales
 sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 locale-gen
 update-locale LANG=en_US.UTF-8
