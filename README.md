@@ -21,6 +21,10 @@ Scripts to setup an ArPiRobot OS image.
     - *Note: Bullseye userspace used instead of Jammy userspace due to [WiFi issues with Jammy Userspace](https://forum.armbian.com/topic/21697-orangepi-3-lts-armbian-2205-jammy-xfce-cant-connect-with-wifi/)*
     - [Download](https://www.armbian.com/orangepi3-lts/)
 
+- Orange Pi i96
+    - Legendary Orange Pi i96 OS Image Based on Debian Bullseye (`opii96bullseye`)
+    - [Download](https://github.com/TheRemote/Legendary-OrangePi-i96/releases/)
+
 
 ## Using Scripts to Make an Image
 
