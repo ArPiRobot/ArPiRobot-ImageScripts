@@ -12,7 +12,7 @@ trap exit_trap EXIT
 
 # Set hostname
 echo "ArPiRobot-Robot" | tee /etc/hostname
-sed -i "s/rpi4b/ArPiRobot-Robot/g" /etc/hosts
+sed -i "s/orangepii96/ArPiRobot-Robot/g" /etc/hosts
 
 # Set locale
 apt-get -y install locales
