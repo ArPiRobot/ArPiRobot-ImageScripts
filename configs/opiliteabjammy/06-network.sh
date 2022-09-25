@@ -29,7 +29,7 @@ systemctl enable hostapd
 systemctl enable dnsmasq
 
 # Write hostpad config files
-mkdir -p /etc/hostpad
+mkdir -p /etc/hostapd
 cat > /etc/hostapd/hostapd.conf << 'EOF'
 country_code=US
 ieee80211d=1
