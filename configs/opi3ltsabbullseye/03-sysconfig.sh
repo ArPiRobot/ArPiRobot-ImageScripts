@@ -17,7 +17,7 @@ rm /etc/systemd/system/serial-getty@.service.d/override.conf
 
 # Set hostname
 echo "ArPiRobot-Robot" | tee /etc/hostname
-sed -i "s/rpi4b/ArPiRobot-Robot/g" /etc/hosts
+sed -i "s/orangepi3-lts/ArPiRobot-Robot/g" /etc/hosts
 
 # Set locale
 sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
