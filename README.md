@@ -65,7 +65,9 @@ Scripts to setup an ArPiRobot OS image.
     ```sh
     fdisk -l image_name.img
     # Multiply end of last partition + 1 by sector size to get size
+    # Note that if the system uses a GPT partition table add 34 not 1(33 for backup gpt table after shrink)
     truncate --size=size_here image_name.img
+    # If using GPT table use gdisk to rewrite backup gpt table after truncating image
     ```
 - xzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.xz`
     ```sh
