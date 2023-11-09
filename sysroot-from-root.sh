@@ -49,7 +49,7 @@ rsync -a \
     --exclude=lib/systemd \
     "$rootdir/usr/" "$destdir/usr/"
 rsync -a "$rootdir/opt/" "$destdir/opt/"
-ln -sf usr/lib/ "$destdir/lib"
+rsync -a "$rootdir/lib/" "$destdir/lib/"
 echo ""
 
 # Convert links to all be relative (absolute links won't work in porable sysroot)
