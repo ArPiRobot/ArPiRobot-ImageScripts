@@ -2,6 +2,8 @@
 
 Scripts to setup an ArPiRobot OS image.
 
+Also includes scripts to build a cross compilation sysroot using debootstrap.
+
 ## Supported Boards and OS Images
 
 - Raspberry Pi: 3B(+), 3A(+), 4B, Zero W, Zero 2 W
@@ -73,6 +75,20 @@ Scripts to setup an ArPiRobot OS image.
     ```sh
     xz -z image_name.img -v -T 0
     ```
+
+## Using Scripts to Make an Image
+
+*Note: Must be done on a Linux system.*
+
+*Note: This does not run on an image file. Just on any linux system with debootstrap and qemu-user-static installed.*
+
+```sh
+# Replace buster with different debian codename
+# Both debian and raspberry pi os must support the given codename
+sudo ./make_sysroots.sh buster
+```
+
+This will create sysroot tarballs for each supported architecture in `build-sysroot/`.
 
 ## License
 
