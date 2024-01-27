@@ -13,12 +13,13 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-if [ $# -ne 1 ]; then
-    echo "Usage: make_sysroots.sh version_codename"
+if [ $# -ne 2 ]; then
+    echo "Usage: make_sysroots.sh version_codename sysroot_version"
     exit 1
 fi
 
-codename=$1
+codename="$1"
+ver="$2"
 
 BUILDDIR="$(dirname "$0")"/build-sysroot
 mkdir -p $BUILDDIR
@@ -32,6 +33,7 @@ mkdir ./sysroot-armv6
 ../sysroot-from-root.sh ./bootstrap-armv6 ./sysroot-armv6
 cd ./sysroot-armv6
 echo -n "sysroot/armv6" > what.txt
+echo -n "$ver" > version.txt
 rm -f ../sysroot-armv6.tar
 rm -f ../sysroot-armv6.tar.gz
 tar -cvf ../sysroot-armv6.tar *
@@ -48,6 +50,7 @@ mkdir ./sysroot-aarch64
 ../sysroot-from-root.sh ./bootstrap-aarch64 ./sysroot-aarch64
 cd ./sysroot-aarch64
 echo -n "sysroot/aarch64" > what.txt
+echo -n "$ver" > version.txt
 rm -f ../sysroot-aarch64.tar
 rm -f ../sysroot-aarch64.tar.gz
 tar -cvf ../sysroot-aarch64.tar *
