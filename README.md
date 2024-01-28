@@ -6,22 +6,19 @@ Also includes scripts to build a cross compilation sysroot using debootstrap.
 
 ## Supported Boards and OS Images
 
+- Raspberry Pi: (All):
+    - RasPiOS Lite Bookworm (12) 32-bit (`rpi_armhf`)
+    - [Download]()
+
 - Raspberry Pi: 3B(+), 3A(+), 4B, Zero W, Zero 2 W
     - RasPiOS Lite Buster (10) 32-bit (`rpibuster`)
-    - [Download](https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/)
+    - [Download](https://downloads.raspberrypi.org/raspios_lite_armhf/images/)
 
-- Raspberry Pi: 3B(+), 3A(+), 4B, Zero 2 W
-    - Armbian 22.05 w/ Jammy Userspace 64-bit 5.15 kernel (`rpiabjammy`)
-    - [Download](https://www.armbian.com/rpi4b/)
+- Orange Pi Zero 2W:
+    - TODO
 
-- Orange Pi Lite
-    - Armbian 22.08 w/ Jammy Userspace 32-bit 5.15 kernel (`opliteabjammy`)
-    - [Download](https://www.armbian.com/orange-pi-lite/)
-
-- Orange Pi 3 LTS
-    - Armbian 22.08 w/ Bullseye Userspace 64-bit 5.15 kernel (`opi3ltsabbullseye`)
-    - *Note: Bullseye userspace used instead of Jammy userspace due to [WiFi issues with Jammy Userspace](https://forum.armbian.com/topic/21697-orangepi-3-lts-armbian-2205-jammy-xfce-cant-connect-with-wifi/)*
-    - [Download](https://www.armbian.com/orangepi3-lts/)
+- Orange Pi 3B:
+    - TODO
 
 
 ## Using Scripts to Make an Image
@@ -76,16 +73,16 @@ Also includes scripts to build a cross compilation sysroot using debootstrap.
     xz -z image_name.img -v -T 0
     ```
 
-## Using Scripts to Make an Image
+## Using Scripts to Make a Sysroot
 
 *Note: Must be done on a Linux system.*
 
 *Note: This does not run on an image file. Just on any linux system with debootstrap and qemu-user-static installed.*
 
 ```sh
-# Replace buster with different debian codename
+# Replace buster with different debian codename and 1.1.0 with the sysroot version number
 # Both debian and raspberry pi os must support the given codename
-sudo ./make_sysroots.sh buster
+sudo ./make_sysroots.sh buster 1.1.0
 ```
 
 This will create sysroot tarballs for each supported architecture in `build-sysroot/`.
