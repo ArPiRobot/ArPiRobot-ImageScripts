@@ -10,15 +10,13 @@ Also includes scripts to build a cross compilation sysroot using debootstrap.
     - RasPiOS Lite Bookworm (12) 32-bit (`rpi_armhf`)
     - [Download]()
 
-- Raspberry Pi: 3B(+), 3A(+), 4B, Zero W, Zero 2 W
-    - RasPiOS Lite Buster (10) 32-bit (`rpibuster`)
-    - [Download](https://downloads.raspberrypi.org/raspios_lite_armhf/images/)
-
 - Orange Pi Zero 2W:
-    - TODO
+    - Debian Bookworm (12) 64-bit (`opi_zero2w`)
+    - TODO: 1GB_2GB Orangepizero2w_1.0.0_debian_bookworm_server_linux6.1.31.7z
 
 - Orange Pi 3B:
-    - TODO
+    - Debian Bookworm (12) 64-bit (`opi_3b`)
+    - TODO (Orangepi3b_1.0.4_debian_bookworm_server_linux5.10.160.7z)
 
 
 ## Using Scripts to Make an Image
