@@ -10,22 +10,31 @@ set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
-# Create connection for hotspot
-nmcli connection add type wifi ifname $ifname con-name RobotAP ssid ArPiRobot-RobotAP
+# Note: Can't use nmcli in chroot, thus write a config file instead
+cat > /lib/systemd/system/systemd-random-seed.service << 'EOF'
+[connection]
+id=RobotAP
+uuid=b1bbea3e-9954-4827-b6ee-b0bc244d48a9
+type=wifi
+interface-name=wlan0
+autoconnect=true
 
-# Configure as access point using 2.4GHz 
-nmcli connection modify RobotAP 802-11-wireless.mode ap
-nmcli connection modify RobotAP 802-11-wireless.band bg
+[wifi]
+band=bg
+mode=ap
+ssid=ArPiRobot-RobotAP
 
-# Configure password
-nmcli connection modify RobotAP wifi-sec.key-mgmt wpa-psk
-nmcli connection modify RobotAP wifi-sec.psk arpirobot123
+[wifi-security]
+key-mgmt=wpa-psk
+psk=arpirobot123
 
-# Configure IP address
-nmcli connection modify RobotAP ipv4.method shared
-nmcli connection modify RobotAP ipv4.addresses 192.168.10.1/24
-nmcli connection modify RobotAP ipv6.method disabled
+[ipv4]
+address1=192.168.10.1/24
+method=shared
 
-# Enable hotspot at boot
-nmcli connection modify RobotAP connection.autoconnect yes
+[ipv6]
+addr-gen-mode=default
+method=disabled
 
+[proxy]
+EOF
