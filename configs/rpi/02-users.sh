@@ -18,7 +18,7 @@ printf "arpirobot\narpirobot" | passwd arpirobot
 # Copy all groups of default user
 groups=("adm" "dialout" "cdrom" "sudo" "audio" "video" "plugdev" "games" "users" "input" "render" "netdev" "spi" "i2c" "gpio")
 for i in "${groups[@]}" ; do
-    addgroup arpirobot $i
+    adduser arpirobot $i
 done
 
 # Setting root password

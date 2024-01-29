@@ -16,7 +16,7 @@ trap exit_trap EXIT
 # even though image is created in chroot and never boots rw before booting in use
 
 # Remove log & swap software
-apt-get -y purge logrotate dphys-swapfile
+DEBIAN_FRONTEND=noninteractive apt-get -y purge logrotate dphys-swapfile
 
 # Append options to boot cmdline
 printf "$(head -1 /boot/cmdline.txt) fastboot noswap rfkill.default_state=1" > /boot/cmdline.txt

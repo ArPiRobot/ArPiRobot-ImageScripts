@@ -17,7 +17,7 @@ function binarch(){
 }
 
 # Install required software from system repos
-apt-get -y install git \
+DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     dos2unix \
     sysstat \
     python3 \

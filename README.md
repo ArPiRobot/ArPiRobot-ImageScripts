@@ -34,7 +34,7 @@ Each configuration is designed for a certain base image (usually the official OS
     ```sh
     dd if=/dev/zero bs=1MiB count=3072 >> file_name.img
     ```
-- Setup a loopback device
+- Setup a loopback device (sudo losetup -f -P --show)
 - Grow the base image root partition using gparted (or any other method)
 - Mount base image root
 - Mount other partitions according to base image's fstab
@@ -46,7 +46,7 @@ Each configuration is designed for a certain base image (usually the official OS
     mount --make-rslave root/dev
     ```
 - Copy host system's resolv.conf contents (if needed). Don't copy actual file to avoid overwriting symlinks on some systems.
-- Chroot into /mnt/img-chroot
+- Chroot into mounted image
     - Install git and python3
     - Clone this repository
     - Run make_image.py [config] [version]

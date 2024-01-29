@@ -11,6 +11,6 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
 # Update repos, upgrade all packages, and make sure configuration finishes
-apt-get -y update
-apt-get -y upgrade
-dpkg --configure -a
+DEBIAN_FRONTEND=noninteractive apt-get -y update
+DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+DEBIAN_FRONTEND=noninteractive dpkg --configure -a
