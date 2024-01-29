@@ -18,7 +18,6 @@ function binarch(){
 
 # Install required software from system repos
 apt-get -y install git \
-    openssh-server \
     dos2unix \
     sysstat \
     python3 \
@@ -42,10 +41,7 @@ apt-get -y install git \
     python3-gi \
     python3-gst-1.0 \
     gstreamer1.0-gl \
-    gstreamer1.0-rtsp \
-    gstreamer1.0-omx-rpi-config \
-    gstreamer1.0-omx-rpi \
-    gstreamer1.0-omx
+    gstreamer1.0-rtsp
 
 # Install ArPiRobot-CameraStreaming
 cd /home/arpirobot

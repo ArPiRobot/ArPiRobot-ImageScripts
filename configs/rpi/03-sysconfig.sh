@@ -10,14 +10,13 @@ set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
-# Disable first boot auto login, root password change, and system configuration
-rm /root/.not_logged_in_yet
-rm /etc/systemd/system/getty@.service.d/override.conf
-rm /etc/systemd/system/serial-getty@.service.d/override.conf
+
+# Enable UART console
+printf "enable_uart=1\n" >> /boot/config.txt
 
 # Set hostname
 echo "ArPiRobot-Robot" | tee /etc/hostname
-sed -i "s/orangepi3-lts/ArPiRobot-Robot/g" /etc/hosts
+sed -i "s/raspberrypi/ArPiRobot-Robot/g" /etc/hosts
 
 # Set locale
 sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
@@ -40,10 +39,13 @@ EOF
 
 # Enable ssh server
 systemctl enable ssh
+systemctl enable regenerate_ssh_host_keys
 
 # Enable hardware interfaces
-sed -i '/^overlays=/d' /boot/armbianEnv.txt
-printf "overlays=i2c0 spi-spidev1 uart3\n" >> /boot/armbianEnv.txt
+raspi-config nonint do_spi 0
+raspi-config nonint do_i2c 0
+raspi-config nonint do_ssh 0
+raspi-config nonint do_camera 0
 
 # Setup custom systemd target & service & script to allow running commands at end of boot process
 cat > /etc/systemd/system/custom.target << 'EOF'
@@ -53,6 +55,7 @@ Requires=multi-user.target
 After=multi-user.target
 EOF
 ln -sf /etc/systemd/system/custom.target /etc/systemd/system/default.target
+
 cat > /etc/systemd/system/lastcommands.service << 'EOF'
 [Unit]
 Description=Run final boot commands
@@ -66,17 +69,9 @@ ExecStart=/usr/local/bin/last_boot_scripts.sh
 WantedBy=custom.target
 EOF
 systemctl enable lastcommands.service
+
 cat > /usr/local/bin/last_boot_scripts.sh << 'EOF'
 #!/usr/bin/env bash
-
-# During first boot, wait for armbian-firstrun to finish before running these scripts
-# process name is truncated to armbian-firstru
-while [ $(pgrep armbian-firstru | wc -l) -gt 0 ]; do
-    echo "Waiting for armbian-firstrun to finish..."
-    sleep 1;
-done
-
-
 files=$(find /usr/local/last_boot_scripts/ -name "*.sh" | sort)
 for file in $files; do
     echo "Running $file"
@@ -85,6 +80,3 @@ done
 EOF
 chmod +x /usr/local/bin/last_boot_scripts.sh
 mkdir -p /usr/local/last_boot_scripts/
-
-
-# armbian-firstrun service handles ssh key generation

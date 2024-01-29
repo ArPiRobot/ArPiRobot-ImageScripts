@@ -10,5 +10,7 @@ set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
-# Clear bash history
-rm -f /root/.bash_history
+# Update repos, upgrade all packages, and make sure configuration finishes
+apt-get -y update
+apt-get -y upgrade
+dpkg --configure -a
