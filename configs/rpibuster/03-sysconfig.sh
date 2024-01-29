@@ -47,7 +47,7 @@ raspi-config nonint do_i2c 0
 raspi-config nonint do_ssh 0
 raspi-config nonint do_camera 0
 
-# Setup custom systemd tartet & service & script to allow running commands at end of boot process
+# Setup custom systemd target & service & script to allow running commands at end of boot process
 cat > /etc/systemd/system/custom.target << 'EOF'
 [Unit]
 Description=Custom Target

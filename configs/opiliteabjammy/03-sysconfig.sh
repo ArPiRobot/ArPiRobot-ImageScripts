@@ -46,7 +46,7 @@ sed -i '/^overlays=/d' /boot/armbianEnv.txt
 printf "overlays=i2c0 i2c1 spi-spidev uart1 uart2 uart3\n" >> /boot/armbianEnv.txt
 printf "param_spidev_spi_bus=0\n" >> /boot/armbianEnv.txt
 
-# Setup custom systemd tartet & service & script to allow running commands at end of boot process
+# Setup custom systemd target & service & script to allow running commands at end of boot process
 cat > /etc/systemd/system/custom.target << 'EOF'
 [Unit]
 Description=Custom Target

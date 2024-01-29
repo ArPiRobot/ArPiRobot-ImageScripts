@@ -45,7 +45,7 @@ systemctl enable ssh
 sed -i '/^overlays=/d' /boot/armbianEnv.txt
 printf "overlays=i2c0 spi-spidev1 uart3\n" >> /boot/armbianEnv.txt
 
-# Setup custom systemd tartet & service & script to allow running commands at end of boot process
+# Setup custom systemd target & service & script to allow running commands at end of boot process
 cat > /etc/systemd/system/custom.target << 'EOF'
 [Unit]
 Description=Custom Target
