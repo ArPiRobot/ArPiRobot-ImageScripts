@@ -4,19 +4,24 @@ Scripts to setup an ArPiRobot OS image.
 
 Also includes scripts to build a cross compilation sysroot using debootstrap.
 
-## Supported Boards and OS Images
+## Configurations
 
-- Raspberry Pi: (All):
-    - RasPiOS Lite Bookworm (12) 32-bit (`rpi_armhf`)
-    - [Download]()
+Each configuration is designed for a certain base image (usually the official OS image from the board vendor). The base images the config was designed for are listed below.
 
-- Orange Pi Zero 2W:
+- Raspberry Pi - All (`rpi`):
+    - RasPiOS Lite Bookworm (12) 32-bit
+    - [Base Image Downloads](https://www.raspberrypi.com/software/operating-systems/)
+    - Base Image Used: `2023-12-11-raspios-bookworm-armhf-lite.img.xz`
+
+- Orange Pi Zero 2W - 1GB and 2GB variants (`opi_zero2w`)
     - Debian Bookworm (12) 64-bit (`opi_zero2w`)
-    - TODO: 1GB_2GB Orangepizero2w_1.0.0_debian_bookworm_server_linux6.1.31.7z
+    - [Base Image Downloads](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-Pi-Zero-2W.html)
+    - Base Image Used: `Orangepizero2w_1.0.0_debian_bookworm_server_linux6.1.31.7z` (tested with image for the 1GB/2GB boards, images for the 1.5GB and 4GB will probably work too)
 
 - Orange Pi 3B:
     - Debian Bookworm (12) 64-bit (`opi_3b`)
-    - TODO (Orangepi3b_1.0.4_debian_bookworm_server_linux5.10.160.7z)
+    - [Base Image Downloads](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-Pi-3B.html)
+    - Base Image Used: `Orangepi3b_1.0.4_debian_bookworm_server_linux5.10.160.7z`
 
 
 ## Using Scripts to Make an Image
@@ -78,9 +83,8 @@ Also includes scripts to build a cross compilation sysroot using debootstrap.
 *Note: This does not run on an image file. Just on any linux system with debootstrap and qemu-user-static installed.*
 
 ```sh
-# Replace buster with different debian codename and 1.1.0 with the sysroot version number
-# Both debian and raspberry pi os must support the given codename
-sudo ./make_sysroots.sh buster 1.1.0
+# make_sysroots.sh [codename] [sysroot_version]
+sudo ./make_sysroots.sh bookworm 1.1.0
 ```
 
 This will create sysroot tarballs for each supported architecture in `build-sysroot/`.
