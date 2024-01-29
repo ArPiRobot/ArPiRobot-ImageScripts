@@ -11,7 +11,7 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
 # Note: Can't use nmcli in chroot, thus write a config file instead
-cat > /lib/systemd/system/systemd-random-seed.service << 'EOF'
+cat > /etc/NetworkManager/system-connections/RobotAP.nmconnection << 'EOF'
 [connection]
 id=RobotAP
 uuid=b1bbea3e-9954-4827-b6ee-b0bc244d48a9
