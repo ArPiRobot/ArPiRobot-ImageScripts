@@ -12,7 +12,7 @@ trap exit_trap EXIT
 
 
 # Enable UART console
-printf "enable_uart=1\n" >> /boot/config.txt
+printf "enable_uart=1\n" >> /boot/firmware/config.txt
 
 # Set hostname
 echo "ArPiRobot-Robot" | tee /etc/hostname
