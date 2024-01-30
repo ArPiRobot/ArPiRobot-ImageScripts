@@ -38,3 +38,4 @@ method=disabled
 
 [proxy]
 EOF
+chmod 600 /etc/NetworkManager/system-connections/RobotAP.nmconnection
