@@ -26,3 +26,7 @@ printf "notdefault\nnotdefault" | passwd root
 
 # Allow passwordless sudo for arpirobot
 echo "arpirobot ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_arpirobot-nopasswd
+
+# Disable userconfig service (prompts for user creation on first boot)
+systemctl disable userconfig.service
+systemctl mask userconfig.service

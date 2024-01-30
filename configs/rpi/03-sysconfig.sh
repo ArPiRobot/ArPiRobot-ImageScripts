@@ -14,6 +14,9 @@ trap exit_trap EXIT
 # Enable UART console
 printf "enable_uart=1\n" >> /boot/firmware/config.txt
 
+# Remove console=tty1 so that systemd output is shown on uart console
+sudo sed -i 's/ console=tty1//g' /boot/firmware/cmdline.txt
+
 # Set hostname
 echo "ArPiRobot-Robot" | tee /etc/hostname
 sed -i "s/raspberrypi/ArPiRobot-Robot/g" /etc/hosts
