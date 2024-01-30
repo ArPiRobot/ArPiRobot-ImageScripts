@@ -21,6 +21,7 @@ autoconnect=true
 
 [wifi]
 band=bg
+channel=0
 mode=ap
 ssid=ArPiRobot-RobotAP
 

@@ -4,6 +4,13 @@ Scripts to setup an ArPiRobot OS image.
 
 Also includes scripts to build a cross compilation sysroot using debootstrap.
 
+## Folder Strucutre
+
+- `configs`: Contains configuration scripts to build an image from the indicated base image using a chroot.
+- `common_scripts`: Includes scripts that will be included on all images
+- Each config can also have a scripts directory with custom scripts (or overrides for common scripts)
+- Installing the scrips is handled by one of the config scripts (`arpirobotsoft`)
+
 ## Configurations
 
 Each configuration is designed for a certain base image (usually the official OS image from the board vendor). The base images the config was designed for are listed below.
