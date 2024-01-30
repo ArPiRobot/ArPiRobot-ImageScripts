@@ -11,6 +11,15 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 
 
+# Note: When porting this to another board / version of Linux the command
+# sudo fuser -m -v /
+# Can be useful to determine what processes are using the root filesystem
+# Capital 'F' is for write access
+# To determine PID of process with name from fuser command
+# sudo ps -C PROCESS_NAME_HERE -o pid=
+# List open files for the given PID (doesn't show which are open for writing, but narrows down list)
+# sudo ls -l /proc/PID_HERE/fd
+
 # NOTE: System boots rw and switches to ro after boot
 # This allows services that need rw access (at least for first boot) to still work
 # even though image is created in chroot and never boots rw before booting in use
@@ -71,7 +80,7 @@ cat >> /etc/fstab << 'EOF'
 tmpfs           /tmp             tmpfs   nosuid,nodev,nofail         0       0
 tmpfs           /var/log         tmpfs   nosuid,nodev,nofail         0       0
 tmpfs           /var/tmp         tmpfs   nosuid,nodev,nofail         0       0
-tmpfs           /var/lib/dhcpcd5 tmpfs   nosuid,nodev,nofail         0       0
+tmpfs           /var/lib/NetworkManager/ tmpfs   nosuid,nodev,nofail         0       0
 tmpfs           /var/lib/misc    tmpfs   nosuid,nodev,nofail         0       0
 EOF
 
