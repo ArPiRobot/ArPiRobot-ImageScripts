@@ -75,6 +75,7 @@ ExecStart=/usr/local/bin/arpirobot-launch.sh
 [Install]
 WantedBy=custom.target
 EOF
+systemctl enable arpirobot-program.service
 
 # Create directory for robot program
 mkdir -p /home/arpirobot/arpirobot
