@@ -37,6 +37,7 @@ if os.path.exists("/etc/sysconfig/regdomain"):
                 print(line, end='')
         print("COUNTRY={}".format(sys.argv[3]))
 else:
+    os.makedirs("/etc/sysconfig", exist_ok=True)
     with open("/etc/sysconfig/regdomain", "w") as file:
         file.write("COUNTRY={}".format(sys.argv[3]))
     

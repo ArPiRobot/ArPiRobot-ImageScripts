@@ -68,4 +68,15 @@ NEW_PASS="$2"
 # sed "s/ssid=$SSID/ssid=$NEW_SSID/g" /etc/hostapd/hostapd.conf
 # sed "s/wpa_passphrase=$PASS/wpa_passphrase=$NEW_PASS/g" /etc/hostapd/hostapd.conf
 
+# Make system rw if it is ro currently
+was_ro=0
+if [ ! -z "$(mount | grep "on / " | grep ro)" ]; then
+    # Curently ro
+    was_ro=1
+    dt-rw.sh
+fi
 sudo dt-wifi_ap_replace.py "$1" "$2" "$3" "$4" "$5"
+if [ $was_ro = 1 ]; then
+    # Restore ro if it was originally ro
+    dt-ro.sh
+fi
