@@ -35,7 +35,7 @@ COUNTRY_LINE=$(iw reg get | grep country | head -1)
 CHANNEL_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep channel=)
 BAND_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep band=)
 SSID=$(echo "$SSID_LINE" | sed -z 's/ssid=//g')
-PASS=$(echo "$PASS_LINE" | sed -z 's/wpa_passphrase=//g')
+PASS=$(echo "$PASS_LINE" | sed -z 's/psk=//g')
 COUNTRY=$(echo "$COUNTRY_LINE" | sed -z 's/country //g')
 COUNTRY="${COUNTRY%:*}"
 CHANNEL=$(echo "$CHANNEL_LINE" | sed -z 's/channel=//g')
