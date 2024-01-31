@@ -31,7 +31,11 @@ sudo chmod 755 /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null 2>&1
 # Read settings from file
 SSID_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep ssid=)
 PASS_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep psk=)
-COUNTRY_LINE=$(iw reg get | grep country | head -1)
+
+# Note: Need full path to iw b/c DeployTool doesn't run a shell, thus sbin not in path
+COUNTRY_LINE=$(/usr/sbin/iw reg get | grep country | head -1)
+
+
 CHANNEL_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep channel=)
 BAND_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep band=)
 SSID=$(echo "$SSID_LINE" | sed -z 's/ssid=//g')
