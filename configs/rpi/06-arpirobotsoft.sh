@@ -24,6 +24,7 @@ function binarch(){
 # However, these services / programs are setup such that they do not
 # need write access to filesystem, thus it shouldn't matter if lastcommands
 # runs afterwards
+orig_dir="$(pwd)"
 cd /home/arpirobot
 git clone https://github.com/ArPiRobot/ArPiRobot-CameraStreaming.git
 chown -R arpirobot:arpirobot ArPiRobot-CameraStreaming
@@ -42,13 +43,13 @@ else
     exit 1
 fi
 sed -i 's/libcamera/raspicam/g' /home/arpirobot/camstream/default.txt
-cd
+cd "$orig_dir"
 rm -rf /home/arpirobot/ArPiRobot-CameraStreaming
 
 # Scripts used by deploy tool
 DIR="$(dirname "$0")"
-cp "$DIR/../../common_scripts/*" /usr/local/bin/
-cp "$DIR/scripts/*" /usr/local/bin/
+cp "$DIR/../../common_scripts"/* /usr/local/bin/
+cp "$DIR/scripts"/* /usr/local/bin/
 
 # Service to start robot program
 # Note: This uses the "custom" target and runs after the last boot commands
