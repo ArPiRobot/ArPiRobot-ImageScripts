@@ -40,3 +40,6 @@ method=disabled
 [proxy]
 EOF
 chmod 600 /etc/NetworkManager/system-connections/RobotAP.nmconnection
+
+# Default to unset regulatory domain
+echo "options cfg80211 ieee80211_regdom=00" > /etc/modprobe.d/cfg80211_regdomain.conf

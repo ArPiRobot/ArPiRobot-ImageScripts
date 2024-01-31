@@ -28,16 +28,6 @@ with fileinput.FileInput("/etc/NetworkManager/system-connections/RobotAP.nmconne
 os.system("iw reg set {}".format(sys.argv[3]))
 
 # Write config file to apply it on boot
-if os.path.exists("/etc/sysconfig/regdomain"):
-    with fileinput.FileInput("/etc/sysconfig/regdomain", inplace=True, backup='.bak') as file:
-        for line in file:
-            if line.startswith("COUNTRY="):
-                continue
-            else:
-                print(line, end='')
-        print("COUNTRY={}".format(sys.argv[3]))
-else:
-    os.makedirs("/etc/sysconfig", exist_ok=True)
-    with open("/etc/sysconfig/regdomain", "w") as file:
-        file.write("COUNTRY={}".format(sys.argv[3]))
+with open("/etc/modprobe.d/cfg80211_regdomain.conf", "w") as file:
+    file.write("options cfg80211 ieee80211_regdom={}".format(sys.argv[3]))
     
