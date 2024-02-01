@@ -5,9 +5,9 @@ import fileinput
 import os
 
 # four args plus name of script
-# dt-wifi_ap_replace.py SSID PASSWORD COUNTRY_CODE CHANNEL BAND
-if len(sys.argv) != 6:
-    print("Must be exactly five arguments!")
+# dt-wifi_ap_replace.py SSID PASSWORD CHANNEL BAND
+if len(sys.argv) != 5:
+    print("Must be exactly four arguments!")
     sys.exit(1)
 
 with fileinput.FileInput("/etc/NetworkManager/system-connections/RobotAP.nmconnection", inplace=True, backup='.bak') as file:
@@ -17,9 +17,9 @@ with fileinput.FileInput("/etc/NetworkManager/system-connections/RobotAP.nmconne
         elif line.startswith("psk="):
             print("psk=" + sys.argv[2])
         elif line.startswith("band="):
-            print("band=" + sys.argv[5])
+            print("band=" + sys.argv[4])
         elif line.startswith("channel="):
-            print("channel=" + sys.argv[4])
+            print("channel=" + sys.argv[3])
         else:
             print(line, end='')
     

@@ -44,7 +44,7 @@ if [ $# -eq 0 ]; then
     echo "$BAND"
     exit 0
 else
-    if [ $# -ne 5 ]; then
+    if [ $# -ne 4 ]; then
         echo "Either call with zero or four arguments!"
         echo "$0 [NEW_SSID NEW_PASSWORD CHANNEL BAND]"
         exit 1
@@ -65,7 +65,7 @@ if [ ! -z "$(mount | grep "on / " | grep ro)" ]; then
     was_ro=1
     dt-rw.sh
 fi
-sudo dt-wifi_ap_replace.py "$1" "$2" "$3" "$4" "$5"
+sudo dt-wifi_ap_replace.py "$1" "$2" "$3" "$4"
 if [ $was_ro = 1 ]; then
     # Restore ro if it was originally ro
     dt-ro.sh
