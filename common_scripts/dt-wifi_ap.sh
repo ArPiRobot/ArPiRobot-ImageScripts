@@ -80,3 +80,7 @@ if [ $was_ro = 1 ]; then
     # Restore ro if it was originally ro
     dt-ro.sh
 fi
+
+# Restart hotspot
+sudo nmcli con down RobotAP
+sudo nmcli con up RobotAP
