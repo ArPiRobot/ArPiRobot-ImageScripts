@@ -83,4 +83,5 @@ fi
 
 # Restart hotspot
 sudo nmcli con down RobotAP
+sudo nmcli con reload
 sudo nmcli con up RobotAP
