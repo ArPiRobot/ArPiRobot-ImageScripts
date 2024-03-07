@@ -28,6 +28,9 @@ cd $BUILDDIR
 # armv6 chroot is based on raspbian not debian b/c debian armhf is armv7 but Pi zero is armv6 w/ hard float
 rm -rf ./bootstrap-armv6
 debootstrap --arch=armhf --variant=buildd $codename ./bootstrap-armv6 http://raspbian.raspberrypi.org/raspbian/
+cp "$(dirname "$0")/sysroot_setup.sh" ./bootstrap-armv6/setup.sh
+chmod +x ./bootstrap-armv6/setup.sh
+chroot ././bootstrap-armv6 /setup.sh
 rm -rf ./sysroot-armv6
 mkdir ./sysroot-armv6
 ../sysroot-from-root.sh ./bootstrap-armv6 ./sysroot-armv6
@@ -45,6 +48,9 @@ rm -rf ./bootstrap-armv6
 # aarch64 chroot is based on normal debian
 rm -rf ./bootstrap-aarch64
 sudo debootstrap --arch=arm64 --variant=buildd $codename ./bootstrap-aarch64
+cp "$(dirname "$0")/sysroot_setup.sh" ./bootstrap-aarch64/setup.sh
+chmod +x ./bootstrap-aarch64/setup.sh
+chroot ././bootstrap-aarch64 /setup.sh
 rm -rf ./sysroot-aarch64
 mkdir ./sysroot-aarch64
 ../sysroot-from-root.sh ./bootstrap-aarch64 ./sysroot-aarch64
