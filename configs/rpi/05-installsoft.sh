@@ -36,4 +36,5 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     python3-gi \
     python3-gst-1.0 \
     gstreamer1.0-gl \
-    gstreamer1.0-rtsp
+    gstreamer1.0-rtsp \
+    libboost-dev
