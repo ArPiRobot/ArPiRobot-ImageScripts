@@ -37,4 +37,6 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     python3-gst-1.0 \
     gstreamer1.0-gl \
     gstreamer1.0-rtsp \
-    libboost-dev
+    libcamera0.2 \
+    gstreamer1.0-libcamera \
+    rpicam-apps-lite
