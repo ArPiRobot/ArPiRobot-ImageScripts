@@ -41,4 +41,5 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     gstreamer1.0-libcamera \
     rpicam-apps-lite \
     libopencv-*406 \
+    python3-opencv \
     ffmpeg
