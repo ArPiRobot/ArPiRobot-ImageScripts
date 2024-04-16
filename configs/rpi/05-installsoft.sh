@@ -40,4 +40,5 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     libcamera0.2 \
     gstreamer1.0-libcamera \
     rpicam-apps-lite \
-    libopencv-*406
+    libopencv-*406 \
+    ffmpeg
