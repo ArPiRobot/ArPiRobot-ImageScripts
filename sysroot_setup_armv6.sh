@@ -6,4 +6,7 @@ apt-get install -y \
     libgstreamer1.0-dev \
     libopencv-dev \
     libboost-dev \
-    libboost-system-dev
+    libboost-system-dev \
+    liblgpio-dev \
+    libpigpio-dev \
+    libserialport-dev

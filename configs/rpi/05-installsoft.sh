@@ -43,4 +43,7 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     libopencv-*406 \
     python3-opencv \
     ffmpeg \
-    libboost-system1.74.0
+    libboost-system1.74.0 \
+    liblgpio1 \
+    libpigpio1 \
+    libserialport0
