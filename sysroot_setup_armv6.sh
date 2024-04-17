@@ -18,4 +18,5 @@ apt-get install -y \
     libboost-system-dev \
     liblgpio-dev \
     libpigpio-dev \
-    libserialport-dev
+    libserialport-dev \
+    libpigpiod-if-dev
