@@ -42,4 +42,5 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     rpicam-apps-lite \
     libopencv-*406 \
     python3-opencv \
-    ffmpeg
+    ffmpeg \
+    libboost-system1.74.0
