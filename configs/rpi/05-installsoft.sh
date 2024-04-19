@@ -46,4 +46,5 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     libboost-system1.74.0 \
     liblgpio1 \
     libpigpio1 \
-    libserialport0
+    libserialport0 \
+    libpigpiod-if-dev
