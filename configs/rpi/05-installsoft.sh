@@ -48,3 +48,9 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install git \
     libpigpio1 \
     libserialport0 \
     libpigpiod-if-dev
+
+# RTSP server used for camera streams
+mkdir /opt/mediamtx
+wget https://github.com/bluenviron/mediamtx/releases/download/v1.7.0/mediamtx_v1.7.0_linux_armv6.tar.gz
+tar -C /opt/mediamtx --extract --gzip -f mediamtx_v1.7.0_linux_armv6.tar.gz
+rm mediamtx_v1.7.0_linux_armv6.tar.gz

@@ -51,26 +51,10 @@ raspi-config nonint do_ssh 0
 raspi-config nonint do_camera 0
 
 # Setup custom systemd target & service & script to allow running commands at end of boot process
-cat > /etc/systemd/system/custom.target << 'EOF'
-[Unit]
-Description=Custom Target
-Requires=multi-user.target
-After=multi-user.target
-EOF
+cp "$DIR/../../common/services/custom.target" /etc/systemd/system/
 ln -sf /etc/systemd/system/custom.target /etc/systemd/system/default.target
 
-cat > /etc/systemd/system/lastcommands.service << 'EOF'
-[Unit]
-Description=Run final boot commands
-After=multi-user.target
-
-[Service]
-Type=simple
-ExecStart=/usr/local/bin/last_boot_scripts.sh
-
-[Install]
-WantedBy=custom.target
-EOF
+cp "$DIR/../../common/services/lastcommands.service" /etc/systemd/system/
 systemctl enable lastcommands.service
 
 cat > /usr/local/bin/last_boot_scripts.sh << 'EOF'

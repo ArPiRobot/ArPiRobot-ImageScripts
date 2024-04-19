@@ -1,0 +1,12 @@
+[Unit]
+Description=Service to run RTSP server for camera streams
+After=multi-user.target
+
+[Service]
+Type=simple
+User=USERNAME_HERE
+WorkingDirectory=/opt/mediamtx
+ExecStart=/opt/mediamtx/mediamtx
+
+[Install]
+WantedBy=multi-user.target

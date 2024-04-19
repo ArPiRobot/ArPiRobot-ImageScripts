@@ -1,0 +1,10 @@
+[Unit]
+Description=Run final boot commands
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/last_boot_scripts.sh
+
+[Install]
+WantedBy=custom.target
