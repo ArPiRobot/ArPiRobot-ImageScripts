@@ -28,6 +28,12 @@ raspi-config nonint do_camera 0
 # of code across different SBCs
 echo "1" > /usr/local/arpirobot_default_i2c.txt
 
+# Write a file indicating which SPI interface should be used by the CoreLib
+# by default on this board. This is allows easier use of hats from the CoreLib
+# by not having to specify a specifc SPI bus number, improving portability
+# of code across different SBCs
+echo "0" > /usr/local/arpirobot_default_spi.txt
+
 # Increase default gpu memory on lower ram devices
 # Necessary for v4l2m2m encoders to work properly
 echo "gpu_mem=16" >> /boot/firmware/config.txt
