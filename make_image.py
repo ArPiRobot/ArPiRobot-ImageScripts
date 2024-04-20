@@ -8,23 +8,28 @@ import subprocess
 import getpass
 import sys
 import os
+import time
 import shutil
 import argparse
 import urllib.request
+from typing import List
 
 
-# def run_command(cmd_args):
-#     script_name = os.path.basename(cmd_args[0])
-#     proc = subprocess.Popen(cmd_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-#     with proc.stdout:
-#         for line in iter(proc.stdout.readline, b''):
-#             strline = line.decode("utf8")
-#             if strline.endswith("\n"):
-#                 strline = strline[:-1]
-#             if strline.endswith("\r"):
-#                 strline = strline[:-1]
-#             logging.info("({}) {}".format(script_name, strline))
-#     return proc.wait()
+def run_command(cmd_args, shell=False):
+    script_name = os.path.basename(cmd_args[0])
+    proc = subprocess.Popen(cmd_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shell)
+    stdout_buf = bytearray()
+    with proc.stdout:
+        for line in iter(proc.stdout.readline, b''):
+            stdout_buf.extend(line)
+            strline = line.decode("utf8")
+            if strline.endswith("\n"):
+                strline = strline[:-1]
+            if strline.endswith("\r"):
+                strline = strline[:-1]
+            logging.info("({}) {}".format(script_name, strline))
+    ec = proc.wait()
+    return ec, stdout_buf
 
 ################################################################################
 # System checks
@@ -61,6 +66,8 @@ def chroot_check():
 ################################################################################
 
 def stage2():
+    print("STAGE 2")
+    return
     # Handle command line args
     parser = argparse.ArgumentParser()
     parser.add_argument("components", type=str, nargs="*", help="List of components to execute")
@@ -71,6 +78,8 @@ def stage2():
     internet_check()
     chroot_check()
     
+    # TODO: Mark all component scripts executable (chmod)
+
     # TODO: Execute each component in order
 
 ################################################################################
@@ -81,104 +90,218 @@ def stage2():
 # Stage 1: Runs on host system
 ################################################################################
 
+class ExitOneError(Exception):
+    def __init__(self):
+        super().__init__()
+
+def stage1_cleanup(loopback: str, mounts: List[str], mount_prefix: str):
+    # Sleep avoids issues with unmounting too quickly after mount (eg if mount failure triggers cleanup)
+    time.sleep(1)
+    mounts.reverse()
+    for mount in mounts:
+        # Remove slash prefix from dest so os.path.join works
+        full_mount = os.path.join(mount_prefix, mount[1:])
+        if mount == "/dev":
+            run_command(["umount", "-R", full_mount])
+        else:
+            run_command(["umount", full_mount])
+        time.sleep(0.5)
+    if mount_prefix != "":
+        try:
+            shutil.rmtree(mount_prefix)
+        except:
+            pass
+    if loopback is not None and loopback != "":
+        run_command(["losetup", "-d", loopback])
+
 def stage1():
+    # Setup logging
+    shandler = logging.StreamHandler(sys.stdout)
+    fhandler = logging.FileHandler("build/make_image.log", mode='w')
+    shandler.setLevel(logging.DEBUG)
+    fhandler.setLevel(logging.DEBUG)
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[shandler, fhandler],
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+
+    loopback = None
+    current_mounts = []
+    script_dir = os.path.realpath(os.path.dirname(__file__))
+    working_root = os.path.join(script_dir, "build", "rootfs")
+    imgscript_dir = os.path.join(working_root, "root", "imagescripts")
+
     # Modules that are not builtin should not be imported for stage2
     import yaml
 
-    # Handle command line args
-    parser = argparse.ArgumentParser()
-    parser.add_argument("config", type=str, help="Name of the config to use to generate the image.")
-    parser.add_argument("version", type=str, help="Version string of the image (exclude config).")
-    args = parser.parse_args(sys.argv[2:])
+    try:
 
-    # Ensure running in proper conditions
-    root_check()
-    
-    # Parse config
-    script_dir = os.path.realpath(os.path.dirname(__file__))
-    config = None
-    with open(os.path.join(script_dir, "configs", "{}.yaml".format(args.config))) as f:
-        config = yaml.load(f, yaml.FullLoader)
-    base_img = config['base_img']
-    base_img_name = os.path.basename(base_img)
-    base_img_sha256 = config['base_img_sha256']
-    partitions = config['partitions']
-    components = config['components']
-    if len(partitions) == 0:
-        logging.error("Partitions cannot have length 0")
-        exit(1)
-    if len(components) == 0:
-        logging.error("Components cannot have length 0")
-        exit(1)
+        # Handle command line args
+        parser = argparse.ArgumentParser()
+        parser.add_argument("config", type=str, help="Name of the config to use to generate the image.")
+        parser.add_argument("version", type=str, help="Version string of the image (exclude config).")
+        args = parser.parse_args(sys.argv[2:])
 
-    # Make sure all referenced components exist
-    missing_components = False
-    for component in components:
-        component_file = os.path.join(script_dir, "components", "{}.sh".format(component))
-        if not os.path.exists(component_file):
-            logging.error("Component {} missing".format(component))
-            missing_components = True
-    if missing_components:
-        exit(1)
-    
-    # Download image and verify hash
-    download_dir = os.path.join(script_dir, "build", "downloads")
-    if not os.path.exists(download_dir):
-        os.makedirs(download_dir)
-    dest_file = os.path.join(download_dir, base_img_name)
-    if not os.path.exists(dest_file):
-        logging.info("Downloading base image file")
-        res = subprocess.run(["wget", base_img, "-O", dest_file], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        if res.returncode != 0:
-            logging.error("Failed to download base image file")
-            exit(1)
-    else:
-        logging.info("Skipping base image download, as it already exists")
-    res = subprocess.run(["sha256sum", dest_file], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    if res.returncode != 0:
-        logging.error("Calculating hash failed")
-        exit(1)
-    calc_hash = res.stdout.decode().split(" ")[0]
-    if calc_hash != base_img_sha256:
-        logging.error("Hash of downloaded image does not match expected.")
-        os.remove(dest_file)
-        exit(1)
+        # Ensure running in proper conditions
+        root_check()
+        
+        # Parse config
+        config = None
+        with open(os.path.join(script_dir, "configs", "{}.yaml".format(args.config))) as f:
+            config = yaml.load(f, yaml.FullLoader)
+        base_img = config['base_img']
+        base_img_name = os.path.basename(base_img)
+        base_img_sha256 = config['base_img_sha256']
+        expand_mb = config['expand_mb']
+        partitions = config['partitions']
+        components = config['components']
+        if len(partitions) == 0:
+            logging.error("Partitions cannot have length 0")
+            raise ExitOneError()
+        if len(components) == 0:
+            logging.error("Components cannot have length 0")
+            raise ExitOneError()
 
-    # Extract base image
-    logging.info("Decompressing base image")
-    img_path = None
-    if base_img_name.endswith(".xz"):
-        img_path = dest_file[:-3] # remove .xz suffix
-        res = subprocess.run(["xz", "-k", "-d", dest_file], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    else:
-        logging.error("Unknown compression format.")
+        # Make sure all referenced components exist
+        missing_components = False
+        for component in components:
+            component_file = os.path.join(script_dir, "components", "{}.sh".format(component))
+            if not os.path.exists(component_file):
+                logging.error("Component {} missing".format(component))
+                missing_components = True
+        if missing_components:
+            raise ExitOneError()
+        
+        # Download image and verify hash
+        download_dir = os.path.join(script_dir, "build", "downloads")
+        if not os.path.exists(download_dir):
+            os.makedirs(download_dir)
+        dest_file = os.path.join(download_dir, base_img_name)
+        if not os.path.exists(dest_file):
+            logging.info("Downloading base image file")
+            ec, out = run_command(["wget", base_img, "-O", dest_file])
+            if ec != 0:
+                logging.error("Failed to download base image file")
+                raise ExitOneError()
+        else:
+            logging.info("Skipping base image download, as it already exists")
+        ec, out = run_command(["sha256sum", dest_file])
+        if ec != 0:
+            logging.error("Calculating hash failed")
+            raise ExitOneError()
+        calc_hash = out.decode().split(" ")[0]
+        if calc_hash != base_img_sha256:
+            logging.error("Hash of downloaded image does not match expected.")
+            os.remove(dest_file)
+            raise ExitOneError()
+
+        # Extract base image
+        logging.info("Decompressing base image")
+        img_path = None
+        if base_img_name.endswith(".xz"):
+            img_path = dest_file[:-3] # remove .xz suffix
+            ec, out = run_command(["xz", "-k", "-d", dest_file])
+        else:
+            logging.error("Unknown compression format.")
+            raise ExitOneError()
+        if ec != 0:
+            logging.error("Decompression failed.")
+            raise ExitOneError()
+        working_img = os.path.join(script_dir, "build", "ArPiRobot-{}-{}.img".format(args.version, args.config))
+        if os.path.exists(working_img):
+            os.remove(working_img)
+        shutil.move(img_path, working_img)
+        logging.info("Working image: {}".format(working_img))
+
+        # Expand image file
+        logging.info("Expanding image file")
+        ec, out = run_command("dd if=/dev/zero bs=1MiB count={} >> {}".format(expand_mb, working_img), shell=True)
+        if ec != 0:
+            logging.error("Failed to expand image file.")
+            raise ExitOneError()
+
+        # Setup loopback device
+        time.sleep(1)
+        logging.info("Setting up loopback device")
+        ec, out = run_command(["losetup", "-f", "-P", "--show", working_img])
+        if ec != 0:
+            logging.error("Failed to setup loopback device")
+            raise ExitOneError()
+        loopback = out.decode().splitlines()[0].strip()
+        logging.info("Loopback device = {}".format(loopback))
+
+        # Mount image partitions
+        logging.info("Mounting image partitions")
+        if os.path.exists(working_root):
+            shutil.rmtree(working_root)
+        os.makedirs(working_root)
+        for partnum, dest in partitions.items():
+            # Remove slash prefix from dest so os.path.join works
+            full_dest = os.path.join(working_root, dest[1:])
+            ec, out = run_command(["mount", "{}p{}".format(loopback, partnum), full_dest])
+            if ec != 0:
+                logging.error("Failed to mount partition {}".format(partnum))
+                raise ExitOneError()
+            current_mounts.append(dest)
+
+
+        # Mount standard chroot binds
+        logging.info("Binding system mounts")
+        ec, out = run_command(["mount", "--rbind", "/dev", os.path.join(working_root, "dev")])
+        if ec != 0:
+            logging.error("Failed to bind /dev")
+            raise ExitOneError()
+        ec, out = run_command(["mount", "--make-rslave", os.path.join(working_root, "dev")])
+        if ec != 0:
+            logging.error("Failed to bind /dev")
+            raise ExitOneError()
+        current_mounts.append("/dev")
+        ec, out = run_command(["mount", "--bind", "/proc", os.path.join(working_root, "proc")])
+        if ec != 0:
+            logging.error("Failed to bind /proc")
+            raise ExitOneError()
+        current_mounts.append("/proc")
+        ec, out = run_command(["mount", "--bind", "/sys", os.path.join(working_root, "sys")])
+        if ec != 0:
+            logging.error("Failed to bind /sys")
+            raise ExitOneError()
+        current_mounts.append("/sys")
+
+        # Copy to chroot
+        logging.info("Copying to chroot")
+        os.mkdir(imgscript_dir)
+        shutil.copytree(os.path.join(script_dir, "components"), os.path.join(imgscript_dir, "components"))
+        shutil.copy(os.path.join(script_dir, "make_image.py"), os.path.join(imgscript_dir, "make_image.py"))
+
+        # Write version file in chroot dir
+        logging.info("Writing image version file")
+        with open(os.path.join(working_root, "usr", "local", "arpirobot-image-version.txt"), "w") as f:
+            f.write("{}-{}".format(args.version, args.config))
+
+        logging.info("Running stage2 in chroot")
+        chroot_cmd = ["chroot", working_root, "/usr/bin/env", "python3", "/root/imagescripts/make_image.py"]
+        chroot_cmd.append("stage2")
+        chroot_cmd.extend(components)
+        ec, out = run_command(chroot_cmd)
+        if ec != 0:
+            logging.error("Failed to execute stage 2")
+            raise ExitOneError()
+
+        # Finished successfully
+        logging.info("Done.")
+        logging.info("Cleaning up.")
+        stage1_cleanup(loopback, current_mounts, working_root)
+    except ExitOneError as e:
+        logging.info("Cleaning up.")
+        stage1_cleanup(loopback, current_mounts, working_root)
         exit(1)
-    if res.returncode != 0:
-        logging.error("Decompression failed.")
-        exit(1)
-    working_img = os.path.join(script_dir, "build", "ArPiRobot-{}-{}.img".format(args.version, args.config))
-    if os.path.exists(working_img):
-        os.remove(working_img)
-    shutil.move(img_path, working_img)
-    logging.info("Working image: {}".format(working_img))
+    except BaseException as e:
+        logging.info("Cleaning up.")
+        stage1_cleanup(loopback, current_mounts, working_root)
+        raise e
 
-    # TODO: Extract and mount base image partitions
-    # TODO: Mount standard chroot binds
-    # TODO: Copy this script, configs, and components to chroot
-    # TODO: Write version file in chroot dir
-
-    logging.info("BEGIN STAGE 2")
-    # TODO: Enter chroot and run stage 2 in chroot
-    # TODO: Wait for stage 2 to complete and get exit code.
-    logging.info("END STAGE 2")
-    
-    # TODO: Unmount standard binds
-    # TODO: Unmount image (reverse order)
-    # TODO: If stage 2 failed, exit now
-
-    # Finished successfully
-    logging.info("Done")
-    exit(0)
 
 ################################################################################
 
@@ -189,16 +312,6 @@ def stage1():
 ################################################################################
 
 def main():
-    # Setup logging
-    shandler = logging.StreamHandler(sys.stdout)
-    shandler.setLevel(logging.DEBUG)
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[shandler],
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
-
     # TODO: Duplicate stdout and stderr to file
 
     # Launch
@@ -209,13 +322,12 @@ def main():
         stage1()
     elif sys.argv[1] == "stage2":
         stage2()
+    elif sys.argv[1] == "clean":
+        script_dir = os.path.realpath(os.path.dirname(__file__))
+        shutil.rmtree(os.path.join(script_dir, "build"))
     else:
         print("Unknown command.")
         exit(1)
-
-    # logging.info("Writing image version file")
-    # with open("/usr/local/arpirobot-image-version.txt", "w") as f:
-    #     f.write("{}-{}".format(args.version, args.config))
 
 ################################################################################
     

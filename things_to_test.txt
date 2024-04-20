@@ -1,6 +1,7 @@
 List of things to test to make sure an image is configured correctly
 Note: This is not a comprehensive list
 
+- Version file exists at /usr/local/arpirobot-image-version.txt
 - Root filesystem expands on first boot
 - Filesystem becomes mounted readonly after boot
 - SSH host keys are regenerated on first boot
