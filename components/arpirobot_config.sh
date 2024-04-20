@@ -12,7 +12,7 @@ DIR="$(dirname "$0")"
 
 
 # Scripts used by deploy tool
-for script in "$DIR/arpirobot_config/scripts"/*; deploy
+for script in "$DIR/arpirobot_config/scripts"/*; do
     cp "$script" /usr/local/bin/
     chmod +x /usr/local/bin/$(basename "$script")
 done

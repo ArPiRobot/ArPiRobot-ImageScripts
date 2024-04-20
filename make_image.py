@@ -258,6 +258,25 @@ def stage1():
         loopback = out.decode().splitlines()[0].strip()
         logging.info("Loopback device = {}".format(loopback))
 
+        # Grow last partition (this is assumed to be root partition)
+        logging.info("Growing root partition")
+        largest_part = 0
+        for part, _ in partitions.items():
+            if part > largest_part:
+                largest_part = part
+        ec, out = run_command(["growpart", loopback, str(largest_part)])
+        if ec != 0:
+            logging.error("Failed to grow root partition")
+            raise ExitOneError()
+        ec, out = run_command(["e2fsck", "-f", "-y", "{}p{}".format(loopback, largest_part)])
+        if ec != 0:
+            logging.error("Failed to grow root partition")
+            raise ExitOneError()
+        ec, out = run_command(["resize2fs", "{}p{}".format(loopback, largest_part)])
+        if ec != 0:
+            logging.error("Failed to grow root partition")
+            raise ExitOneError()
+
         # Mount image partitions
         logging.info("Mounting image partitions")
         if os.path.exists(working_root):

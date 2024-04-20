@@ -53,10 +53,23 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libboost-system1.74.0 \
     libserialport0
 
+
+# Get architecture of an ELF binary
+function binarch(){
+    printf "$(readelf -h $1 | grep Machine: | sed -r 's/\s+Machine:\s+//g')"
+}
+
 # RTSP server used for camera streams
+arch=$(binarch $(which python3))
 mkdir /opt/mediamtx
-wget https://github.com/bluenviron/mediamtx/releases/download/v1.7.0/mediamtx_v1.7.0_linux_armv6.tar.gz
-tar -C /opt/mediamtx --extract --gzip -f mediamtx_v1.7.0_linux_armv6.tar.gz
-rm mediamtx_v1.7.0_linux_armv6.tar.gz
+if [ "$arch" = "ARM" ]; then
+    wget https://github.com/bluenviron/mediamtx/releases/download/v1.7.0/mediamtx_v1.7.0_linux_armv6.tar.gz -O mediamtx.tar.gz
+elif [ "$arch" = "AArch64" ]; then
+    wget https://github.com/bluenviron/mediamtx/releases/download/v1.7.0/mediamtx_v1.7.0_linux_arm64v8.tar.gz -O mediamtx.tar.gz
+else
+    echo "Unknown architecture. Cannot install mediamtx." && exit 1
+fi
+tar -C /opt/mediamtx --extract --gzip -f mediamtx.tar.gz
+rm mediamtx.tar.gz
 cp "$DIR/install_software/mediamtx.service" /etc/systemd/system/
 systemctl enable mediamtx.service

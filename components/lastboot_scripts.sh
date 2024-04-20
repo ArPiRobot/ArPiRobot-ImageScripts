@@ -18,6 +18,6 @@ ln -sf /etc/systemd/system/custom.target /etc/systemd/system/default.target
 cp "$DIR/lastboot_scripts/lastcommands.service" /etc/systemd/system/
 systemctl enable lastcommands.service
 
-cp "$DIR/lastboot_service/last_boot_scripts.sh" /usr/local/bin/
+cp "$DIR/lastboot_scripts/last_boot_scripts.sh" /usr/local/bin/
 chmod +x /usr/local/bin/last_boot_scripts.sh
 mkdir -p /usr/local/last_boot_scripts/
