@@ -27,3 +27,10 @@ raspi-config nonint do_camera 0
 # by not having to specify a specifc I2C bus number, improving portability
 # of code across different SBCs
 echo "1" > /usr/local/arpirobot_default_i2c.txt
+
+# Increase default gpu memory on lower ram devices
+# Necessary for v4l2m2m encoders to work properly
+echo "gpu_mem=16" >> /boot/firmware/config.txt
+echo "gpu_mem_256=76" >> /boot/firmware/config.txt
+echo "gpu_mem_512=76" >> /boot/firmware/config.txt
+echo "gpu_mem_1024=76" >> /boot/firmware/config.txt
