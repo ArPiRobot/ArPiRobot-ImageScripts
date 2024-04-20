@@ -9,6 +9,7 @@ partitions:             # IN ORDER THEY SHOULD BE MOUNTED partnumber: mountpath
   1: /boot/
 components:             # IN THE ORDER THEY SHOULD BE RUN
   - suppress_initramfs_stuff
+  - opi3b_repofix
   - update_system
   - opi3b_usersetup
   - opi3b_hwconfig
