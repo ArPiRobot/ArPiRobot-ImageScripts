@@ -178,7 +178,8 @@ def stage1():
         with open(os.path.join(script_dir, "configs", "{}.yaml".format(args.config))) as f:
             config = yaml.load(f, yaml.FullLoader)
         base_img = config['base_img']
-        base_img_name = os.path.basename(base_img)
+        base_img_can_download = config['base_img_can_download']
+        base_img_name = config['base_img_name']
         base_img_sha256 = config['base_img_sha256']
         expand_mb = config['expand_mb']
         partitions = config['partitions']
@@ -213,10 +214,16 @@ def stage1():
             os.makedirs(download_dir)
         dest_file = os.path.join(download_dir, base_img_name)
         if not os.path.exists(dest_file):
-            logging.info("Downloading base image file")
-            ec, out = run_command(["wget", base_img, "-O", dest_file])
-            if ec != 0:
-                logging.error("Failed to download base image file")
+            if base_img_can_download:
+                logging.info("Downloading base image file")
+                ec, out = run_command(["wget", base_img, "-O", dest_file])
+                if ec != 0:
+                    logging.error("Failed to download base image file")
+                    raise ExitOneError()
+            else:
+                logging.error("Base image cannot be downloaded automatically.")
+                logging.info("Download the image from {}".format(base_img))
+                logging.info("Place it in {}/build/download then re-launch the script".format(script_dir))
                 raise ExitOneError()
         else:
             logging.info("Skipping base image download, as it already exists")
@@ -235,7 +242,15 @@ def stage1():
         img_path = None
         if base_img_name.endswith(".xz"):
             img_path = dest_file[:-3] # remove .xz suffix
+            if os.path.exists(img_path):
+                os.remove(img_path)
             ec, out = run_command(["xz", "-k", "-d", dest_file])
+        elif base_img_name.endswith(".7z"):
+            img_path = dest_file[:-3] # remove .7z suffix
+            img_path += ".img" # Add .img suffix
+            if os.path.exists(img_path):
+                os.remove(img_path)
+            ec, out = run_command(["7z", "e", "-o{}".format(os.path.dirname(img_path)), dest_file, os.path.basename(img_path)])
         else:
             logging.error("Unknown compression format.")
             raise ExitOneError()
