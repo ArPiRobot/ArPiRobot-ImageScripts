@@ -17,4 +17,5 @@ components:             # IN THE ORDER THEY SHOULD BE RUN
   - rpi_install_software
   - arpirobot_config
   - network_config
+  - network_config_ethernet
   - cleanup
