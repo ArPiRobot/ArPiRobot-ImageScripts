@@ -1,100 +1,29 @@
 # ArPiRobot-ImageScripts
 
-Scripts to setup an ArPiRobot OS image.
+Scripts to setup OS images for use with ArPiRobot framework.
 
-Also includes scripts to build a cross compilation sysroot using debootstrap.
+Also includes scripts to generate development sysroots.
 
-## Folder Strucutre
+## Folder Structure
 
-- `configs`: Contains configuration scripts to build an image from the indicated base image using a chroot.
-- `common_scripts`: Includes scripts that will be included on all images
-- Each config can also have a scripts directory with custom scripts (or overrides for common scripts)
-- Installing the scrips is handled by one of the config scripts (`arpirobotsoft`)
-
-## Configurations
-
-Each configuration is designed for a certain base image (usually the official OS image from the board vendor). The base images the config was designed for are listed below.
-
-- Raspberry Pi - All (`rpi`):
-    - RasPiOS Lite Bookworm (12) 32-bit
-    - [Base Image Downloads](https://www.raspberrypi.com/software/operating-systems/)
-    - Base Image Used: `2023-12-11-raspios-bookworm-armhf-lite.img.xz`
-
-- Orange Pi Zero 2W - 1GB and 2GB variants (`opi_zero2w`)
-    - Debian Bookworm (12) 64-bit (`opi_zero2w`)
-    - [Base Image Downloads](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-Pi-Zero-2W.html)
-    - Base Image Used: `Orangepizero2w_1.0.0_debian_bookworm_server_linux6.1.31.7z` (tested with image for the 1GB/2GB boards, images for the 1.5GB and 4GB will probably work too)
-
-- Orange Pi 3B:
-    - Debian Bookworm (12) 64-bit (`opi_3b`)
-    - [Base Image Downloads](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-Pi-3B.html)
-    - Base Image Used: `Orangepi3b_1.0.4_debian_bookworm_server_linux5.10.160.7z`
+- `components`: Collection of bash scripts that actually set things up. See `components/_readme.txt` for organization details.
+- `configs`: Contains yaml configuration files to define which components should run for a given board and what OS image for that board to base the ArPiRobot image on.
+- `sysroot`: Scripts used to setup sysroots
+- `make_image.py`: Used to create an OS image using one of the defined configs
+- `make_sysroots.sh` Used to create development sysroots
 
 
-## Using Scripts to Make an Image
+## Creating Images
 
-*Note: Must be done on a Linux system.*
+- Requires Linux system with `qemu-user-static` package installed
+- Run `./make_iamge.py stage1 [config] [version]`
+- Once done, this will result in an image file in `build/`. The image will be compressed using xz
 
-- Install qemu-user-static
-- Download the base image
-- Increase the base image size using dd (3GB usually good)
-    ```sh
-    dd if=/dev/zero bs=1MiB count=3072 >> file_name.img
-    ```
-- Setup a loopback device (sudo losetup -f -P --show)
-- Grow the base image root partition using gparted (or any other method)
-- Mount base image root
-- Mount other partitions according to base image's fstab
-- Bind mount proc, sys, dev
-    ```sh
-    mount -t proc /proc root/proc
-    mount -t sysfs /sys root/sys
-    mount --rbind /dev root/dev
-    mount --make-rslave root/dev
-    ```
-- Copy host system's resolv.conf contents (if needed). Don't copy actual file to avoid overwriting symlinks on some systems.
-- Chroot into mounted image
-    - Install git and python3
-    - Clone this repository
-    - Run make_image.py [config] [version]
-    - Let all scripts run (address errors if any)
-    - Exit chroot
-- Copy off the log and delete cloned repo from mounted root directory
-- Unmount bind mounted things
-    ```sh
-    umount -R root/dev
-    umount root/sys
-    umount root/proc
-    ```
-- Unmount non root partitions
-- Unmount root partition
-- Shrink partition with gparted (or any other method)
-- Detach the loopback device
-- Use fdisk & truncate to shrink image
-    ```sh
-    fdisk -l image_name.img
-    # Multiply end of last partition + 1 by sector size to get size
-    # Note that if the system uses a GPT partition table add 34 not 1(33 for backup gpt table after shrink)
-    truncate --size=size_here image_name.img
-    # If using GPT parition table, use gdisk to rewrite headers and tables (w command) after
-    ```
-- xzip the image file and rename it in the format `ArPiRobot-[version]-[config].img.xz`
-    ```sh
-    xz -z image_name.img -v -T 0
-    ```
+## Creating Sysroots
 
-## Using Scripts to Make a Sysroot
-
-*Note: Must be done on a Linux system.*
-
-*Note: This does not run on an image file. Just on any linux system with debootstrap and qemu-user-static installed.*
-
-```sh
-# make_sysroots.sh [codename] [sysroot_version]
-sudo ./make_sysroots.sh bookworm 1.1.0
-```
-
-This will create sysroot tarballs for each supported architecture in `build-sysroot/`.
+- Requires Linux system with `qemu-user-static` package installed
+- Run `./make_sysroots.sh [codename] [version]` eg `./make_sysroots.sh bookworm 1.1.0`
+- All sysroots will be built in `build-sysroot` as `.tar.gz` packages
 
 ## License
 
