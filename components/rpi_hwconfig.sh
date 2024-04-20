@@ -26,4 +26,4 @@ raspi-config nonint do_camera 0
 # by default on this board. This is allows easier use of hats from the CoreLib
 # by not having to specify a specifc I2C bus number, improving portability
 # of code across different SBCs
-echo "1" > /usr/local/arpirobot_hat_i2c.txt
+echo "1" > /usr/local/arpirobot_default_i2c.txt
