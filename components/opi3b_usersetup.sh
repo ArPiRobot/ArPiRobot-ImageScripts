@@ -14,12 +14,12 @@ DIR="$(dirname "$0")"
 # This script is included in orangepi image. Not sure if it's an armbian thing or an orangepi addition
 auto_login_cli.sh -d
 
-# Change password
-printf "arpirobot\narpirobot" | passwd arpirobot
-
 # Rename orangepi user to arpirobot
 # We could create a new user and add groups, but this is just easier
 usermod --login arpirobot --move-home --home /home/arpirobot orangepi
+
+# Change password
+printf "arpirobot\narpirobot" | passwd arpirobot
 
 # Allow passwordless sudo for arpirobot
 echo "arpirobot ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_arpirobot-nopasswd
