@@ -137,9 +137,20 @@ def stage1_cleanup(loopback: str, mounts: List[str], mount_prefix: str):
         run_command(["losetup", "-d", loopback])
 
 def stage1():
+    # Handle command line args
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config", type=str, help="Name of the config to use to generate the image.")
+    parser.add_argument("version", type=str, help="Version string of the image (exclude config).")
+    args = parser.parse_args(sys.argv[2:])
+
+    script_dir = os.path.realpath(os.path.dirname(__file__))
+    logfile = os.path.join(script_dir, "build", "make_image_{}.log".format(args.config))
+    if not os.path.exists(os.path.dirname(logfile)):
+        os.mkdir(os.path.dirname(logfile))
+
     # Setup logging
     shandler = logging.StreamHandler(sys.stdout)
-    fhandler = logging.FileHandler("build/make_image.log", mode='w')
+    fhandler = logging.FileHandler(logfile, mode='w')
     shandler.setLevel(logging.DEBUG)
     fhandler.setLevel(logging.DEBUG)
     logging.basicConfig(
@@ -151,7 +162,6 @@ def stage1():
 
     loopback = None
     current_mounts = []
-    script_dir = os.path.realpath(os.path.dirname(__file__))
     working_root = os.path.join(script_dir, "build", "rootfs")
     imgscript_dir = os.path.join(working_root, "root", "imagescripts")
 
@@ -159,12 +169,6 @@ def stage1():
     import yaml
 
     try:
-
-        # Handle command line args
-        parser = argparse.ArgumentParser()
-        parser.add_argument("config", type=str, help="Name of the config to use to generate the image.")
-        parser.add_argument("version", type=str, help="Version string of the image (exclude config).")
-        args = parser.parse_args(sys.argv[2:])
 
         # Ensure running in proper conditions
         root_check()
@@ -354,9 +358,6 @@ def main():
         stage1()
     elif sys.argv[1] == "stage2":
         stage2()
-    elif sys.argv[1] == "clean":
-        script_dir = os.path.realpath(os.path.dirname(__file__))
-        shutil.rmtree(os.path.join(script_dir, "build"))
     else:
         print("Unknown command.")
         exit(1)

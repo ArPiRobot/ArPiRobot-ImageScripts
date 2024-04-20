@@ -13,12 +13,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-if [ $# -ne 2 ]; then
-    echo "Usage: make_sysroots.sh version_codename sysroot_version"
+if [ $# -ne 1 ]; then
+    echo "Usage: make_sysroots.sh sysroot_version"
     exit 1
 fi
 
-codename="$1"
 ver="$2"
 
 BUILDDIR="$(dirname "$0")"/build-sysroot
@@ -28,6 +27,8 @@ mkdir -p $BUILDDIR
 exec > >(tee -ia $BUILDDIR/make_sysroots.log)
 
 cd $BUILDDIR
+
+codename=$(head -n 1 ../sysroot/codename.txt)
 
 # armv6 chroot is based on raspbian not debian b/c debian armhf is armv7 but Pi zero is armv6 w/ hard float
 rm -rf ./bootstrap-armv6

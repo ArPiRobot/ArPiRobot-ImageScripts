@@ -16,13 +16,13 @@ Also includes scripts to generate development sysroots.
 ## Creating Images
 
 - Requires Linux system with `qemu-user-static` package installed
-- Run `./make_iamge.py stage1 [config] [version]`
+- Run `sudo ./make_iamge.py stage1 [config] [version]`
 - Once done, this will result in an image file in `build/`. The image will be compressed using xz
 
 ## Creating Sysroots
 
 - Requires Linux system with `qemu-user-static` package installed
-- Run `./make_sysroots.sh [codename] [version]` eg `./make_sysroots.sh bookworm 1.1.0`
+- Run `sudo ./make_sysroots.sh [version]` eg `./make_sysroots.sh 1.1.0`
 - All sysroots will be built in `build-sysroot` as `.tar.gz` packages
 
 ## License
