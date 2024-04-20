@@ -6,3 +6,4 @@ partitions:             # IN ORDER THEY SHOULD BE MOUNTED partnumber: mountpath
   1: /boot/firmware
 components:             # IN THE ORDER THEY SHOULD BE RUN
   - test
+  - test2

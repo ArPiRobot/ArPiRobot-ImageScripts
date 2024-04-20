@@ -15,8 +15,10 @@ import urllib.request
 from typing import List
 
 
-def run_command(cmd_args, shell=False):
+def run_command(cmd_args, shell=False, custom_label=None):
     script_name = os.path.basename(cmd_args[0])
+    if custom_label is not None:
+        script_name = custom_label
     proc = subprocess.Popen(cmd_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shell)
     stdout_buf = bytearray()
     with proc.stdout:
@@ -66,8 +68,17 @@ def chroot_check():
 ################################################################################
 
 def stage2():
-    print("STAGE 2")
-    return
+    # Setup logging
+    shandler = logging.StreamHandler(sys.stdout)
+    shandler.setLevel(logging.DEBUG)
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="[%(levelname)s] %(message)s",
+        handlers=[shandler]
+    )
+
+    script_dir = os.path.realpath(os.path.dirname(__file__))
+
     # Handle command line args
     parser = argparse.ArgumentParser()
     parser.add_argument("components", type=str, nargs="*", help="List of components to execute")
@@ -78,9 +89,20 @@ def stage2():
     internet_check()
     chroot_check()
     
-    # TODO: Mark all component scripts executable (chmod)
+    # Mark all component scripts executable (chmod)
+    logging.info("Making all components executable")
+    ec, out = run_command("chmod +x {}/*.sh".format(os.path.join(script_dir, "components")), shell=True)
+    if ec != 0:
+        logging.error("chmod failed")
+        exit(1)
 
-    # TODO: Execute each component in order
+    # Execute each component in order
+    for component in args.components:
+        logging.info("Running component {}".format(component))
+        ec, out = run_command(os.path.join(script_dir, "components", "{}.sh".format(component)), custom_label="{}.sh".format(component))
+        if ec != 0:
+            logging.error("Component {} failed to execute.".format(component))
+            exit(1)
 
 ################################################################################
 
