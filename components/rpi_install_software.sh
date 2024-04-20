@@ -15,7 +15,8 @@ DIR="$(dirname "$0")"
 DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libcamera0.2 \
     gstreamer1.0-libcamera \
-    rpicam-apps-lite
+    rpicam-apps-lite \
+    libcamera-tools
 
 # pigpio and lgpio are available in system repos, so no need to build from source
 DEBIAN_FRONTEND=noninteractive apt-get -y install \

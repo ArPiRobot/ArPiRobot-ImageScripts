@@ -1,19 +1,17 @@
 List of things to test to make sure an image is configured correctly
 (This is not a comprehensive list, just a basic set of things to check)
 
-- Hardware interfaces (i2c, spi, gpio, camera, etc) exist and are enabled
-- Camera streaming works with mediamtx
-
 On Boot: 
 - Root filesystem expands on first boot
-- SSH host keys are regenerated at first boot
+- SSH host keys are regenerated at first boot (/etc/ssh/ssh_host*)
 - Filesystem is remounted readonly after boot
 
 Basics:
 - Version file exists at /usr/local/arpirobot-image-version.txt
+- Switching between rw and ro works
 
 WiFi:
-- WiFi adapter regulatory domain defaults to unset
+- WiFi adapter regulatory domain defaults to unset (sudo iw reg get)
 - WiFi network is generated and can be connected to
 - Can login to computer via SSH using 192.168.10.1
 
@@ -24,7 +22,7 @@ Ethernet:
 Hardware:
 - All I2C interfaces are available in OS (/dev/i2c-*)
 - All SPI interfaces are available in OS (/dev/spidev*.*)
-- All UART interfaces are available in OS (/dev/ttyS*)
+- All UART interfaces are available in OS (/dev/ttyS*, /dev/ttyAMA*, etc)
 - All GPIO devices are available in OS (/dev/gpiochip*)
 - Camera connector devices are shown in v4l2 or libcamera (as appropriate)
     - v4l2-ctl --list-devices
@@ -37,5 +35,5 @@ ArPiRobot:
 - Deployed code runs using correct I/O provider for the device (pigpio or lgpio)
 - Robot program is able to link to (and load) ALL I/O providers (pigpio, lgpio, libserialport)
 
-Device Test:
+Robot Code Test:
 - TODO: Both C++ and Python code for test platform works with all expected devices
