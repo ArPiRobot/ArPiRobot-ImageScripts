@@ -17,4 +17,4 @@ chmod -x /etc/kernel/postinst.d/initramfs-tools
 # Don't update these. Causes issues.
 apt-mark hold initramfs-tools
 apt-mark hold flash-kernel
-apt-mark hold linux-firmware
+apt-mark hold orangepi-firmware
