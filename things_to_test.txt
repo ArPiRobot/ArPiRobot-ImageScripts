@@ -4,6 +4,8 @@ List of things to test to make sure an image is configured correctly
 On Boot: 
 - Root filesystem expands on first boot
 - SSH host keys are regenerated at first boot (/etc/ssh/ssh_host*)
+    - Make sure these either didn't exist on SD card before boot and do after boot
+    - Or boot multiple times and ensure ssh fingerprint changes when you login
 - Filesystem is remounted readonly after boot
 
 Basics:

@@ -38,4 +38,3 @@ EOF
 
 # Enable ssh server
 systemctl enable ssh
-systemctl enable regenerate_ssh_host_keys
