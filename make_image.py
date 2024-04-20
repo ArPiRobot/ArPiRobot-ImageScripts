@@ -311,10 +311,20 @@ def stage1():
             logging.error("Failed to execute stage 2")
             raise ExitOneError()
 
-        # Finished successfully
-        logging.info("Done.")
+        # Finished successfully. Unmount and clean everything up
         logging.info("Cleaning up.")
         stage1_cleanup(loopback, current_mounts, working_root)
+        loopback = None
+        current_mounts = []
+        working_root = ""
+
+        # Compress the generated image using xz
+        logging.info("Compressing image")
+        ec, out = run_command(["xz", "-T", "0", "-z", working_img])
+        if ec != 0:
+            logging.error("Failed to compress image")
+            raise ExitOneError()
+        
     except ExitOneError as e:
         logging.info("Cleaning up.")
         stage1_cleanup(loopback, current_mounts, working_root)
