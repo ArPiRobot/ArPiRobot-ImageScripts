@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-
 function exit_trap(){
     ec=$?
     if [ $ec -ne 0 ]; then
-        echo "\"${last_command}\" command failed with exit code $ec."
+        echo "\"${last_command}\" command failed with exit code $ec." >&2
     fi
 }
 set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
+DIR="$(dirname "$0")"
+
 
 # Note: Can't use nmcli in chroot, thus write a config file instead
 cat > /etc/NetworkManager/system-connections/RobotAP.nmconnection << 'EOF'
@@ -42,4 +43,5 @@ EOF
 chmod 600 /etc/NetworkManager/system-connections/RobotAP.nmconnection
 
 # Default to unset regulatory domain
+# User can change in deploy tool
 echo "options cfg80211 ieee80211_regdom=00" > /etc/modprobe.d/cfg80211_regdomain.conf

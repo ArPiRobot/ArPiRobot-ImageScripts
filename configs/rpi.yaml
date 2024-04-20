@@ -5,5 +5,15 @@ partitions:             # IN ORDER THEY SHOULD BE MOUNTED partnumber: mountpath
   2: /
   1: /boot/firmware
 components:             # IN THE ORDER THEY SHOULD BE RUN
-  - test
-  - test2
+  - update_system
+  - rpi_usersetup
+  - rpi_hwconfig
+  - core_system_config
+  - lastboot_scripts
+  - readonly
+  - rpi_readonly
+  - install_software
+  - rpi_install_software
+  - arpirobot_config
+  - network_config
+  - cleanup

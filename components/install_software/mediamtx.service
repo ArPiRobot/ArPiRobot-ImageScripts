@@ -1,5 +1,5 @@
 [Unit]
-Description=Service to run RTSP server for camera streams
+Description=RTSP server for camera streams
 After=multi-user.target
 
 [Service]

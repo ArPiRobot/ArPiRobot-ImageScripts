@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-
 function exit_trap(){
     ec=$?
     if [ $ec -ne 0 ]; then
-        echo "\"${last_command}\" command failed with exit code $ec."
+        echo "\"${last_command}\" command failed with exit code $ec." >&2
     fi
 }
 set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
+DIR="$(dirname "$0")"
 
 
-# Note: When porting this to another board / version of Linux the command
+# Note: the dt-rw.sh and dt-ro.sh are added by board specific files (eg rpi_readonly)
+
+# Note: The command
 # sudo fuser -m -v /
 # Can be useful to determine what processes are using the root filesystem
 # Capital 'F' is for write access
@@ -26,9 +28,6 @@ trap exit_trap EXIT
 
 # Remove log & swap software
 DEBIAN_FRONTEND=noninteractive apt-get -y purge logrotate dphys-swapfile
-
-# Append options to boot cmdline
-printf "$(head -1 /boot/firmware/cmdline.txt) fastboot noswap rfkill.default_state=1" > /boot/firmware/cmdline.txt
 
 # Edit systemd-random-seed.service
 cat > /lib/systemd/system/systemd-random-seed.service << 'EOF'
@@ -66,11 +65,11 @@ cat > /etc/cron.hourly/fake-hwclock << 'EOF'
 if (command -v fake-hwclock >/dev/null 2>&1) ; then
   ro=$(mount | sed -n -e "s/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p")
   if [ "$ro" = "ro" ]; then
-    mount -o remount,rw /
+    dt-rw.sh
   fi
   fake-hwclock save
   if [ "$ro" = "ro" ]; then
-    mount -o remount,ro /
+    dt-ro.sh
   fi
 fi
 EOF
@@ -90,22 +89,18 @@ set_bash_prompt(){
     fs_mode=$(mount | sed -n -e 's/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p')
     PS1='\[\033[01;32m\]\u@\h${fs_mode:+($fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 }
-alias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot/firmware'
-alias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot/firmware'
+alias ro='dt-ro.sh'
+alias rw='dt-rw.sh'
 PROMPT_COMMAND=set_bash_prompt
 EOF
 
 # Additions to bash_logout
 cat >> /etc/bash.bash_logout << 'EOF'
-sudo mount -o remount,rw /
+dt-rw.sh
 history -a
 sudo fake-hwclock save
-sudo mount -o remount,ro /
-sudo mount -o remount,ro /boot/firmware
+dt-ro.sh
 EOF
-
-# Auto reboot on kernel panic
-echo "kernel.panic = 10" > /etc/sysctl.d/01-panic.conf
 
 # Disable daily apt services
 systemctl disable apt-daily.service
@@ -119,10 +114,9 @@ systemctl disable systemd-rfkill
 # Disable time sync service
 systemctl disable systemd-timesyncd
 
-# Write script to make ro after boot (relies on custom systemd service from sysconfig script)
+# Write script to make ro after boot (relies on lastboot_scripts)
 cat > /usr/local/last_boot_scripts/50-ro-post-boot.sh << 'EOF'
 #!/usr/bin/env bash
-mount -o ro,remount /
-mount -o ro,remount /boot/firmware
+dt-ro.sh
 EOF
 chmod +x /usr/local/last_boot_scripts/50-ro-post-boot.sh

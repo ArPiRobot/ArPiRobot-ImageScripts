@@ -23,6 +23,10 @@ ver="$2"
 
 BUILDDIR="$(dirname "$0")"/build-sysroot
 mkdir -p $BUILDDIR
+
+# Redirect output so it's logged too
+exec > >(tee -ia $BUILDDIR/make_sysroots.log)
+
 cd $BUILDDIR
 
 # armv6 chroot is based on raspbian not debian b/c debian armhf is armv7 but Pi zero is armv6 w/ hard float
