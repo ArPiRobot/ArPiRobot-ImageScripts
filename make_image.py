@@ -189,6 +189,13 @@ def stage1():
         if len(components) == 0:
             logging.error("Components cannot have length 0")
             raise ExitOneError()
+        
+        # Prompt for deletion of existing image
+        working_img = os.path.join(script_dir, "build", "ArPiRobot-{}-{}.img".format(args.version, args.config))
+        if os.path.exists("{}.xz".format(working_img)):
+            logging.error("Final image file exists. Move or delete this file. Exiting.")
+            raise ExitOneError()
+
 
         # Make sure all referenced components exist
         missing_components = False
@@ -235,7 +242,6 @@ def stage1():
         if ec != 0:
             logging.error("Decompression failed.")
             raise ExitOneError()
-        working_img = os.path.join(script_dir, "build", "ArPiRobot-{}-{}.img".format(args.version, args.config))
         if os.path.exists(working_img):
             os.remove(working_img)
         shutil.move(img_path, working_img)
