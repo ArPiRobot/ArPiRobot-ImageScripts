@@ -21,3 +21,9 @@ raspi-config nonint do_spi 0
 raspi-config nonint do_i2c 0
 raspi-config nonint do_ssh 0
 raspi-config nonint do_camera 0
+
+# Write a file indicating which I2C interface should be used by the CoreLib
+# by default on this board. This is allows easier use of hats from the CoreLib
+# by not having to specify a specifc I2C bus number, improving portability
+# of code across different SBCs
+echo "1" > /usr/local/arpirobot_hat_i2c.txt
