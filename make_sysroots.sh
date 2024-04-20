@@ -24,6 +24,7 @@ BUILDDIR="$(dirname "$0")"/build-sysroot
 mkdir -p $BUILDDIR
 
 # Redirect output so it's logged too
+rm $BUILDDIR/make_sysroots.log
 exec > >(tee -ia $BUILDDIR/make_sysroots.log)
 
 cd $BUILDDIR
