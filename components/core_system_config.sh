@@ -38,3 +38,14 @@ EOF
 
 # Enable ssh server
 systemctl enable ssh
+
+
+# Script to regenerate ssh host keys on first boot.
+# Requires last_commands service to be setup (from another component)
+cat > /usr/local/last_boot_scripts/10-ssh-host-keys.sh << 'EOF'
+#!/usr/bin/env bash
+rm -f /etc/ssh/ssh_host_*_key*
+ssh-keygen -A > /dev/null
+rm -f /usr/local/last_boot_scripts/10-ssh-host-keys.sh
+EOF
+chmod +x /usr/local/last_boot_scripts/10-ssh-host-keys.sh
