@@ -16,6 +16,7 @@ DIR="$(dirname "$0")"
 # hostapd (specifically on some orange pi hardware). Thus, configuring /etc/network/interfaces along
 # with dnsmasq and hostapd manually
 systemctl disable NetworkManager.service
+systemctl mask NetworkManger.service
 
 # Install required packages
 DEBIAN_FRONTEND=noninteractive apt-get -y install dnsmasq hostapd
