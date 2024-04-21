@@ -26,15 +26,15 @@
 #####################################################################################
 
 # Read settings from file
-SSID_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep ssid=)
-PASS_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep psk=)
-CHANNEL_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep channel=)
-BAND_LINE=$(sudo cat /etc/NetworkManager/system-connections/RobotAP.nmconnection | grep band=)
+SSID_LINE=$(sudo cat /etc/hostapd/hostapd.conf | grep '^ssid=')
+PASS_LINE=$(sudo cat /etc/hostapd/hostapd.conf | grep '^wpa_passphrase=')
+CHANNEL_LINE=$(sudo cat /etc/hostapd/hostapd.conf | grep '^channel=')
+BAND_LINE=$(sudo cat /etc/hostapd/hostapd.conf | grep '^hw_mode=')
 SSID=$(echo "$SSID_LINE" | sed -z 's/ssid=//g')
-PASS=$(echo "$PASS_LINE" | sed -z 's/psk=//g')
+PASS=$(echo "$PASS_LINE" | sed -z 's/wpa_passphrase=//g')
 
 CHANNEL=$(echo "$CHANNEL_LINE" | sed -z 's/channel=//g')
-BAND=$(echo "$BAND_LINE" | sed -z 's/band=//g')
+BAND=$(echo "$BAND_LINE" | sed -z 's/hw_mode=//g')
 
 # If no arguments print the current settings
 if [ $# -eq 0 ]; then
@@ -53,10 +53,10 @@ fi
 
 NEW_SSID="$1"
 NEW_PASS="$2"
+NEW_CHANNEL="$3"
+NEW_BAND="$4"
 
 # Don't use sed as it would require escaping symbols like $, @, /, etc. Python  script is used instead
-# sed "s/ssid=$SSID/ssid=$NEW_SSID/g" /etc/hostapd/hostapd.conf
-# sed "s/wpa_passphrase=$PASS/wpa_passphrase=$NEW_PASS/g" /etc/hostapd/hostapd.conf
 
 # Make system rw if it is ro currently
 was_ro=0
@@ -65,13 +65,11 @@ if [ ! -z "$(mount | grep "on / " | grep ro)" ]; then
     was_ro=1
     dt-rw.sh
 fi
-sudo dt-wifi_ap_replace.py "$1" "$2" "$3" "$4"
+sudo dt-wifi_ap_replace.py "$NEW_SSID" "$NEW_PASS" "$NEW_CHANNEL" "$NEW_BAND"
 if [ $was_ro = 1 ]; then
     # Restore ro if it was originally ro
     dt-ro.sh
 fi
 
 # Restart hotspot
-sudo nmcli con down RobotAP
-sudo nmcli con reload
-sudo nmcli con up RobotAP
+sudo systemctl restart hostapd

@@ -10,27 +10,21 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap exit_trap EXIT
 DIR="$(dirname "$0")"
 
-
-# Note: Can't use nmcli in chroot, thus write a config file instead
-cat > "/etc/NetworkManager/system-connections/Wired Connection 1.nmconnection" << 'EOF'
-[connection]
-id=Wired connection 1
-uuid=33ef1f97-4338-3da0-b2b3-ba908037697d
-type=ethernet
-autoconnect-priority=-999
-interface-name=eth0
-
-[ethernet]
-
-[ipv4]
-address1=192.168.11.1/24
-method=shared
-
-[ipv6]
-addr-gen-mode=default
-method=disabled
-
-[proxy]
-
+# Write dnsmasq config file
+cat > /etc/dnsmasq.conf << 'EOF'
+interface=eth0
+dhcp-range=192.168.11.2,192.168.11.20,255.255.255.0,24h
+domain=local
+address=/ArPiRobot-Robot.local/192.168.11.1
 EOF
-chmod 600 "/etc/NetworkManager/system-connections/Wired Connection 1.nmconnection"
+
+# Configure static IP in /etc/network/interfaces
+cat > /etc/network/interfaces << 'EOF'
+auto lo
+iface lo inet loopback
+
+allow-hotplug wlan0
+iface wlan0  inet static
+    address 192.168.10.1
+    netmask 255.255.255.0
+EOF

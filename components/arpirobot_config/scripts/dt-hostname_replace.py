@@ -19,3 +19,13 @@ with fileinput.FileInput("/etc/hosts", inplace=True, backup='.bak') as file:
 
 with open("/etc/hostname", "w") as f:
     f.write(sys.argv[1] + "\n")
+
+with fileinput.FileInput("/etc/dnsmasq.conf", inplace=True, backup='.bak') as file:
+    for line in file:
+        if line.startswith("address="):
+            first_slash = line.find("/")
+            second_slash = line.find("")
+            line = line[0:first_slash+1] + sys.argv[1] + line[second_slash:]
+            print(line)
+        else:
+            print(line, end='')

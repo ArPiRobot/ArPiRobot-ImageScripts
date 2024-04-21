@@ -110,6 +110,7 @@ systemctl disable apt-daily-upgrade.timer
 
 # Disable systemd-rfkill
 systemctl disable systemd-rfkill
+systemctl mask systemd-rfkill
 
 # Disable time sync service (if it exists)
 systemctl disable systemd-timesyncd || echo "No timesyncd service, so not disabled"
