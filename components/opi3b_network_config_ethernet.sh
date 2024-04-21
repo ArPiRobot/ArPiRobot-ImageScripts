@@ -12,4 +12,5 @@ DIR="$(dirname "$0")"
 
 
 # Ethernet is end1 not eth0 on this board
-sed -i 's/interface-name=eth0/interface-name=end1/g' "/etc/NetworkManager/system-connections/Wired Connection 1.nmconnection"
+sed -i 's/interface=eth0/interface=end1/g' /etc/dnsmasq.conf
+sed -i 's/eth0/end1/g' /etc/network/interfaces
