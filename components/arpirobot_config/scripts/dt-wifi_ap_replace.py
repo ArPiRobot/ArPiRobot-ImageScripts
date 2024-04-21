@@ -14,9 +14,9 @@ with fileinput.FileInput("/etc/hostapd/hostapd.conf", inplace=True, backup='.bak
     for line in file:
         if line.startswith("ssid="):
             print("ssid=" + sys.argv[1])
-        elif line.startswith("psk="):
+        elif line.startswith("wpa_passphrase="):
             print("wpa_passphrase=" + sys.argv[2])
-        elif line.startswith("band="):
+        elif line.startswith("hw_mode="):
             print("hw_mode=" + sys.argv[4])
         elif line.startswith("channel="):
             print("channel=" + sys.argv[3])
