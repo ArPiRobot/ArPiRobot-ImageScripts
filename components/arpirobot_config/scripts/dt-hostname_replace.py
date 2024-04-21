@@ -24,8 +24,9 @@ with fileinput.FileInput("/etc/dnsmasq.conf", inplace=True, backup='.bak') as fi
     for line in file:
         if line.startswith("address="):
             first_slash = line.find("/")
-            second_slash = line.find("")
-            line = line[0:first_slash+1] + sys.argv[1] + line[second_slash:]
+            second_slash = line.find("/", first_slash + 1)
+            if first_slash != -1 and second_slash != -1:
+                line = line[0:first_slash+1] + sys.argv[1] + ".local" + line[second_slash:]
             print(line)
         else:
             print(line, end='')
