@@ -20,5 +20,6 @@ components:             # IN THE ORDER THEY SHOULD BE RUN
   - opizero2w_install_software
   - arpirobot_config
   - network_config
+  - opizero2w_network_fixes
   - end_suppress_initramfs_stuff
   - cleanup

@@ -22,6 +22,6 @@ components:             # IN THE ORDER THEY SHOULD BE RUN
   - arpirobot_config
   - network_config
   - network_config_ethernet
-  - opi3b_network_config_ethernet # Fix ethernet interface name
+  - opi3b_network_fixes
   - end_suppress_initramfs_stuff
   - cleanup
