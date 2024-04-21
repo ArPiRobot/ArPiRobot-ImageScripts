@@ -111,8 +111,8 @@ systemctl disable apt-daily-upgrade.timer
 # Disable systemd-rfkill
 systemctl disable systemd-rfkill
 
-# Disable time sync service
-systemctl disable systemd-timesyncd
+# Disable time sync service (if it exists)
+systemctl disable systemd-timesyncd || echo "No timesyncd service, so not disabled"
 
 # Write script to make ro after boot (relies on lastboot_scripts)
 cat > /usr/local/last_boot_scripts/50-ro-post-boot.sh << 'EOF'

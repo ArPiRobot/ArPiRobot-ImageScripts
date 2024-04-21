@@ -17,6 +17,8 @@ auto_login_cli.sh -d
 # Rename orangepi user to arpirobot
 # We could create a new user and add groups, but this is just easier
 usermod --login arpirobot --move-home --home /home/arpirobot orangepi
+groupmod --new-name arpirobot orangepi
+
 
 # Change password
 printf "arpirobot\narpirobot" | passwd arpirobot
