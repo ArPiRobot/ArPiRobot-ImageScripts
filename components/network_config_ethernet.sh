@@ -11,7 +11,8 @@ trap exit_trap EXIT
 DIR="$(dirname "$0")"
 
 # Write dnsmasq config file
-cat > /etc/dnsmasq.conf << 'EOF'
+cat >> /etc/dnsmasq.conf << 'EOF'
+
 interface=eth0
 dhcp-range=192.168.11.2,192.168.11.20,255.255.255.0,24h
 domain=local
@@ -19,12 +20,10 @@ address=/ArPiRobot-Robot.local/192.168.11.1
 EOF
 
 # Configure static IP in /etc/network/interfaces
-cat > /etc/network/interfaces << 'EOF'
-auto lo
-iface lo inet loopback
+cat >> /etc/network/interfaces << 'EOF'
 
-allow-hotplug wlan0
-iface wlan0  inet static
-    address 192.168.10.1
+allow-hotplug eth0
+iface eth0  inet static
+    address 192.168.11.1
     netmask 255.255.255.0
 EOF
