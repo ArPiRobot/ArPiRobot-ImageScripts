@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "deployFiles": [
+        "src/*",
+        "main.sh"
+    ],
+    "coreLibFiles": [
+        "lib/*",
+        "python_bindings/arpirobot/"
+    ]
+}

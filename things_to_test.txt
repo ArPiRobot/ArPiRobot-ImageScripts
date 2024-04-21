@@ -5,11 +5,12 @@ On Boot:
 - Root filesystem expands on first boot
 - SSH host keys are regenerated at first boot (/etc/ssh/ssh_host*)
     - Make sure these either didn't exist on SD card before boot and do after boot
-    - Or boot multiple times and ensure ssh fingerprint changes when you login
+    - Or flash and boot multiple times and ensure ssh fingerprint changes when you login
 - Filesystem is remounted readonly after boot
 
 Basics:
 - Version file exists at /usr/local/arpirobot-image-version.txt
+- i2c and spi default files exist at /usr/local
 - Switching between rw and ro works
 
 WiFi:
@@ -26,7 +27,7 @@ Hardware:
 - All SPI interfaces are available in OS (/dev/spidev*.*)
 - All UART interfaces are available in OS (/dev/ttyS*, /dev/ttyAMA*, etc)
 - All GPIO devices are available in OS (/dev/gpiochip*)
-- Camera connector devices are shown in v4l2 or libcamera (as appropriate)
+- Can execute the following without errors
     - v4l2-ctl --list-devices
     - cam -l
 
@@ -38,4 +39,6 @@ ArPiRobot:
 - Robot program is able to link to (and load) ALL I/O providers (pigpio, lgpio, libserialport)
 
 Robot Code Test:
-- TODO: Both C++ and Python code for test platform works with all expected devices
+- Run the test platform code on the test platform to ensure all features work as expected
+- See comments in robot.py for details on expected outcomes from the program.
+
