@@ -42,11 +42,16 @@ systemctl enable ssh
 
 # Script to regenerate ssh host keys on first boot.
 # Requires last_commands service to be setup (from another component)
-mkdir -p /usr/local/last_boot_scripts/
-cat > /usr/local/last_boot_scripts/10-ssh-host-keys.sh << 'EOF'
-#!/usr/bin/env bash
-rm -f /etc/ssh/ssh_host_*_key*
-ssh-keygen -A > /dev/null
-rm -f /usr/local/last_boot_scripts/10-ssh-host-keys.sh
-EOF
-chmod +x /usr/local/last_boot_scripts/10-ssh-host-keys.sh
+
+# Not actually needed. Both rpi and armbian images (orangepi images are armbian based)
+# have a mechanism to do this out of the box. It is best to just use these as disabling
+# them is not trivial without impacting other first boot behavior
+
+# mkdir -p /usr/local/last_boot_scripts/
+# cat > /usr/local/last_boot_scripts/10-ssh-host-keys.sh << 'EOF'
+# #!/usr/bin/env bash
+# rm -f /etc/ssh/ssh_host_*_key*
+# ssh-keygen -A > /dev/null
+# rm -f /usr/local/last_boot_scripts/10-ssh-host-keys.sh
+# EOF
+# chmod +x /usr/local/last_boot_scripts/10-ssh-host-keys.sh
