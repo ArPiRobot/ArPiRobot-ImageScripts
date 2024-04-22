@@ -12,8 +12,8 @@ from arpirobot.arduino.iface import ArduinoUartInterface
 from arpirobot.arduino.sensor import VoltageMonitor
 
 # Expected functionality:
-#   Gamepad left stick Y axis moves motors on motor hat
-#   Gamepad right trigger moves DRV8833 motor
+#   Gamepad left stick Y axis moves motors on motor hat (both directions must work)
+#   Gamepad triggers moves DRV8833 motor (both directions must work)
 #   Status LED works
 #   Voltage monitor via arduino reports main batt voltage
 
@@ -80,8 +80,10 @@ class Robot(BaseRobot):
         pass
 
     def enabled_periodic(self):
-        drive = self.gp0.get_axis(1)
-        other = self.gp0.get_axis(5)
+        drive = self.gp0.get_axis(1, 0.1)
+        other_pos = self.gp0.get_axis(5, 0.1)
+        other_neg = self.gp0.get_axis(4, 0.1)
+        other = other_pos - other_neg
         self.m1.set_speed(drive)
         self.m4.set_speed(drive)
         self.ma.set_speed(other)

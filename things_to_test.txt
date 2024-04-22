@@ -38,7 +38,7 @@ ArPiRobot:
 - Deployed code runs using correct I/O provider for the device (pigpio or lgpio)
 - Robot program is able to link to (and load) ALL I/O providers (pigpio, lgpio, libserialport)
 
-Robot Code Test:
+Robot Code Test (make sure to set correct board in robot.py):
 - Run the test platform code on the test platform to ensure all features work as expected
 - See comments in robot.py for details on expected outcomes from the program.
 
