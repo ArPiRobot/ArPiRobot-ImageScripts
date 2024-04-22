@@ -30,7 +30,7 @@ EOF
 chmod +x /usr/local/bin/dt-rw.sh
 
 # Remove services that we don't need that hold files open for writes
-DEBIAN_FRONTEND=noninteractive apt-get -y vnstat containerd.io
+DEBIAN_FRONTEND=noninteractive apt-get -y remove vnstat containerd.io
 
 # packagekitd holds file open for write after apt-get is used
 # not really sure if there are scenarios where we'd want to start this
