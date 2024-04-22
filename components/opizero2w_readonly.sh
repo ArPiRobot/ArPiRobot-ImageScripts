@@ -26,3 +26,6 @@ cat << 'EOF' > /usr/local/bin/dt-rw.sh
 sudo mount -o rw,remount /
 EOF
 chmod +x /usr/local/bin/dt-rw.sh
+
+# Remove services that we don't need that hold files open for writes
+DEBIAN_FRONTEND=noninteractive apt-get -y vnstat containerd.io
