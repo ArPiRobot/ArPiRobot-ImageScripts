@@ -27,7 +27,7 @@ cat > /etc/hostapd/hostapd.conf << 'EOF'
 interface=wlan0
 ssid=ArPiRobot-RobotAP
 hw_mode=g
-channel=0
+channel=6
 macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
