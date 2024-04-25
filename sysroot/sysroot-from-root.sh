@@ -50,16 +50,18 @@ rsync -a \
     "$rootdir/usr/" "$destdir/usr/"
 rsync -a "$rootdir/opt/" "$destdir/opt/"
 rsync -a "$rootdir/lib/" "$destdir/lib/"
+mkdir "$destdir/etc"
+rsync -a "$rootdir/etc/alternatives/" "$destdir/etc/alternatives/"
 echo ""
 
-# Convert links to all be relative (absolute links won't work in porable sysroot)
+# Convert links to all be relative (absolute links won't work in portable sysroot)
 echo "Fixing links in sysroot"
 while read l; do
     if [ -z "$l" ]; then
         # Empty string -> find probably found nothing?
         continue
     fi
-
+    
     # Directory containing the link
     ldir=$(dirname "$l")
 
@@ -70,7 +72,7 @@ while read l; do
     tabsnew="$destdir/$tabs"
 
     # Relative target in sysroot directory
-    trelnew="$(realpath -m --relative-to="$ldir" "$tabsnew")"
+    trelnew="$(realpath -m -s --relative-to="$ldir" "$tabsnew")"
 
     # Replace link with relative link
     ln -sf "$trelnew" "$l"
