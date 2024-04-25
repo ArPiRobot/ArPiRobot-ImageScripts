@@ -50,19 +50,19 @@ gzip ../sysroot-armv6.tar
 cd ..
 
 # aarch64 chroot is based on normal debian
-# rm -rf ./bootstrap-aarch64
-# sudo debootstrap --arch=arm64 --variant=buildd $codename ./bootstrap-aarch64
-# cp ../sysroot/setup_aarch64.sh ./bootstrap-aarch64/setup.sh
-# chmod +x ./bootstrap-aarch64/setup.sh
-# chroot ././bootstrap-aarch64 /setup.sh
-# rm -rf ./sysroot-aarch64
-# mkdir ./sysroot-aarch64
-# ../sysroot/sysroot-from-root.sh ./bootstrap-aarch64 ./sysroot-aarch64
-# cd ./sysroot-aarch64
-# echo -n "sysroot/aarch64" > what.txt
-# echo -n "$ver" > version.txt
-# rm -f ../sysroot-aarch64.tar
-# rm -f ../sysroot-aarch64.tar.gz
-# tar -cvf ../sysroot-aarch64.tar *
-# gzip ../sysroot-aarch64.tar
-# cd ..
+rm -rf ./bootstrap-aarch64
+sudo debootstrap --arch=arm64 --variant=buildd $codename ./bootstrap-aarch64
+cp ../sysroot/setup_aarch64.sh ./bootstrap-aarch64/setup.sh
+chmod +x ./bootstrap-aarch64/setup.sh
+chroot ././bootstrap-aarch64 /setup.sh
+rm -rf ./sysroot-aarch64
+mkdir ./sysroot-aarch64
+../sysroot/sysroot-from-root.sh ./bootstrap-aarch64 ./sysroot-aarch64
+cd ./sysroot-aarch64
+echo -n "sysroot/aarch64" > what.txt
+echo -n "$ver" > version.txt
+rm -f ../sysroot-aarch64.tar
+rm -f ../sysroot-aarch64.tar.gz
+tar -cvf ../sysroot-aarch64.tar *
+gzip ../sysroot-aarch64.tar
+cd ..
