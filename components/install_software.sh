@@ -48,27 +48,10 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install \
     gstreamer1.0-pulseaudio \
     gstreamer1.0-gl \
     gstreamer1.0-rtsp \
+    libopencv-*406 \
     ffmpeg \
     libboost-system1.74.0 \
-    libserialport0 \
-    libopencv-calib3d406 \
-    libopencv-contrib406 \
-    libopencv-core406 \
-    libopencv-dnn406 \
-    libopencv-features2d406 \
-    libopencv-flann406 \
-    libopencv-imgcodecs406 \
-    libopencv-imgproc406 \
-    libopencv-ml406 \
-    libopencv-objdetect406 \
-    libopencv-photo406 \
-    libopencv-shape406 \
-    libopencv-stitching406 \
-    libopencv-superres406 \
-    libopencv-video406 \
-    libopencv-videoio406 \
-    libopencv-videostab406 \
-    libopencv-viz406
+    libserialport0
 
 
 # Get architecture of an ELF binary
