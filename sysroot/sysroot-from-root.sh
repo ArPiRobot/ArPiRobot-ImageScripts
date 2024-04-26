@@ -42,14 +42,15 @@ rsync -a \
     --exclude=share \
     --exclude=libexec \
     --exclude=games \
-    --exclude=lib/aarch64-linux-gnu/dri \
     --exclude=lib/firmware \
     --exclude=local/cuda-10.2/doc \
     --exclude=local/cuda-10.2/samples \
     --exclude=lib/systemd \
+    --exclude=lib/aarch64-linux-gnu/dri \
+    --exclude=lib/arm-linux-gnueabihf/dri \
     "$rootdir/usr/" "$destdir/usr/"
 rsync -a "$rootdir/opt/" "$destdir/opt/"
-rsync -a "$rootdir/lib/" "$destdir/lib/"
+ln -s "./usr/lib" "$destdir/lib"
 mkdir "$destdir/etc"
 rsync -a "$rootdir/etc/alternatives/" "$destdir/etc/alternatives/"
 echo ""

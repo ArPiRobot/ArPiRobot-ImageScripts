@@ -24,7 +24,7 @@ else
     GZ="gzip"
 fi
 
-ver="$2"
+ver="$1"
 
 BUILDDIR="$(dirname "$0")"/build-sysroot
 mkdir -p $BUILDDIR
