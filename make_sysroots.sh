@@ -18,6 +18,12 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
+if ! command -v pigz &> /dev/null; then
+    GZ="pigz"
+else
+    GZ="gzip"
+fi
+
 ver="$2"
 
 BUILDDIR="$(dirname "$0")"/build-sysroot
@@ -46,7 +52,7 @@ echo -n "$ver" > version.txt
 rm -f ../sysroot-armv6.tar
 rm -f ../sysroot-armv6.tar.gz
 tar -cvf ../sysroot-armv6.tar *
-xz -T0 -z ../sysroot-armv6.tar
+$GZ ../sysroot-armv6.tar
 cd ..
 
 # aarch64 chroot is based on normal debian
@@ -64,5 +70,5 @@ echo -n "$ver" > version.txt
 rm -f ../sysroot-aarch64.tar
 rm -f ../sysroot-aarch64.tar.gz
 tar -cvf ../sysroot-aarch64.tar *
-xz -T0 -z ../sysroot-aarch64.tar
+$GZ ../sysroot-aarch64.tar
 cd ..
