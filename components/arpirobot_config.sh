@@ -21,6 +21,10 @@ done
 cp "$DIR/arpirobot_config/services/arpirobot-program.service" /etc/systemd/system/
 systemctl enable arpirobot-program.service
 
+# Service to start robot program under debug server
+cp "$DIR/arpirobot_config/services/arpirobot-program-debug.service" /etc/systemd/system/
+# DO NOT ENABLE THIS AT BOOT! systemctl enable arpirobot-program.service
+
 # Create directory for robot program
 mkdir -p /home/arpirobot/arpirobot
 chown arpirobot:arpirobot /home/arpirobot/arpirobot

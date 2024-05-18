@@ -1,0 +1,11 @@
+[Unit]
+Description=Service to start the arpirobot program under debug server
+After=lastcommands.service
+
+[Service]
+Type=simple
+User=arpirobot
+ExecStart=/usr/local/bin/arpirobot-launch.sh --debug
+
+[Install]
+WantedBy=custom.target

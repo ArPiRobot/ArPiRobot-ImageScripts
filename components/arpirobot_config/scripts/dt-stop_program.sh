@@ -25,3 +25,4 @@
 #####################################################################################
 
 sudo systemctl stop arpirobot-program.service
+sudo systemctl stop arpirobot-program-debug.service

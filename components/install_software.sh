@@ -54,6 +54,11 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libserialport0
 
 
+# Debug tools
+DEBIAN_FRONTEND=noninteractive apt-get -y install lldb
+pip3 install --break-system-packages debugpy
+
+
 # Get architecture of an ELF binary
 function binarch(){
     printf "$(readelf -h $1 | grep Machine: | sed -r 's/\s+Machine:\s+//g')"
