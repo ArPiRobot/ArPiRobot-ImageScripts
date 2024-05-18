@@ -1,6 +1,8 @@
 # OrangePi Zero 2W 1GB/2GB/4GB (1.5GB NOT SUPPORTED AS THIS REQUIRES A DIFFERENT BASE IMAGE!!!)
-base_img: https://drive.google.com/file/d/1rIqFzTh89p0WrpfRYNkyk-63r99ITmfr/view?usp=drive_link
-base_img_can_download: false
+# Original vendor link: https://drive.google.com/file/d/1rIqFzTh89p0WrpfRYNkyk-63r99ITmfr/view?usp=drive_link
+# OrangePi sometimes deletes old images though, so using a copy on github release instead
+base_img: https://github.com/ArPiRobot/ArPiRobot-ImageScripts/releases/download/baseimgs/Orangepizero2w_1.0.0_debian_bookworm_server_linux6.1.31.7z
+base_img_can_download: true
 base_img_name: Orangepizero2w_1.0.0_debian_bookworm_server_linux6.1.31.7z
 base_img_sha256: 2a9b3459dd306e1518bae1956ebc47113b9be24b37f12b217549b7178b7a5a8f
 expand_mb: 3072

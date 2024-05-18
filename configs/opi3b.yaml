@@ -1,8 +1,11 @@
-# OrangePi 3B
-base_img: https://drive.google.com/file/d/1btJGKqBKsRXCr4q_UDm4ZntCL4Vv_xeS/view?usp=drive_link
-base_img_can_download: false
-base_img_name: Orangepi3b_1.0.4_debian_bookworm_server_linux5.10.160.7z
-base_img_sha256: d56a378f8fb5267d1ff18c5dd4a974edf33653555943c9bcee80f8a8dcd3b0f8
+# OrangePi 3B (image should work on v2.1 and v1.1.1, but I can only test in v1.1.1)
+# v2.1 board changed Wireless module, physical board size, and more.
+# Original vendor link: https://drive.google.com/file/d/1sqeY04gz3WkOkO-dV18nec0qNROoH_eL/view?usp=drive_link
+# OrangePi sometimes deletes old images though, so using a copy on github release instead
+base_img: https://github.com/ArPiRobot/ArPiRobot-ImageScripts/releases/download/baseimgs/Orangepi3b_1.0.6_debian_bookworm_server_linux5.10.160.7z
+base_img_can_download: true
+base_img_name: Orangepi3b_1.0.6_debian_bookworm_server_linux5.10.160.7z
+base_img_sha256: e82d3194411c224777ba532da446bc264fd5dcea6d8463cfb5983acb0a3b5dd8
 expand_mb: 3072
 partitions:             # IN ORDER THEY SHOULD BE MOUNTED partnumber: mountpath
   2: /
