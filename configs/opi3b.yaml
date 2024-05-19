@@ -1,5 +1,7 @@
-# OrangePi 3B (image should work on v2.1 and v1.1.1, but I can only test in v1.1.1)
-# v2.1 board changed Wireless module, physical board size, and more.
+# OrangePi 3B
+#   v1.1.1 Tested (note: 1.1.1 uses 2.1 pinout not 1.1 pinout)
+#   v2.1 board changed Wireless module, physical board size, and more.
+#   The base image used (1.0.6 vendor image) *should* support both v2.1 and v1.1.1
 # Original vendor link: https://drive.google.com/file/d/1sqeY04gz3WkOkO-dV18nec0qNROoH_eL/view?usp=drive_link
 # OrangePi sometimes deletes old images though, so using a copy on github release instead
 base_img: https://github.com/ArPiRobot/ArPiRobot-ImageScripts/releases/download/baseimgs/Orangepi3b_1.0.6_debian_bookworm_server_linux5.10.160.7z
