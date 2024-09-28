@@ -16,7 +16,7 @@ Also includes scripts to generate development sysroots.
 ## Creating Images
 
 - Requires Linux system with `qemu-user-static` package installed
-- Run `sudo ./make_iamge.py stage1 [config] [version]`
+- Run `sudo ./make_image.py stage1 [config] [version]`
 - Once done, this will result in an image file in `build/`. The image will be compressed using xz
 
 ## Creating Sysroots

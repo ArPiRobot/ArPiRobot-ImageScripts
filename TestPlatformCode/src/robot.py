@@ -18,9 +18,9 @@ from arpirobot.arduino.sensor import VoltageMonitor
 #   Voltage monitor via arduino reports main batt voltage
 
 # Choose one
-board = "rpi"
+# board = "rpi"
 # board = "opi3b"
-# board = "opizero2w"
+board = "opizero2w"
 
 
 class Robot(BaseRobot):

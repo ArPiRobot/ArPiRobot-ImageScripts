@@ -36,7 +36,7 @@ ArPiRobot:
 - Mediamtx service starts on boot
 - Deploy tool can connect, get robot status, deploy code, and read logs
 - Deployed code runs using correct I/O provider for the device (pigpio or lgpio)
-- Robot program is able to link to (and load) ALL I/O providers (pigpio, lgpio, libserialport)
+- Robot program is able to link to (and load) ALL I/O providers (pigpio, lgpio, libserialport). This is tested by building corelib with all providers enabled (linking against dynamic libs in sysroot) and verifying the library can be loaded at runtime with a deployed program.
 
 Robot Code Test (make sure to set correct board in robot.py):
 - Run the test platform code on the test platform to ensure all features work as expected
