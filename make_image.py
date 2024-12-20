@@ -82,7 +82,7 @@ def stage2():
     # Handle command line args
     parser = argparse.ArgumentParser()
     parser.add_argument("components", type=str, nargs="*", help="List of components to execute")
-    args = parser.parse_args(sys.argv[2:])
+    args = parser.parse_args(sys.argv[1:])
 
     # Ensure running in proper conditions
     root_check()
@@ -141,7 +141,7 @@ def stage1():
     parser = argparse.ArgumentParser()
     parser.add_argument("config", type=str, help="Name of the config to use to generate the image.")
     parser.add_argument("version", type=str, help="Version string of the image (exclude config).")
-    args = parser.parse_args(sys.argv[2:])
+    args = parser.parse_args(sys.argv[1:])
 
     script_dir = os.path.realpath(os.path.dirname(__file__))
     logfile = os.path.join(script_dir, "build", "make_image_{}.log".format(args.config))
@@ -348,7 +348,7 @@ def stage1():
 
         logging.info("Running stage2 in chroot")
         chroot_cmd = ["chroot", working_root, "/usr/bin/env", "python3", "/root/imagescripts/make_image.py"]
-        chroot_cmd.append("stage2")
+        chroot_cmd.append("--stage2")
         chroot_cmd.extend(components)
         ec, out = run_command(chroot_cmd)
         if ec != 0:
@@ -388,18 +388,23 @@ def stage1():
 ################################################################################
 
 def main():
-    # TODO: Duplicate stdout and stderr to file
+
+    # Check for stage arguments
+    stage = 1
+    if "--stage1" in sys.argv[1:]:
+        stage = 1
+        sys.argv.remove("--stage1")
+    if "--stage2" in sys.argv[1:]:
+        stage = 2
+        sys.argv.remove("--stage2")
 
     # Launch
-    if len(sys.argv) == 1:
-        print("Usage: {} COMMAND".format(os.path.basename(sys.argv[0])))
-        exit(1)
-    if sys.argv[1] == "stage1":
+    if stage == 1:
         stage1()
-    elif sys.argv[1] == "stage2":
+    elif stage == 2:
         stage2()
     else:
-        print("Unknown command.")
+        print("Unknown stage.")
         exit(1)
 
 ################################################################################
