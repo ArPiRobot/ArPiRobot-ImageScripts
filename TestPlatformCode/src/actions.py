@@ -1,5 +1,5 @@
-from arpirobot.core.action import Action, LockedDeviceList
-from arpirobot.core.log import Logger
+from arpirobot.action import Action, LockedDeviceList
+from arpirobot.log import Logger
 import main
 
 

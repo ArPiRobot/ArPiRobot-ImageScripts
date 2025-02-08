@@ -1,7 +1,7 @@
-from arpirobot.core.robot import BaseRobot
-from arpirobot.core.log import Logger
-from arpirobot.core.action import ActionManager
-from arpirobot.core.network import NetworkTable
+from arpirobot.robot import BaseRobot
+from arpirobot.log import Logger
+from arpirobot.action import ActionManager
+from arpirobot.network import NetworkTable
 
 from arpirobot.devices.adafruitmotorhat import AdafruitMotorHatMotor
 from arpirobot.devices.drv8833 import DRV8833Module
