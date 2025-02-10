@@ -1,4 +1,4 @@
-# All targeted Raspberry Pi boards. Uses armv6 image because Pi Zero.
+# armv6 image for RPi Zero W
 base_img: https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2024-03-15/2024-03-15-raspios-bookworm-armhf-lite.img.xz
 base_img_can_download: true
 base_img_name: 2024-03-15-raspios-bookworm-armhf-lite.img.xz

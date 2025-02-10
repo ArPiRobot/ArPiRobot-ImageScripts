@@ -1,0 +1,23 @@
+# All targeted Raspberry Pi boards except RPi Zero W (which is 32-bit only)
+base_img: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-03-15/2024-03-15-raspios-bookworm-arm64-lite.img.xz
+base_img_can_download: true
+base_img_name: 2024-03-15-raspios-bookworm-arm64-lite.img.xz
+base_img_sha256: 58a3ec57402c86332e67789a6b8f149aeeb4e7bb0a16c9388a66ea6e07012e45
+expand_mb: 3072
+partitions:             # IN ORDER THEY SHOULD BE MOUNTED partnumber: mountpath
+  2: /
+  1: /boot/firmware
+components:             # IN THE ORDER THEY SHOULD BE RUN
+  - update_system
+  - rpi_usersetup
+  - rpi_hwconfig
+  - core_system_config
+  - lastboot_scripts
+  - readonly
+  - rpi_readonly
+  - install_software
+  - rpi_install_software
+  - arpirobot_config
+  - network_config
+  - network_config_ethernet
+  - cleanup
