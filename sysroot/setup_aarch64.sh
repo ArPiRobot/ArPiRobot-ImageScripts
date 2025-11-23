@@ -11,7 +11,8 @@ apt-get install -y \
     libopencv-dev \
     libboost-dev \
     libboost-system-dev \
-    libserialport-dev
+    libserialport-dev \
+    libgcc-s1
 
 # pigpio and lgpio are not available in debian repos
 apt-get install -y wget swig python3-dev python3-setuptools

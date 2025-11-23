@@ -19,4 +19,5 @@ apt-get install -y \
     liblgpio-dev \
     libpigpio-dev \
     libserialport-dev \
-    libpigpiod-if-dev
+    libpigpiod-if-dev \
+    libgcc-s1

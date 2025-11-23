@@ -49,8 +49,16 @@ rsync -a \
     --exclude=lib/aarch64-linux-gnu/dri \
     --exclude=lib/arm-linux-gnueabihf/dri \
     "$rootdir/usr/" "$destdir/usr/"
+if [ ! -L "$rootdir/lib" ]; then
+    mkdir "$destdir/lib"
+    [ -d "$rootdir/lib/arm-linux-gnueabihf" ] && \
+        rsync -a "$rootdir/lib/arm-linux-gnueabihf" "$destdir/lib/"
+    [ -d "$rootdir/lib/aarch64-linux-gnu" ] && \
+        rsync -a "$rootdir/lib/aarch64-linux-gnu" "$destdir/lib/"
+else
+    ln -s "./usr/lib" "$destdir/lib"
+fi
 rsync -a "$rootdir/opt/" "$destdir/opt/"
-ln -s "./usr/lib" "$destdir/lib"
 mkdir "$destdir/etc"
 rsync -a "$rootdir/etc/alternatives/" "$destdir/etc/alternatives/"
 echo ""
