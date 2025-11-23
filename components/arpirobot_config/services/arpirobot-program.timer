@@ -1,0 +1,14 @@
+# This timer is used to delay launching the robot program on system boot
+# CPU heavy programs can sometimes (with weaker battery packs) cause power
+# issues during startup when drivers / devices are still initializing
+# Delaying execution of the robot program seems to reduce how often this causes
+# issues during boot
+
+[Unit]
+Description=Delayed start for arpirobot-program service
+
+[Timer]
+OnBootSec=15s
+
+[Install]
+WantedBy=timers.target
