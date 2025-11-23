@@ -50,11 +50,7 @@ rsync -a \
     --exclude=lib/arm-linux-gnueabihf/dri \
     "$rootdir/usr/" "$destdir/usr/"
 if [ ! -L "$rootdir/lib" ]; then
-    mkdir "$destdir/lib"
-    [ -d "$rootdir/lib/arm-linux-gnueabihf" ] && \
-        rsync -a "$rootdir/lib/arm-linux-gnueabihf" "$destdir/lib/"
-    [ -d "$rootdir/lib/aarch64-linux-gnu" ] && \
-        rsync -a "$rootdir/lib/aarch64-linux-gnu" "$destdir/lib/"
+    rsync -a "$rootdir/lib/" "$destdir/lib/"
 else
     ln -s "./usr/lib" "$destdir/lib"
 fi
